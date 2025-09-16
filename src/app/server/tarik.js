@@ -17,7 +17,7 @@ export async function fetchKegiatan() {
 
   const config = {
     headers: {
-      'balis-token': session?.user?.accessToken
+      Authorization: `Bearer ${session?.user?.accessToken ?? ''}`
     },
     withCredentials: true
   }
@@ -44,7 +44,7 @@ export async function fetchSyaratKegiatan(kelompok_id) {
 
   const config = {
     headers: {
-      'balis-token': session.user?.accessToken || ''
+      Authorization: `Bearer ${session?.user?.accessToken ?? ''}`
     },
     withCredentials: true
   }

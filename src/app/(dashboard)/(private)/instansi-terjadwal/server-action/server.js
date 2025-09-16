@@ -18,7 +18,7 @@ export async function fetchInstansiTerjadwal(tahun = '') {
 
   const config = {
     headers: {
-      'balis-token': session.user?.accessToken || ''
+      Authorization: `Bearer ${session?.user?.accessToken ?? ''}`
     },
     params: {
       limit: 1000,
@@ -53,7 +53,7 @@ export async function fetchKelompok() {
 
   const config = {
     headers: {
-      'balis-token': session.user?.accessToken || ''
+      Authorization: `Bearer ${session?.user?.accessToken ?? ''}`
     },
     withCredentials: true
   }

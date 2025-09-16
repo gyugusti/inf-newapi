@@ -41,7 +41,7 @@ export async function GET(req) {
     // Proxy ke backend lama
     const resp = await customFetch.get('/api/lkf', {
       headers: {
-        'balis-token': session.user?.accessToken || ''
+        Authorization: `Bearer ${session?.user?.accessToken ?? ''}`
       },
       params: qp
     })

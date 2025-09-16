@@ -21,7 +21,7 @@ export async function fetchJadwal(searchParams = {}) {
 
   const config = {
     headers: {
-      'balis-token': session.user?.accessToken
+      Authorization: `Bearer ${session?.user?.accessToken ?? ''}`
     },
     params: {
       page,

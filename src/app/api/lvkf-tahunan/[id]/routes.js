@@ -17,7 +17,7 @@ export async function GET(_req, { params }) {
     const { id } = params
 
     const resp = await customFetch.get(`/api/lkf/${id}`, {
-      headers: { 'balis-token': session.user?.accessToken || '' }
+      headers: { Authorization: `Bearer ${session?.user?.accessToken ?? ''}` }
     })
 
     if (resp?.status === 200 && resp?.data?.status === 200) {
