@@ -15,8 +15,8 @@ import { useDispatch } from 'react-redux'
 
 import CustomTabList from '@/@core/components/mui/TabList'
 import ListJadwal from '@/views/jadwal/ListJadwal'
-import JadwalContainer from '@/views/jadwal/JadwalContainer'
-import { setStatus } from '@/redux-store/jadwal'
+import JadwalContainer from '@/views/jadwal/koordinator/JadwalContainer'
+import { setStatus } from '@/redux-store/jadwal-koord'
 import SearchContainer from '@/components/jadwal/SearchContainer'
 
 const Index = () => {
