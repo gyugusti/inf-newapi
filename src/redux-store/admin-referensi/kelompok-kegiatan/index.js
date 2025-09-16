@@ -76,7 +76,7 @@ export const getKegiatanKelompok = createAsyncThunk('kelKegiatan/getKegiatanKelo
 })
 
 export const getKegiatan = createAsyncThunk('kelKegiatan/getKegiatan', async (_, thunkAPI) => {
-  let url = `/apiBalis/kegiatan`
+  let url = `/api/Balis/kegiatan`
 
   let config = {
     params: {
@@ -112,7 +112,6 @@ export const editKegiatan = createAsyncThunk(
   'kelKegiatan/editKegiatan',
   async ({ kegiatan_id, dataform }, thunkAPI) => {
     try {
-
       const resp = await customFetch.put(`/api/kegiatanKel/update/${kegiatan_id}`, dataform)
 
       return resp.data
@@ -170,7 +169,6 @@ export const editKelompokKeg = createAsyncThunk('kelKegiatan/editKelompokKeg', a
 
 export const deleteKelompok = createAsyncThunk('kelKegiatan/deleteKelompok', async (id, thunkAPI) => {
   try {
-
     const resp = await customFetch.delete(`/api/kelKegiatan/${id}`)
 
     if (resp.data.status === 200) {

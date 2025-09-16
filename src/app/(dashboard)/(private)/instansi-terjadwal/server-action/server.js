@@ -7,14 +7,13 @@ import customFetch from '@/utils/axios'
 
 /**
  * Fetch daftar instansi yang terjadwal
- * Mengambil data dari endpoint /api/instansiTerjadwal
  */
 export async function fetchInstansiTerjadwal(tahun = '') {
   const session = await getServerSession(authOptions)
 
   if (!session) throw new Error('Unauthorized')
 
-  const url = `/api/instansiTerjadwal`
+  const url = `/api/ver/instansiTerjadwal`
 
   const config = {
     headers: {
