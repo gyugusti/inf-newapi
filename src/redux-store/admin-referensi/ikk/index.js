@@ -1,8 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { toast } from 'react-toastify' // Import from react-toastify
 
-import { getSession } from 'next-auth/react'
-
 import { handleLogout } from '@/redux-store/auth'
 import customFetch from '@/utils/axios'
 
@@ -21,13 +19,8 @@ const initialState = {
 
 export const getIkk = createAsyncThunk('ikk/getIkk', async (_, thunkAPI) => {
   let url = `/api/ikk`
-  const session = await getSession()
 
-  let config = {
-    headers: {
-      'balis-token': session.user.accessToken
-    }
-  }
+  let config = {}
 
   try {
     const resp = await customFetch.get(url, config)
@@ -52,11 +45,7 @@ export const getIkk = createAsyncThunk('ikk/getIkk', async (_, thunkAPI) => {
 
 export const getDetailIkk = createAsyncThunk('ikk/getDetailIkk', async (_, thunkAPI) => {
   let url = `/api/ikk`
-  const session = await getSession()
   let config = {
-    headers: {
-      'balis-token': session.user.accessToken
-    },
     params: {
       inkf_id: `${thunkAPI.getState().ikk.inkf_id}`
     }
@@ -86,13 +75,8 @@ export const getDetailIkk = createAsyncThunk('ikk/getDetailIkk', async (_, thunk
 export const createIkk = createAsyncThunk('ikk/createIkk', async (dataform, thunkAPI) => {
   try {
     let url = `/api/ikk`
-    const session = await getSession()
 
-    let config = {
-      headers: {
-        'balis-token': session.user.accessToken
-      }
-    }
+    let config = {}
     const resp = await customFetch.post(url, dataform, config)
 
     return resp.data
@@ -110,13 +94,8 @@ export const createIkk = createAsyncThunk('ikk/createIkk', async (dataform, thun
 export const editIkk = createAsyncThunk('ikk/editIkk', async ({ ikk_item_id, dataform }, thunkAPI) => {
   try {
     let url = `/api/ikk/${ikk_item_id}`
-    const session = await getSession()
 
-    let config = {
-      headers: {
-        'balis-token': session.user.accessToken
-      }
-    }
+    let config = {}
     const resp = await customFetch.put(url, dataform, config)
 
     return resp.data
@@ -133,13 +112,8 @@ export const editIkk = createAsyncThunk('ikk/editIkk', async ({ ikk_item_id, dat
 
 export const deleteIkk = createAsyncThunk('ikk/deleteIkk', async (ikk_item_id, thunkAPI) => {
   try {
-    const session = await getSession()
 
-    const resp = await customFetch.delete(`/api/ikk/${ikk_item_id}`, {
-      headers: {
-        'balis-token': session.user.accessToken
-      }
-    })
+    const resp = await customFetch.delete(`/api/ikk/${ikk_item_id}`)
 
     if (resp.data.status === 200) {
       return resp.data

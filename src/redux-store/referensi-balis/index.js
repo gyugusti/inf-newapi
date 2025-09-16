@@ -1,8 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { toast } from 'react-toastify'
 
-import { getSession } from 'next-auth/react'
-
 import { handleLogout } from '@/redux-store/auth'
 import customFetch from '@/utils/axios'
 
@@ -28,12 +26,8 @@ const initialState = {
 
 export const getKabupaten = createAsyncThunk('refbalis/getKab', async (propinsi_id, thunkAPI) => {
   let url = `apiBalis/getKabupaten`
-  const session = await getSession()
 
   let config = {
-    headers: {
-      'balis-token': session.user.accessToken
-    },
     params: {
       propinsi_id: propinsi_id
     }
@@ -61,14 +55,9 @@ export const getKabupaten = createAsyncThunk('refbalis/getKab', async (propinsi_
 })
 
 export const getPropinsi = createAsyncThunk('refbalis/getPropinsi', async (_, thunkAPI) => {
-  const session = await getSession()
   let url = `apiBalis/getPropinsi`
 
-  let config = {
-    headers: {
-      'balis-token': session.user.accessToken
-    }
-  }
+  let config = {}
 
   try {
     const resp = await customFetch.get(url, config)
@@ -92,14 +81,9 @@ export const getPropinsi = createAsyncThunk('refbalis/getPropinsi', async (_, th
 })
 
 export const getBidang = createAsyncThunk('refbalis/getBidang', async (_, thunkAPI) => {
-  const session = await getSession()
   let url = `apiBalis/getBidang`
 
-  let config = {
-    headers: {
-      'balis-token': session.user.accessToken
-    }
-  }
+  let config = {}
 
   try {
     const resp = await customFetch.get(url, config)
@@ -123,14 +107,9 @@ export const getBidang = createAsyncThunk('refbalis/getBidang', async (_, thunkA
 })
 
 export const getModelSumber = createAsyncThunk('refbalis/getModelSumber', async (_, thunkAPI) => {
-  const session = await getSession()
   let url = `apiBalis/getModelSumber`
 
-  let config = {
-    headers: {
-      'balis-token': session.user.accessToken
-    }
-  }
+  let config = {}
 
   try {
     const resp = await customFetch.get(url, config)
@@ -154,14 +133,9 @@ export const getModelSumber = createAsyncThunk('refbalis/getModelSumber', async 
 })
 
 export const getSatuan = createAsyncThunk('refbalis/getSatuan', async (_, thunkAPI) => {
-  const session = await getSession()
   let url = `apiBalis/getSatuan`
 
-  let config = {
-    headers: {
-      'balis-token': session.user.accessToken
-    }
-  }
+  let config = {}
 
   try {
     const resp = await customFetch.get(url, config)
@@ -185,14 +159,9 @@ export const getSatuan = createAsyncThunk('refbalis/getSatuan', async (_, thunkA
 })
 
 export const getJenisPekerja = createAsyncThunk('refbalis/getJenisPekerja', async (_, thunkAPI) => {
-  const session = await getSession()
   let url = `apiBalis/getJenisPekerja`
 
-  let config = {
-    headers: {
-      'balis-token': session.user.accessToken
-    }
-  }
+  let config = {}
 
   try {
     const resp = await customFetch.get(url, config)
@@ -216,14 +185,9 @@ export const getJenisPekerja = createAsyncThunk('refbalis/getJenisPekerja', asyn
 })
 
 export const getListUser = createAsyncThunk('refbalis/getListUser', async (_, thunkAPI) => {
-  const session = await getSession()
   let url = `apiBalis/getListUser`
 
-  let config = {
-    headers: {
-      'balis-token': session.user.accessToken
-    }
-  }
+  let config = {}
 
   try {
     const resp = await customFetch.get(url, config)
@@ -247,14 +211,9 @@ export const getListUser = createAsyncThunk('refbalis/getListUser', async (_, th
 })
 
 export const getPenandatangan = createAsyncThunk('refbalis/getPenandatangan', async (_, thunkAPI) => {
-  const session = await getSession()
   let url = `api/ttd`
 
-  let config = {
-    headers: {
-      'balis-token': session.user.accessToken
-    }
-  }
+  let config = {}
 
   try {
     const resp = await customFetch.get(url, config)
@@ -278,13 +237,9 @@ export const getPenandatangan = createAsyncThunk('refbalis/getPenandatangan', as
 })
 
 export const getAlamat = createAsyncThunk('refbalis/getAlamat', async (fas_id, thunkAPI) => {
-  const session = await getSession()
   let url = `apiBalis/getFasilitasAlamat`
 
   let config = {
-    headers: {
-      'balis-token': session.user.accessToken
-    },
     params: {
       fas_id: fas_id
     }
@@ -312,13 +267,9 @@ export const getAlamat = createAsyncThunk('refbalis/getAlamat', async (fas_id, t
 })
 
 export const getDokumen = createAsyncThunk('refbalis/getDokumen', async (fas_id, thunkAPI) => {
-  const session = await getSession()
   let url = `/api/dokumen`
 
   let config = {
-    headers: {
-      'balis-token': session.user.accessToken
-    },
     params: {
       fas_id: fas_id
     }

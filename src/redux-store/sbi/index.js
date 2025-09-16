@@ -1,8 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { toast } from 'react-toastify'
 
-import { getSession } from 'next-auth/react'
-
 import { JADWAL_PELAKSANAAN, JADWAL_SELESAI } from '@/configs/jadwalConfig'
 import { handleLogout } from '@/redux-store/auth'
 import customFetch from '@/utils/axios'
@@ -30,13 +28,9 @@ const initialState = {
 }
 
 export const getListSbi = createAsyncThunk('sbi/getListSbi', async (_, thunkAPI) => {
-  const session = await getSession()
   let url = `/api/sbi`
 
   let config = {
-    headers: {
-      'balis-token': session.user.accessToken
-    },
     params: {
       page: `${thunkAPI.getState().sbi.current_page}`,
       limit: `${thunkAPI.getState().sbi.per_page}`,
@@ -67,14 +61,9 @@ export const getListSbi = createAsyncThunk('sbi/getListSbi', async (_, thunkAPI)
 })
 
 export const getSbi = createAsyncThunk('sbi/getSbi', async (id, thunkAPI) => {
-  const session = await getSession()
   let url = `api/sbi/${id}`
 
-  let config = {
-    headers: {
-      'balis-token': session.user.accessToken
-    }
-  }
+  let config = {}
 
   try {
     const resp = await customFetch.get(url, config)
@@ -98,14 +87,9 @@ export const getSbi = createAsyncThunk('sbi/getSbi', async (id, thunkAPI) => {
 })
 
 export const getSpi = createAsyncThunk('sbi/getSpi', async (id, thunkAPI) => {
-  const session = await getSession()
   let url = `api/spi/${id}`
 
-  let config = {
-    headers: {
-      'balis-token': session.user.accessToken
-    }
-  }
+  let config = {}
 
   try {
     const resp = await customFetch.get(url, config)
@@ -129,14 +113,9 @@ export const getSpi = createAsyncThunk('sbi/getSpi', async (id, thunkAPI) => {
 })
 
 export const createSbi = createAsyncThunk('sbi/createSbi', async (dataform, thunkAPI) => {
-  const session = await getSession()
   let url = `/api/sbi`
 
-  let config = {
-    headers: {
-      'balis-token': session.user.accessToken
-    }
-  }
+  let config = {}
 
   try {
     const resp = await customFetch.post(url, dataform, config)
@@ -155,13 +134,8 @@ export const createSbi = createAsyncThunk('sbi/createSbi', async (dataform, thun
 
 export const editSbi = createAsyncThunk('sbi/editSbi', async ({ id, dataform }, thunkAPI) => {
   try {
-    const session = await getSession()
 
-    const resp = await customFetch.put(`/api/sbi/${id}`, dataform, {
-      headers: {
-        'balis-token': session.user.accessToken
-      }
-    })
+    const resp = await customFetch.put(`/api/sbi/${id}`, dataform)
 
     thunkAPI.dispatch(clearValues())
 
@@ -178,14 +152,9 @@ export const editSbi = createAsyncThunk('sbi/editSbi', async ({ id, dataform }, 
 })
 
 export const createSpi = createAsyncThunk('sbi/createSpi', async (dataform, thunkAPI) => {
-  const session = await getSession()
   let url = `/api/spi`
 
-  let config = {
-    headers: {
-      'balis-token': session.user.accessToken
-    }
-  }
+  let config = {}
 
   try {
     const resp = await customFetch.post(url, dataform, config)
@@ -204,13 +173,8 @@ export const createSpi = createAsyncThunk('sbi/createSpi', async (dataform, thun
 
 export const editSpi = createAsyncThunk('sbi/editSpi', async ({ id, dataform }, thunkAPI) => {
   try {
-    const session = await getSession()
 
-    const resp = await customFetch.put(`/api/spi/${id}`, dataform, {
-      headers: {
-        'balis-token': session.user.accessToken
-      }
-    })
+    const resp = await customFetch.put(`/api/spi/${id}`, dataform)
 
     thunkAPI.dispatch(clearValues())
 

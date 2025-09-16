@@ -1,8 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { toast } from 'react-toastify'
 
-import { getSession } from 'next-auth/react'
-
 import { handleLogout } from '@/redux-store/auth'
 import customFetch from '@/utils/axios'
 
@@ -35,13 +33,8 @@ const initialState = {
 
 export const getTemuanLib = createAsyncThunk('temuan/getTemuanLib', async (inkf_id, thunkAPI) => {
   let url = `/api/temuanLib`
-  const session = await getSession()
 
-  let config = {
-    headers: {
-      'balis-token': session.user.accessToken
-    }
-  }
+  let config = {}
 
   try {
     const resp = await customFetch.get(url, config)
@@ -66,13 +59,8 @@ export const getTemuanLib = createAsyncThunk('temuan/getTemuanLib', async (inkf_
 
 export const getTemuanKel = createAsyncThunk('temuan/getTemuanKel', async (kelompok_id, thunkAPI) => {
   let url = `/api/temuan/${kelompok_id}`
-  const session = await getSession()
 
-  let config = {
-    headers: {
-      'balis-token': session.user.accessToken
-    }
-  }
+  let config = {}
 
   try {
     const resp = await customFetch.get(url, config)
@@ -97,13 +85,8 @@ export const getTemuanKel = createAsyncThunk('temuan/getTemuanKel', async (kelom
 
 export const createTemuan = createAsyncThunk('temuan/createTemuan', async (dataform, thunkAPI) => {
   let url = `/api/temuan`
-  const session = await getSession()
 
-  let config = {
-    headers: {
-      'balis-token': session.user.accessToken
-    }
-  }
+  let config = {}
 
   try {
     const resp = await customFetch.post(url, dataform, config)
@@ -128,12 +111,8 @@ export const createTemuan = createAsyncThunk('temuan/createTemuan', async (dataf
 
 export const getTemuanCreate = createAsyncThunk('temuan/getTemuanCreate', async (kelompok_id, thunkAPI) => {
   let url = `/api/temuanCreate`
-  const session = await getSession()
 
   let config = {
-    headers: {
-      'balis-token': session.user.accessToken
-    },
     params: {
       kelompok_id: `${kelompok_id}`
     }
@@ -163,13 +142,8 @@ export const getTemuanCreate = createAsyncThunk('temuan/getTemuanCreate', async 
 export const createItemLib = createAsyncThunk('temuan/createItemLib', async (dataform, thunkAPI) => {
   try {
     let url = `/api/temuanLib`
-    const session = await getSession()
 
-    let config = {
-      headers: {
-        'balis-token': session.user.accessToken
-      }
-    }
+    let config = {}
     const resp = await customFetch.post(url, dataform, config)
 
     return resp.data
@@ -187,13 +161,8 @@ export const createItemLib = createAsyncThunk('temuan/createItemLib', async (dat
 export const editItemLib = createAsyncThunk('temuan/editItemLib', async ({ temuan_id, dataform }, thunkAPI) => {
   try {
     let url = `/api/temuanLib/${temuan_id}`
-    const session = await getSession()
 
-    let config = {
-      headers: {
-        'balis-token': session.user.accessToken
-      }
-    }
+    let config = {}
     const resp = await customFetch.put(url, dataform, config)
 
     return resp.data
@@ -210,13 +179,8 @@ export const editItemLib = createAsyncThunk('temuan/editItemLib', async ({ temua
 
 export const deleteItemLib = createAsyncThunk('temuan/deleteItemLib', async (temuan_id, thunkAPI) => {
   try {
-    const session = await getSession()
 
-    const resp = await customFetch.delete(`/api/temuanLib/${temuan_id}`, {
-      headers: {
-        'balis-token': session.user.accessToken
-      }
-    })
+    const resp = await customFetch.delete(`/api/temuanLib/${temuan_id}`)
 
     if (resp.data.status === 200) {
       return resp.data
@@ -236,13 +200,8 @@ export const deleteItemLib = createAsyncThunk('temuan/deleteItemLib', async (tem
 
 export const deleteTemuanKel = createAsyncThunk('temuan/deleteTemuanKel', async (acuan_id, thunkAPI) => {
   try {
-    const session = await getSession()
 
-    const resp = await customFetch.delete(`/api/temuan/${acuan_id}`, {
-      headers: {
-        'balis-token': session.user.accessToken
-      }
-    })
+    const resp = await customFetch.delete(`/api/temuan/${acuan_id}`)
 
     if (resp.data.status === 200) {
       return resp.data

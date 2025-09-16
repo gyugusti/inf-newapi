@@ -1,8 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { toast } from 'react-toastify'
 
-import { getSession } from 'next-auth/react'
-
 import { handleLogout } from '@/redux-store/auth'
 import customFetch from '@/utils/axios'
 
@@ -27,13 +25,8 @@ const initialState = {
 
 export const getkelKegiatan = createAsyncThunk('kelKegiatan/getkelKegiatan', async (_, thunkAPI) => {
   let url = `/api/kelKegiatan`
-  const session = await getSession()
 
-  let config = {
-    headers: {
-      'balis-token': session.user.accessToken // Access the accessToken from the session
-    }
-  }
+  let config = {}
 
   try {
     const resp = await customFetch.get(url, config)
@@ -58,13 +51,8 @@ export const getkelKegiatan = createAsyncThunk('kelKegiatan/getkelKegiatan', asy
 
 export const getKegiatanKelompok = createAsyncThunk('kelKegiatan/getKegiatanKelompok', async (id, thunkAPI) => {
   let url = `/api/kelKegiatan/${id}`
-  const session = await getSession()
 
-  let config = {
-    headers: {
-      'balis-token': session.user.accessToken
-    }
-  }
+  let config = {}
 
   try {
     const resp = await customFetch.get(url, config)
@@ -88,13 +76,9 @@ export const getKegiatanKelompok = createAsyncThunk('kelKegiatan/getKegiatanKelo
 })
 
 export const getKegiatan = createAsyncThunk('kelKegiatan/getKegiatan', async (_, thunkAPI) => {
-  const session = await getSession()
   let url = `/apiBalis/kegiatan`
 
   let config = {
-    headers: {
-      'balis-token': session.user.accessToken
-    },
     params: {
       page: `${thunkAPI.getState().kelKegiatan.current_page}`,
       limit: `${thunkAPI.getState().kelKegiatan.per_page}`,
@@ -128,13 +112,8 @@ export const editKegiatan = createAsyncThunk(
   'kelKegiatan/editKegiatan',
   async ({ kegiatan_id, dataform }, thunkAPI) => {
     try {
-      const session = await getSession()
 
-      const resp = await customFetch.put(`/api/kegiatanKel/update/${kegiatan_id}`, dataform, {
-        headers: {
-          'balis-token': session.user.accessToken
-        }
-      })
+      const resp = await customFetch.put(`/api/kegiatanKel/update/${kegiatan_id}`, dataform)
 
       return resp.data
     } catch (error) {
@@ -151,13 +130,8 @@ export const editKegiatan = createAsyncThunk(
 
 export const createKelompokKeg = createAsyncThunk('kelKegiatan/createKelompokKeg', async (dataform, thunkAPI) => {
   let url = `/api/kelKegiatan`
-  const session = await getSession()
 
-  let config = {
-    headers: {
-      'balis-token': session.user.accessToken
-    }
-  }
+  let config = {}
 
   try {
     const resp = await customFetch.post(url, dataform, config)
@@ -177,13 +151,8 @@ export const createKelompokKeg = createAsyncThunk('kelKegiatan/createKelompokKeg
 export const editKelompokKeg = createAsyncThunk('kelKegiatan/editKelompokKeg', async ({ id, dataform }, thunkAPI) => {
   try {
     let url = `/api/kelKegiatan/${id}`
-    const session = await getSession()
 
-    let config = {
-      headers: {
-        'balis-token': session.user.accessToken
-      }
-    }
+    let config = {}
 
     const resp = await customFetch.put(url, dataform, config)
 
@@ -201,13 +170,8 @@ export const editKelompokKeg = createAsyncThunk('kelKegiatan/editKelompokKeg', a
 
 export const deleteKelompok = createAsyncThunk('kelKegiatan/deleteKelompok', async (id, thunkAPI) => {
   try {
-    const session = await getSession()
 
-    const resp = await customFetch.delete(`/api/kelKegiatan/${id}`, {
-      headers: {
-        'balis-token': session.user.accessToken
-      }
-    })
+    const resp = await customFetch.delete(`/api/kelKegiatan/${id}`)
 
     if (resp.data.status === 200) {
       return resp.data

@@ -1,8 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { toast } from 'react-toastify'
 
-import { getSession } from 'next-auth/react'
-
 import { handleLogout } from '@/redux-store/auth'
 import customFetch from '@/utils/axios'
 
@@ -29,14 +27,9 @@ const initialState = {
 }
 
 export const getInspektur = createAsyncThunk('refInfara/getInspektur', async (_, thunkAPI) => {
-  const session = await getSession()
   let url = `api/inspektur`
 
-  let config = {
-    headers: {
-      'balis-token': session.user.accessToken
-    }
-  }
+  let config = {}
 
   try {
     const resp = await customFetch.get(url, config)
@@ -60,13 +53,9 @@ export const getInspektur = createAsyncThunk('refInfara/getInspektur', async (_,
 })
 
 export const getInspekturRiwayat = createAsyncThunk('refInfara/getInspekturRiwayat', async (_, thunkAPI) => {
-  const session = await getSession()
   let url = `api/inspekturRiwayat`
 
   let config = {
-    headers: {
-      'balis-token': session.user.accessToken
-    },
     params: {
       status: 1
     }
@@ -94,13 +83,9 @@ export const getInspekturRiwayat = createAsyncThunk('refInfara/getInspekturRiway
 })
 
 export const getProsesLog = createAsyncThunk('refinfara/getProsesLog', async (_, thunkAPI) => {
-  const session = await getSession()
   let url = `api/proses/log`
 
   let config = {
-    headers: {
-      'balis-token': session.user.accessToken
-    },
     params: {
       page: `${thunkAPI.getState().refInfara.current_page}`,
       limit: `${thunkAPI.getState().refInfara.per_page}`,
@@ -137,14 +122,9 @@ export const getProsesLog = createAsyncThunk('refinfara/getProsesLog', async (_,
 })
 
 export const getInspekturDetail = createAsyncThunk('refInfara/getInspekturDetail', async (id, thunkAPI) => {
-  const session = await getSession()
   let url = `api/inspektur/${id}`
 
-  let config = {
-    headers: {
-      'balis-token': session.user.accessToken
-    }
-  }
+  let config = {}
 
   try {
     const resp = await customFetch.get(url, config)

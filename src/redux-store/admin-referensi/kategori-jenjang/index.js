@@ -1,8 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { toast } from 'react-toastify'
 
-import { getSession } from 'next-auth/react'
-
 import { handleLogout } from '@/redux-store/auth'
 import customFetch from '@/utils/axios'
 
@@ -32,12 +30,7 @@ const initialState = {
 
 export const getkatInspektur = createAsyncThunk('kategoriJenjang/getkatInspektur', async (_, thunkAPI) => {
   let url = `/api/katInspektur`
-  const session = await getSession()
-  let config = {
-    headers: {
-      'balis-token': session.user.accessToken
-    }
-  }
+  let config = {}
 
   try {
     const resp = await customFetch.get(url, config)
@@ -62,12 +55,7 @@ export const getkatInspektur = createAsyncThunk('kategoriJenjang/getkatInspektur
 
 export const getjenInspektur = createAsyncThunk('kategoriJenjang/getjenInspektur', async (_, thunkAPI) => {
   let url = `/api/jenInspektur`
-  const session = await getSession()
-  let config = {
-    headers: {
-      'balis-token': session.user.accessToken
-    }
-  }
+  let config = {}
 
   try {
     const resp = await customFetch.get(url, config)
@@ -93,12 +81,7 @@ export const getjenInspektur = createAsyncThunk('kategoriJenjang/getjenInspektur
 export const createCategori = createAsyncThunk('kategoriJenjang/createCategori', async (dataform, thunkAPI) => {
   try {
     let url = `/api/katInspektur`
-    const session = await getSession()
-    let config = {
-      headers: {
-        'balis-token': session.user.accessToken
-      }
-    }
+    let config = {}
     const resp = await customFetch.post(url, dataform, config)
 
     return resp.data
@@ -115,13 +98,8 @@ export const createCategori = createAsyncThunk('kategoriJenjang/createCategori',
 
 export const deleteKategori = createAsyncThunk('kategoriJenjang/deleteKategori', async (insp_kat_id, thunkAPI) => {
   try {
-    const session = await getSession()
 
-    const resp = await customFetch.delete(`/api/katInspektur/${insp_kat_id}`, {
-      headers: {
-        'balis-token': session.user.accessToken
-      }
-    })
+    const resp = await customFetch.delete(`/api/katInspektur/${insp_kat_id}`)
 
     if (resp.data.status === 200) {
       return resp.data
@@ -141,14 +119,9 @@ export const deleteKategori = createAsyncThunk('kategoriJenjang/deleteKategori',
 
 export const createJenjang = createAsyncThunk('kategoriJenjang/createJenjang', async (dataform, thunkAPI) => {
   try {
-    const session = await getSession()
     let url = `/api/jenInspektur`
 
-    let config = {
-      headers: {
-        'balis-token': session.user.accessToken
-      }
-    }
+    let config = {}
     const resp = await customFetch.post(url, dataform, config)
 
     return resp.data
@@ -165,13 +138,8 @@ export const createJenjang = createAsyncThunk('kategoriJenjang/createJenjang', a
 
 export const deleteJenjang = createAsyncThunk('kategoriJenjang/deleteJenjang', async (insp_jenjang_id, thunkAPI) => {
   try {
-    const session = await getSession()
 
-    const resp = await customFetch.delete(`/api/jenInspektur/${insp_jenjang_id}`, {
-      headers: {
-        'balis-token': session.user.accessToken
-      }
-    })
+    const resp = await customFetch.delete(`/api/jenInspektur/${insp_jenjang_id}`)
 
     if (resp.data.status === 200) {
       return resp.data
@@ -194,12 +162,7 @@ export const editJenjang = createAsyncThunk(
   async ({ insp_jenjang_id, dataform }, thunkAPI) => {
     try {
       let url = `/api/jenInspektur/${insp_jenjang_id}`
-      const session = await getSession()
-      let config = {
-        headers: {
-          'balis-token': session.user.accessToken
-        }
-      }
+      let config = {}
       const resp = await customFetch.put(url, dataform, config)
 
       return resp.data

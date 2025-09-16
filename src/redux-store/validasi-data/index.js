@@ -1,8 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { toast } from 'react-toastify'
 
-import { getSession } from 'next-auth/react'
-
 import { handleLogout } from '@/redux-store/auth'
 import customFetch from '@/utils/axios'
 
@@ -56,12 +54,8 @@ const initialState = {
 
 export const getRegistrasiSrp = createAsyncThunk('validasiData/getRegistrasiSrp', async (_, thunkAPI) => {
   let url = `/apiRegistrasi/srp`
-  const session = await getSession()
 
   let config = {
-    headers: {
-      'balis-token': session?.user?.accessToken
-    },
     params: {
       page: thunkAPI.getState().validasiData.current_page,
       limit: thunkAPI.getState().validasiData.per_page,
@@ -100,13 +94,7 @@ export const getRegistrasiSrp = createAsyncThunk('validasiData/getRegistrasiSrp'
 export const getRegsrpDetail = createAsyncThunk('validasiData/getRegsrpDetail', async (id, thunkAPI) => {
   let url = `/apiRegistrasi/srp/${id}`
 
-  const session = await getSession()
-
-  let config = {
-    headers: {
-      'balis-token': session.user.accessToken
-    }
-  }
+  let config = {}
 
   try {
     const resp = await customFetch.get(url, config)
@@ -132,13 +120,7 @@ export const getRegsrpDetail = createAsyncThunk('validasiData/getRegsrpDetail', 
 export const createRegSumber = createAsyncThunk('validasiData/createRegSumber', async (dataform, thunkAPI) => {
   let url = `/apiRegistrasi/srp`
 
-  const session = await getSession()
-
-  let config = {
-    headers: {
-      'balis-token': session.user.accessToken
-    }
-  }
+  let config = {}
 
   try {
     const resp = await customFetch.post(url, dataform, config)
@@ -168,13 +150,7 @@ export const editRegSumber = createAsyncThunk('validasiData/editRegSumber', asyn
   try {
     let url = `/apiRegistrasi/srp/${id}`
 
-    const session = await getSession()
-
-    let config = {
-      headers: {
-        'balis-token': session.user.accessToken
-      }
-    }
+    let config = {}
 
     const resp = await customFetch.put(url, dataforms, config)
 
@@ -201,12 +177,8 @@ export const editRegSumber = createAsyncThunk('validasiData/editRegSumber', asyn
 
 export const deleteRegSumber = createAsyncThunk('validasiData/deleteRegSumber', async (params, thunkAPI) => {
   try {
-    const session = await getSession()
 
     const resp = await customFetch.delete(`/apiRegistrasi/srp/destroy`, {
-      headers: {
-        'balis-token': session.user.accessToken
-      },
       params: {
         reg_srp_id: [params.id]
       }
@@ -236,13 +208,7 @@ export const deleteRegSumber = createAsyncThunk('validasiData/deleteRegSumber', 
 export const insertDocSumber = createAsyncThunk('validasiData/insertDocSumber', async (dataform, thunkAPI) => {
   let url = `/apiRegistrasi/srp/doc`
 
-  const session = await getSession()
-
-  let config = {
-    headers: {
-      'balis-token': session.user.accessToken
-    }
-  }
+  let config = {}
 
   try {
     const resp = await customFetch.post(url, dataform, config)
@@ -273,13 +239,7 @@ export const kevalidatorRegSumber = createAsyncThunk(
   async (dataform, thunkAPI) => {
     let url = `/apiRegistrasi/srp/kirim`
 
-    const session = await getSession()
-
-    let config = {
-      headers: {
-        'balis-token': session.user.accessToken
-      }
-    }
+    let config = {}
 
     try {
       const resp = await customFetch.post(url, dataform, config)
@@ -310,15 +270,10 @@ export const kirimOtorisatorSrp = createAsyncThunk(
   'validasiData/kirimOtorisatorSrp',
   async ({ id, dataform }, thunkAPI) => {
     try {
-      const session = await getSession()
 
       let url = `/apiRegistrasi/srp/kirimOtorisator/${id}`
 
-      let config = {
-        headers: {
-          'balis-token': session.user.accessToken
-        }
-      }
+      let config = {}
       const resp = await customFetch.put(url, dataform, config)
 
       return resp.data
@@ -336,15 +291,10 @@ export const kirimOtorisatorSrp = createAsyncThunk(
 
 export const kembalikanSrp = createAsyncThunk('validasiData/kembalikanSrp', async ({ id, dataform }, thunkAPI) => {
   try {
-    const session = await getSession()
 
     let url = `/apiRegistrasi/srp/kembalikan/${id}`
 
-    let config = {
-      headers: {
-        'balis-token': session.user.accessToken
-      }
-    }
+    let config = {}
     const resp = await customFetch.put(url, dataform, config)
 
     return resp.data
@@ -361,15 +311,10 @@ export const kembalikanSrp = createAsyncThunk('validasiData/kembalikanSrp', asyn
 
 export const tolakSrp = createAsyncThunk('validasiData/tolakSrp', async ({ id, dataform }, thunkAPI) => {
   try {
-    const session = await getSession()
 
     let url = `/apiRegistrasi/srp/ditolak/${id}`
 
-    let config = {
-      headers: {
-        'balis-token': session.user.accessToken
-      }
-    }
+    let config = {}
     const resp = await customFetch.put(url, dataform, config)
 
     return resp.data
@@ -386,15 +331,10 @@ export const tolakSrp = createAsyncThunk('validasiData/tolakSrp', async ({ id, d
 
 export const selesaiSrp = createAsyncThunk('validasiData/selesaiSrp', async ({ id, dataform }, thunkAPI) => {
   try {
-    const session = await getSession()
 
     let url = `/apiRegistrasi/srp/selesai/${id}`
 
-    let config = {
-      headers: {
-        'balis-token': session.user.accessToken
-      }
-    }
+    let config = {}
     const resp = await customFetch.put(url, dataform, config)
 
     if (resp.data.status === 200) {
@@ -419,12 +359,8 @@ export const selesaiSrp = createAsyncThunk('validasiData/selesaiSrp', async ({ i
 
 export const dokumenRegSumber = createAsyncThunk('validasiData/dokumenRegSumber', async (reg_srp_id, thunkAPI) => {
   let url = `/apiRegistrasi/srp/doc`
-  const session = await getSession()
 
   let config = {
-    headers: {
-      'balis-token': session.user.accessToken
-    },
     params: {
       reg_srp_id: reg_srp_id,
       jenis_dokumen_id: thunkAPI.getState().validasiData.jenis_dokumen_id
@@ -456,14 +392,9 @@ export const validasiSrpSimpan = createAsyncThunk(
   'validasiData/validasiSrpSimpan',
   async ({ id, dataform }, thunkAPI) => {
     try {
-      const session = await getSession()
       let url = `/apiRegistrasi/srp/simpan/${id}`
 
-      let config = {
-        headers: {
-          'balis-token': session.user.accessToken
-        }
-      }
+      let config = {}
       const resp = await customFetch.put(url, dataform, config)
 
       return resp.data
@@ -482,12 +413,7 @@ export const validasiSrpSimpan = createAsyncThunk(
 export const getListMasterSrp = createAsyncThunk('validasiData/getListMasterSrp', async (_, thunkAPI) => {
   let url = `/apiRegistrasi/srp/list`
 
-  const session = await getSession()
-
   let config = {
-    headers: {
-      'balis-token': session?.user?.accessToken
-    },
     params: {
       limit: thunkAPI.getState().validasiData.limit,
       jenis_sumber_id: thunkAPI.getState().validasiData.jenis_sumber_id,
@@ -526,17 +452,12 @@ export const getListMasterSrp = createAsyncThunk('validasiData/getListMasterSrp'
 
 export const dispoManualSrp = createAsyncThunk('validasiData/dispoManualSrp', async ({ id, dataforms }, thunkAPI) => {
   try {
-    const session = await getSession()
 
     console.log(dataforms)
 
     let url = `/apiRegistrasi/srp/dispoManual/${id}`
 
-    let config = {
-      headers: {
-        'balis-token': session.user.accessToken
-      }
-    }
+    let config = {}
     const resp = await customFetch.put(url, dataforms, config)
 
     return resp.data
@@ -553,12 +474,8 @@ export const dispoManualSrp = createAsyncThunk('validasiData/dispoManualSrp', as
 
 export const getSensusSrp = createAsyncThunk('validasiData/getSensusSrp', async (_, thunkAPI) => {
   let url = `/api/validasi/sumber`
-  const session = await getSession()
 
   let config = {
-    headers: {
-      'balis-token': session?.user?.accessToken
-    },
     params: {
       page: thunkAPI.getState().validasiData.current_page,
       limit: thunkAPI.getState().validasiData.per_page,
@@ -602,13 +519,7 @@ export const getSensusSrp = createAsyncThunk('validasiData/getSensusSrp', async 
 export const getSensusSrpDetail = createAsyncThunk('validasiData/getSensusSrpDetail', async (id, thunkAPI) => {
   let url = `/api/validasi/sumber/${id}`
 
-  const session = await getSession()
-
-  let config = {
-    headers: {
-      'balis-token': session.user.accessToken
-    }
-  }
+  let config = {}
 
   try {
     const resp = await customFetch.get(url, config)
@@ -635,13 +546,7 @@ export const updateSumber = createAsyncThunk('validasiData/updateSumber', async 
   try {
     let url = `/api/validasi/sumber/${id}`
 
-    const session = await getSession()
-
-    let config = {
-      headers: {
-        'balis-token': session.user.accessToken
-      }
-    }
+    let config = {}
 
     const resp = await customFetch.put(url, dataforms, config)
 
@@ -668,17 +573,12 @@ export const updateSumber = createAsyncThunk('validasiData/updateSumber', async 
 
 export const ubahStatusSrp = createAsyncThunk('validasiData/ubahStatusSrp', async ({ id, dataform }, thunkAPI) => {
   try {
-    const session = await getSession()
 
     let url = `/api/validasi/sumber/ubahStatusFas/${id}`
 
     console.log(dataform)
 
-    let config = {
-      headers: {
-        'balis-token': session.user.accessToken
-      }
-    }
+    let config = {}
     const resp = await customFetch.put(url, dataform, config)
 
     if (resp.data.status === 200) {
@@ -705,14 +605,9 @@ export const validasiSensusSimpan = createAsyncThunk(
   'validasiData/validasiSensusSimpan',
   async ({ id, dataform }, thunkAPI) => {
     try {
-      const session = await getSession()
       let url = `/api/validasi/sumber/simpan/${id}`
 
-      let config = {
-        headers: {
-          'balis-token': session.user.accessToken
-        }
-      }
+      let config = {}
       const resp = await customFetch.put(url, dataform, config)
 
       return resp.data
@@ -730,15 +625,10 @@ export const validasiSensusSimpan = createAsyncThunk(
 
 export const simpanInstansi = createAsyncThunk('validasiData/simpanInstansi', async (dataform, thunkAPI) => {
   try {
-    const session = await getSession()
 
     const url = `/api/validasi/sumber/fasSumber`
 
-    const config = {
-      headers: {
-        'balis-token': session?.user?.accessToken
-      }
-    }
+    let config = {}
 
     const resp = await customFetch.post(url, dataform, config)
 
@@ -756,13 +646,10 @@ export const simpanInstansi = createAsyncThunk('validasiData/simpanInstansi', as
 
 export const uploadSrpDok = createAsyncThunk('validasiData/uploadSrpDok', async (dataform, thunkAPI) => {
   console.log('upload')
-
-  const session = await getSession()
   let url = `/api/validasi/sumber/doc`
 
   let config = {
     headers: {
-      'balis-token': session.user.accessToken,
       'Content-Type': 'multipart/form-data'
     }
   }
@@ -784,12 +671,8 @@ export const uploadSrpDok = createAsyncThunk('validasiData/uploadSrpDok', async 
 
 export const deleteSrpDok = createAsyncThunk('validasiData/deleteSrpDok', async (params, thunkAPI) => {
   try {
-    const session = await getSession()
 
     const resp = await customFetch.delete(`/api/validasi/sumber/deleteDoc/${params.id}`, {
-      headers: {
-        'balis-token': session.user.accessToken
-      },
       params: {
         reg_srp_id: [params.id]
       }

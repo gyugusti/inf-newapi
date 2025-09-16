@@ -1,8 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { toast } from 'react-toastify'
 
-import { getSession } from 'next-auth/react'
-
 import { handleLogout } from '@/redux-store/auth'
 import customFetch from '@/utils/axios'
 
@@ -35,12 +33,8 @@ const initialState = {
 
 export const getDataJadwal = createAsyncThunk('dataInspeksi/getDataJadwal', async (_, thunkAPI) => {
   let url = `/api/data/jadwal`
-  const session = await getSession()
 
   let config = {
-    headers: {
-      'balis-token': session.user.accessToken
-    },
     params: {
       page: `${thunkAPI.getState().dataInspeksi.current_page}`,
       limit: `${thunkAPI.getState().dataInspeksi.per_page}`,
@@ -74,12 +68,8 @@ export const getDataJadwal = createAsyncThunk('dataInspeksi/getDataJadwal', asyn
 
 export const getJadwalProp = createAsyncThunk('dataInspeksi/getJadwalProp', async (_, thunkAPI) => {
   let url = `/api/data/jadwalProp`
-  const session = await getSession()
 
   let config = {
-    headers: {
-      'balis-token': session.user.accessToken
-    },
     params: {
       page: `${thunkAPI.getState().dataInspeksi.current_page}`,
       limit: `${thunkAPI.getState().dataInspeksi.per_page}`
@@ -109,12 +99,8 @@ export const getJadwalProp = createAsyncThunk('dataInspeksi/getJadwalProp', asyn
 
 export const getjadwalKab = createAsyncThunk('dataInspeksi/getjadwalKab', async (_, thunkAPI) => {
   let url = `/api/data/getjadwalKab`
-  const session = await getSession()
 
   let config = {
-    headers: {
-      'balis-token': session.user.accessToken
-    },
     params: {
       page: `${thunkAPI.getState().dataInspeksi.current_page}`,
       limit: `${thunkAPI.getState().dataInspeksi.per_page}`
@@ -144,13 +130,8 @@ export const getjadwalKab = createAsyncThunk('dataInspeksi/getjadwalKab', async 
 
 export const getBebanKerja = createAsyncThunk('dataInspeksi/getBebanKerja', async (_, thunkAPI) => {
   let url = `/api/data/inspektur/tahun`
-  const session = await getSession()
 
-  let config = {
-    headers: {
-      'balis-token': session.user.accessToken
-    }
-  }
+  let config = {}
 
   try {
     const resp = await customFetch.get(url, config)
@@ -175,12 +156,8 @@ export const getBebanKerja = createAsyncThunk('dataInspeksi/getBebanKerja', asyn
 
 export const getInspekturDet = createAsyncThunk('dataInspeksi/getInspekturDet', async (_, thunkAPI) => {
   let url = `/api/data/inspektur/detail`
-  const session = await getSession()
 
   let config = {
-    headers: {
-      'balis-token': session.user.accessToken
-    },
     params: {
       page: `${thunkAPI.getState().dataInspeksi.current_page}`,
       limit: `${thunkAPI.getState().dataInspeksi.per_page}`
@@ -210,12 +187,8 @@ export const getInspekturDet = createAsyncThunk('dataInspeksi/getInspekturDet', 
 
 export const getInspekturTahun = createAsyncThunk('dataInspeksi/getInspekturTahun', async (_, thunkAPI) => {
   let url = `/api/data/inspektur/tahun/${tahun}`
-  const session = await getSession()
 
   let config = {
-    headers: {
-      'balis-token': session.user.accessToken
-    },
     params: {
       page: `${thunkAPI.getState().dataInspeksi.current_page}`,
       limit: `${thunkAPI.getState().dataInspeksi.per_page}`
@@ -245,12 +218,8 @@ export const getInspekturTahun = createAsyncThunk('dataInspeksi/getInspekturTahu
 
 export const getDataPengawasan = createAsyncThunk('dataInspeksi/getDataPengawasan', async (_, thunkAPI) => {
   let url = `/api/data/pengawasan`
-  const session = await getSession()
 
   let config = {
-    headers: {
-      'balis-token': session.user.accessToken
-    },
     params: {
       page: `${thunkAPI.getState().dataInspeksi.current_page}`,
       limit: `${thunkAPI.getState().dataInspeksi.per_page}`,
@@ -282,12 +251,8 @@ export const getDataPengawasan = createAsyncThunk('dataInspeksi/getDataPengawasa
 
 export const getDataFasilitas = createAsyncThunk('dataInspeksi/getDataFasilitas', async (_, thunkAPI) => {
   let url = `/api/data/fasilitas`
-  const session = await getSession()
 
   let config = {
-    headers: {
-      'balis-token': session?.user?.accessToken
-    },
     params: {
       page: thunkAPI.getState().dataInspeksi.current_page,
       limit: thunkAPI.getState().dataInspeksi.per_page,
@@ -317,12 +282,8 @@ export const getDataFasilitas = createAsyncThunk('dataInspeksi/getDataFasilitas'
 
 export const getInspekturThnDet = createAsyncThunk('dataInspeksi/getInspekturThnDet', async (id, thunkAPI) => {
   let url = `/api/data/inspektur/tahun/${id}`
-  const session = await getSession()
 
   let config = {
-    headers: {
-      'balis-token': session.user.accessToken
-    },
     params: {
       page: `${thunkAPI.getState().dataInspeksi.current_page}`,
       limit: `${thunkAPI.getState().dataInspeksi.per_page}`

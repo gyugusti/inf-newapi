@@ -1,8 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { toast } from 'react-toastify'
 
-import { getSession } from 'next-auth/react'
-
 import { handleLogout } from '@/redux-store/auth'
 import customFetch from '@/utils/axios'
 
@@ -40,12 +38,8 @@ const initialState = {
 
 export const getLhiSumber = createAsyncThunk('dataLhi/lhiSumber', async (_, thunkAPI) => {
   let url = `/api/lhiSumber`
-  const session = await getSession()
 
   let config = {
-    headers: {
-      'balis-token': session.user.accessToken
-    },
     params: {
       page: `${thunkAPI.getState().dataLhi.current_pageSrp}`,
       limit: `${thunkAPI.getState().dataLhi.per_page}`,
@@ -77,13 +71,8 @@ export const getLhiSumber = createAsyncThunk('dataLhi/lhiSumber', async (_, thun
 
 export const createLhiSumber = createAsyncThunk('dataLhi/createLhiSumber', async (dataform, thunkAPI) => {
   let url = `/api/lhiSumber`
-  const session = await getSession()
 
-  let config = {
-    headers: {
-      'balis-token': session.user.accessToken
-    }
-  }
+  let config = {}
 
   try {
     const resp = await customFetch.post(url, dataform, config)
@@ -102,14 +91,9 @@ export const createLhiSumber = createAsyncThunk('dataLhi/createLhiSumber', async
 
 export const editLhiSumber = createAsyncThunk('dataLhi/editLhiSumber', async ({ id, dataform }, thunkAPI) => {
   try {
-    const session = await getSession()
     let url = `/api/lhiSumber/${id}`
 
-    let config = {
-      headers: {
-        'balis-token': session.user.accessToken
-      }
-    }
+    let config = {}
 
     const resp = await customFetch.put(url, dataform, config)
 
@@ -131,13 +115,8 @@ export const editLhiSumber = createAsyncThunk('dataLhi/editLhiSumber', async ({ 
 
 export const deleteLhiSumber = createAsyncThunk('dataLhi/deleteLhiSumber', async (params, thunkAPI) => {
   try {
-    const session = await getSession()
 
-    const resp = await customFetch.delete(`/api/lhiSumber/${params.id}`, {
-      headers: {
-        'balis-token': session.user.accessToken
-      }
-    })
+    const resp = await customFetch.delete(`/api/lhiSumber/${params.id}`)
 
     if (resp.data.status === 200) {
       return resp.data
@@ -157,14 +136,10 @@ export const deleteLhiSumber = createAsyncThunk('dataLhi/deleteLhiSumber', async
 
 export const getLhiPekerja = createAsyncThunk('dataLhi/getLhiPekerja', async (searchTerm = '', thunkAPI) => {
   let url = `/api/lhiPekerja`
-  const session = await getSession()
 
   console.log(searchTerm)
 
   let config = {
-    headers: {
-      'balis-token': session.user.accessToken
-    },
     params: {
       page: `${thunkAPI.getState().dataLhi.current_page}`,
       limit: `${thunkAPI.getState().dataLhi.per_page}`,
@@ -196,13 +171,8 @@ export const getLhiPekerja = createAsyncThunk('dataLhi/getLhiPekerja', async (se
 
 export const createLhiPekerja = createAsyncThunk('dataLhi/createLhiPekerja', async (dataform, thunkAPI) => {
   let url = `/api/lhiPekerja`
-  const session = await getSession()
 
-  let config = {
-    headers: {
-      'balis-token': session.user.accessToken
-    }
-  }
+  let config = {}
 
   try {
     const resp = await customFetch.post(url, dataform, config)
@@ -221,14 +191,9 @@ export const createLhiPekerja = createAsyncThunk('dataLhi/createLhiPekerja', asy
 
 export const editLhiPekerja = createAsyncThunk('dataLhi/editLhiPekerja', async ({ id, dataform }, thunkAPI) => {
   try {
-    const session = await getSession()
     let url = `/api/lhiPekerja/${id}`
 
-    let config = {
-      headers: {
-        'balis-token': session.user.accessToken
-      }
-    }
+    let config = {}
 
     const resp = await customFetch.put(url, dataform, config)
 
@@ -246,13 +211,8 @@ export const editLhiPekerja = createAsyncThunk('dataLhi/editLhiPekerja', async (
 
 export const deleteLhiPekerja = createAsyncThunk('dataLhi/deleteLhiPekerja', async (params, thunkAPI) => {
   try {
-    const session = await getSession()
 
-    const resp = await customFetch.delete(`/api/lhiPekerja/${params.id}`, {
-      headers: {
-        'balis-token': session.user.accessToken
-      }
-    })
+    const resp = await customFetch.delete(`/api/lhiPekerja/${params.id}`)
 
     if (resp.data.status === 200) {
       return resp.data
@@ -272,13 +232,8 @@ export const deleteLhiPekerja = createAsyncThunk('dataLhi/deleteLhiPekerja', asy
 
 export const lhiPekerjaStore = createAsyncThunk('dataLhi/lhiPekerjaStore', async (dataform, thunkAPI) => {
   let url = `/api/lhiPekerjaStore`
-  const session = await getSession()
 
-  let config = {
-    headers: {
-      'balis-token': session.user.accessToken
-    }
-  }
+  let config = {}
 
   try {
     const resp = await customFetch.post(url, dataform, config)
@@ -297,12 +252,8 @@ export const lhiPekerjaStore = createAsyncThunk('dataLhi/lhiPekerjaStore', async
 
 export const getLhiDosis = createAsyncThunk('dataLhi/getLhiDosis', async (_, thunkAPI) => {
   let url = `/api/lhiDosis`
-  const session = await getSession()
 
   let config = {
-    headers: {
-      'balis-token': session.user.accessToken
-    },
     params: {
       page: `${thunkAPI.getState().dataLhi.current_page}`,
       limit: `${thunkAPI.getState().dataLhi.per_page}`,
@@ -334,13 +285,8 @@ export const getLhiDosis = createAsyncThunk('dataLhi/getLhiDosis', async (_, thu
 
 export const createLhiDosis = createAsyncThunk('dataLhi/createLhiDosis', async (dataform, thunkAPI) => {
   let url = `/api/lhiDosis`
-  const session = await getSession()
 
-  let config = {
-    headers: {
-      'balis-token': session.user.accessToken
-    }
-  }
+  let config = {}
 
   try {
     const resp = await customFetch.post(url, dataform, config)
@@ -360,13 +306,8 @@ export const createLhiDosis = createAsyncThunk('dataLhi/createLhiDosis', async (
 export const editLhiDosis = createAsyncThunk('dataLhi/editLhiDosis', async ({ id, dataform }, thunkAPI) => {
   try {
     let url = `/api/lhiDosis/${id}`
-    const session = await getSession()
 
-    let config = {
-      headers: {
-        'balis-token': session.user.accessToken
-      }
-    }
+    let config = {}
 
     const resp = await customFetch.put(url, dataform, config)
 
@@ -384,13 +325,8 @@ export const editLhiDosis = createAsyncThunk('dataLhi/editLhiDosis', async ({ id
 
 export const deleteLhiDosis = createAsyncThunk('dataLhi/deleteLhiDosis', async (params, thunkAPI) => {
   try {
-    const session = await getSession()
 
-    const resp = await customFetch.delete(`/api/lhiDosis/${params.id}`, {
-      headers: {
-        'balis-token': session.user.accessToken
-      }
-    })
+    const resp = await customFetch.delete(`/api/lhiDosis/${params.id}`)
 
     if (resp.data.status === 200) {
       return resp.data
@@ -410,13 +346,8 @@ export const deleteLhiDosis = createAsyncThunk('dataLhi/deleteLhiDosis', async (
 
 export const lhiDosisStore = createAsyncThunk('dataLhi/lhiDosisStore', async (dataform, thunkAPI) => {
   let url = `/api/lhiDosisStore`
-  const session = await getSession()
 
-  let config = {
-    headers: {
-      'balis-token': session.user.accessToken
-    }
-  }
+  let config = {}
 
   try {
     const resp = await customFetch.post(url, dataform, config)
@@ -435,12 +366,8 @@ export const lhiDosisStore = createAsyncThunk('dataLhi/lhiDosisStore', async (da
 
 export const getLhiKes = createAsyncThunk('dataLhi/getLhiKes', async (_, thunkAPI) => {
   let url = `/api/lhiKes`
-  const session = await getSession()
 
   let config = {
-    headers: {
-      'balis-token': session.user.accessToken
-    },
     params: {
       page: `${thunkAPI.getState().dataLhi.current_page}`,
       limit: `${thunkAPI.getState().dataLhi.per_page}`
@@ -470,13 +397,8 @@ export const getLhiKes = createAsyncThunk('dataLhi/getLhiKes', async (_, thunkAP
 
 export const createLhikes = createAsyncThunk('dataLhi/createLhikes', async (dataform, thunkAPI) => {
   let url = `/api/lhiKes`
-  const session = await getSession()
 
-  let config = {
-    headers: {
-      'balis-token': session.user.accessToken
-    }
-  }
+  let config = {}
 
   try {
     const resp = await customFetch.post(url, dataform, config)
@@ -497,13 +419,8 @@ export const createLhikes = createAsyncThunk('dataLhi/createLhikes', async (data
 
 export const deleteLhiKes = createAsyncThunk('dataLhi/deleteLhiKes', async (params, thunkAPI) => {
   try {
-    const session = await getSession()
 
-    const resp = await customFetch.delete(`/api/lhiKes/${params.id}`, {
-      headers: {
-        'balis-token': session.user.accessToken
-      }
-    })
+    const resp = await customFetch.delete(`/api/lhiKes/${params.id}`)
 
     if (resp.data.status === 200) {
       return resp.data
@@ -525,13 +442,8 @@ export const deleteLhiKes = createAsyncThunk('dataLhi/deleteLhiKes', async (para
 
 export const lhiKesStore = createAsyncThunk('dataLhi/lhiKesStore', async (dataform, thunkAPI) => {
   let url = `/api/lhiKesStore`
-  const session = await getSession()
 
-  let config = {
-    headers: {
-      'balis-token': session.user.accessToken
-    }
-  }
+  let config = {}
 
   try {
     const resp = await customFetch.post(url, dataform, config)
@@ -553,13 +465,8 @@ export const lhiKesStore = createAsyncThunk('dataLhi/lhiKesStore', async (datafo
 export const editLhiKes = createAsyncThunk('dataLhi/editLhiKes', async ({ id, dataform }, thunkAPI) => {
   try {
     let url = `/api/lhiKes/${id}`
-    const session = await getSession()
 
-    let config = {
-      headers: {
-        'balis-token': session.user.accessToken
-      }
-    }
+    let config = {}
 
     const resp = await customFetch.put(url, dataform, config)
 
@@ -579,12 +486,8 @@ export const editLhiKes = createAsyncThunk('dataLhi/editLhiKes', async ({ id, da
 
 export const getLhiDok = createAsyncThunk('dataLhi/lhiDok', async (_, thunkAPI) => {
   let url = `/api/lhiDok`
-  const session = await getSession()
 
   let config = {
-    headers: {
-      'balis-token': session.user.accessToken
-    },
     params: {
       page: `${thunkAPI.getState().dataLhi.current_page}`,
       limit: `${thunkAPI.getState().dataLhi.per_page}`,
@@ -616,13 +519,8 @@ export const getLhiDok = createAsyncThunk('dataLhi/lhiDok', async (_, thunkAPI) 
 
 export const createLhiDok = createAsyncThunk('dataLhi/createLhiDok', async (dataform, thunkAPI) => {
   let url = `/api/lhiDok`
-  const session = await getSession()
 
-  let config = {
-    headers: {
-      'balis-token': session.user.accessToken
-    }
-  }
+  let config = {}
 
   try {
     const resp = await customFetch.post(url, dataform, config)

@@ -56,9 +56,6 @@ export const countRegistrasiSrpval = createAsyncThunk(
     }
 
     let config = {
-      headers: {
-        'balis-token': session?.user?.accessToken
-      },
       params: {
         tahap_reg_id: tahapan,
         validator_id: validator_id
@@ -107,9 +104,6 @@ export const countRegistrasiSrpoto = createAsyncThunk(
     }
 
     let config = {
-      headers: {
-        'balis-token': session?.user?.accessToken
-      },
       params: {
         tahap_reg_id: tahapan,
         koordinator_id: koordinator_id
