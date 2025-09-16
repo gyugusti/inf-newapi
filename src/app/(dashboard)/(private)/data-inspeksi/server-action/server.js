@@ -14,7 +14,7 @@ export async function fetchDataKtun(params = {}) {
 
   const config = {
     headers: {
-      'balis-token': session.user?.accessToken || ''
+      Authorization: `Bearer ${session?.user?.accessToken ?? ''}`
     },
     params: {
       page: params.page || 1,

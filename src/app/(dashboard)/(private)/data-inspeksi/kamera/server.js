@@ -14,7 +14,7 @@ export async function fetchDatakamera(page = 1, per_page = 20) {
 
   const config = {
     headers: {
-      'balis-token': session.user?.accessToken || ''
+      Authorization: `Bearer ${session?.user?.accessToken ?? ''}`
     },
     params: {
       page: page,

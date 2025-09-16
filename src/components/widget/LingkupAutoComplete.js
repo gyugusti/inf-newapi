@@ -38,7 +38,7 @@ const LingkupAutoComplete = ({ value, onChange, flagKegiatan }) => {
         }
 
         const response = await customFetch.get('/apiBalis/kegiatan', {
-          headers: { 'balis-token': session.user.accessToken },
+          headers: { Authorization: `Bearer ${session.user.accessToken}` },
           params
         })
 

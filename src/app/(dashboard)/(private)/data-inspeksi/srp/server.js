@@ -16,7 +16,7 @@ export async function fetchDataSrp(params = {}) {
 
   const config = {
     headers: {
-      'balis-token': session.user?.accessToken || ''
+      Authorization: `Bearer ${session?.user?.accessToken ?? ''}`
     },
     params: {
       page: params.page || 1,

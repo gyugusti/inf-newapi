@@ -28,7 +28,11 @@ const UserInspeksiAutocomplete = ({ value, onChange }) => {
         const session = await getSession()
 
         const res = await customFetch.get('/api/akunInspeksi', {
-          headers: { 'balis-token': session?.user?.accessToken },
+          headers: {
+            Authorization: session?.user?.accessToken
+              ? `Bearer ${session.user.accessToken}`
+              : ''
+          },
           params: {
             page: 1,
             limit: 100,
