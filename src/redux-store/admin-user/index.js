@@ -1,8 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { toast } from 'react-toastify'
 
-import { getSession } from 'next-auth/react'
-
 import { handleLogout } from '@/redux-store/auth'
 import customFetch from '@/utils/axios'
 
@@ -24,12 +22,7 @@ const initialState = {
 export const getAkunInspeksi = createAsyncThunk('akun/getAkunInspeksi', async (accestoken, thunkAPI) => {
   let url = `api/akunInspeksi`
 
-  const session = await getSession()
-
   let config = {
-    headers: {
-      'balis-token': session.user.accessToken
-    },
     params: {
       fas_id: thunkAPI.getState().akun.fas_id,
       page: `${thunkAPI.getState().akun.current_page}`,
@@ -62,16 +55,7 @@ export const getAkunInspeksi = createAsyncThunk('akun/getAkunInspeksi', async (a
 
 export const getUserAkses = createAsyncThunk('akun/getUserAkses', async (id, thunkAPI) => {
   let url = `/api/getUserAkses`
-  const session = await getSession()
-
-  if (!session) {
-    return thunkAPI.rejectWithValue('Session not found')
-  }
-
   let config = {
-    headers: {
-      'balis-token': session.user.accessToken
-    },
     params: {
       user_id: id
     }
@@ -100,17 +84,7 @@ export const getUserAkses = createAsyncThunk('akun/getUserAkses', async (id, thu
 
 export const getRoleInspeksi = createAsyncThunk('akun/getRoleInspeksi', async (_, thunkAPI) => {
   let url = `/api/roleInspeksi`
-  const session = await getSession()
-
-  if (!session) {
-    return thunkAPI.rejectWithValue('Session not found')
-  }
-
-  let config = {
-    headers: {
-      'balis-token': session.user.accessToken
-    }
-  }
+  let config = {}
 
   try {
     const resp = await customFetch.get(url, config)
@@ -136,13 +110,8 @@ export const getRoleInspeksi = createAsyncThunk('akun/getRoleInspeksi', async (_
 export const storeAkses = createAsyncThunk('akun/storeAkses', async ({ id, dataform }, thunkAPI) => {
   try {
     let url = `/api/akunInspeksi/storeAkses/${id}`
-    const session = await getSession()
 
-    let config = {
-      headers: {
-        'balis-token': session.user.accessToken
-      }
-    }
+    let config = {}
     const resp = await customFetch.post(url, dataform, config)
 
     return resp.data
@@ -159,13 +128,8 @@ export const storeAkses = createAsyncThunk('akun/storeAkses', async ({ id, dataf
 
 export const deleteAkses = createAsyncThunk('akun/deleteAkses', async (id, thunkAPI) => {
   try {
-    const session = await getSession()
 
-    const resp = await customFetch.delete(`/api/akunInspeksi/deleteAkses/${id}`, {
-      headers: {
-        'balis-token': session.user.accessToken
-      }
-    })
+    const resp = await customFetch.delete(`/api/akunInspeksi/deleteAkses/${id}`)
 
     if (resp.data.status === 200) {
       return resp.data
@@ -185,13 +149,8 @@ export const deleteAkses = createAsyncThunk('akun/deleteAkses', async (id, thunk
 
 export const createRoleRef = createAsyncThunk('akun/createRoleRef', async (dataform, thunkAPI) => {
   let url = `/api/roleInspeksi`
-  const session = await getSession()
 
-  let config = {
-    headers: {
-      'balis-token': session.user.accessToken
-    }
-  }
+  let config = {}
 
   try {
     const resp = await customFetch.post(url, dataform, config)
@@ -210,13 +169,8 @@ export const createRoleRef = createAsyncThunk('akun/createRoleRef', async (dataf
 
 export const getTokenVirtual = createAsyncThunk('authUser/getTokenVirtual', async (id, thunkAPI) => {
   let url = `/api/loginVirtual/${id}`
-  const session = await getSession()
 
-  let config = {
-    headers: {
-      'balis-token': session.user.accessToken
-    }
-  }
+  let config = {}
 
   try {
     const resp = await customFetch.get(url, config)

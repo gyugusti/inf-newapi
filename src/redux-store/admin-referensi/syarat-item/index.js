@@ -1,8 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { toast } from 'react-toastify'
 
-import { getSession } from 'next-auth/react'
-
 import { handleLogout } from '@/redux-store/auth'
 import customFetch from '@/utils/axios'
 
@@ -22,13 +20,8 @@ const initialState = {
 
 export const getsyaratItem = createAsyncThunk('syaratItem/getsyaratItem', async (_, thunkAPI) => {
   let url = `/api/syaratItem`
-  const session = await getSession()
 
-  let config = {
-    headers: {
-      'balis-token': session.user.accessToken
-    }
-  }
+  let config = {}
 
   try {
     const resp = await customFetch.get(url, config)
@@ -54,13 +47,8 @@ export const getsyaratItem = createAsyncThunk('syaratItem/getsyaratItem', async 
 export const createSyaratItem = createAsyncThunk('syaratItem/createSyaratItem', async (dataform, thunkAPI) => {
   try {
     let url = `/api/syaratItem`
-    const session = await getSession()
 
-    let config = {
-      headers: {
-        'balis-token': session.user.accessToken
-      }
-    }
+    let config = {}
     const resp = await customFetch.post(url, dataform, config)
 
     return resp.data
@@ -78,13 +66,8 @@ export const createSyaratItem = createAsyncThunk('syaratItem/createSyaratItem', 
 export const editsyaratItem = createAsyncThunk('syaratItem/editsyaratItem', async ({ item_id, dataform }, thunkAPI) => {
   try {
     let url = `/api/syaratItem/${item_id}`
-    const session = await getSession()
 
-    let config = {
-      headers: {
-        'balis-token': session.user.accessToken
-      }
-    }
+    let config = {}
     const resp = await customFetch.put(url, dataform, config)
 
     return resp.data
@@ -101,13 +84,8 @@ export const editsyaratItem = createAsyncThunk('syaratItem/editsyaratItem', asyn
 
 export const deletesyaratItem = createAsyncThunk('syaratItem/deletesyaratItem', async (item_id, thunkAPI) => {
   try {
-    const session = await getSession()
 
-    const resp = await customFetch.delete(`/api/syaratItem/${item_id}`, {
-      headers: {
-        'balis-token': session.user.accessToken
-      }
-    })
+    const resp = await customFetch.delete(`/api/syaratItem/${item_id}`)
 
     if (resp.data.status === 200) {
       return resp.data

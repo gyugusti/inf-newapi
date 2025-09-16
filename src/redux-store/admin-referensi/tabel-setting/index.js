@@ -1,8 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { toast } from 'react-toastify'
 
-import { getSession } from 'next-auth/react'
-
 import { handleLogout } from '@/redux-store/auth'
 import customFetch from '@/utils/axios'
 
@@ -21,13 +19,8 @@ const initialState = {
 export const createInkfTabel = createAsyncThunk('tabel/createInkfTabel', async (dataform, thunkAPI) => {
   try {
     let url = `/api/inkfTabel`
-    const session = await getSession()
 
-    let config = {
-      headers: {
-        'balis-token': session.user.accessToken
-      }
-    }
+    let config = {}
     const resp = await customFetch.post(url, dataform, config)
 
     return resp.data
@@ -45,13 +38,8 @@ export const createInkfTabel = createAsyncThunk('tabel/createInkfTabel', async (
 export const editInkfTabel = createAsyncThunk('tabel/editInkfTabel', async ({ tabel_id, dataform }, thunkAPI) => {
   try {
     let url = `/api/inkfTabel/${tabel_id}`
-    const session = await getSession()
 
-    let config = {
-      headers: {
-        'balis-token': session.user.accessToken
-      }
-    }
+    let config = {}
     const resp = await customFetch.put(url, dataform, config)
 
     return resp.data
@@ -68,13 +56,8 @@ export const editInkfTabel = createAsyncThunk('tabel/editInkfTabel', async ({ ta
 
 export const deleteInkfTabel = createAsyncThunk('tabel/deleteInkfTabel', async (tabel_id, thunkAPI) => {
   try {
-    const session = await getSession()
 
-    const resp = await customFetch.delete(`/api/inkfTabel/${tabel_id}`, {
-      headers: {
-        'balis-token': session.user.accessToken
-      }
-    })
+    const resp = await customFetch.delete(`/api/inkfTabel/${tabel_id}`)
 
     if (resp.data.status === 200) {
       return resp.data
@@ -95,13 +78,8 @@ export const deleteInkfTabel = createAsyncThunk('tabel/deleteInkfTabel', async (
 export const createLfkLib = createAsyncThunk('tabel/createLfkLib', async (dataform, thunkAPI) => {
   try {
     let url = `/api/lfkLib`
-    const session = await getSession()
 
-    let config = {
-      headers: {
-        'balis-token': session.user.accessToken
-      }
-    }
+    let config = {}
     const resp = await customFetch.post(url, dataform, config)
 
     return resp.data
@@ -119,13 +97,8 @@ export const createLfkLib = createAsyncThunk('tabel/createLfkLib', async (datafo
 export const editLfkLib = createAsyncThunk('tabel/editLfkLib', async ({ lkf_lib_id, dataform }, thunkAPI) => {
   try {
     let url = `/api/lfkLib/${lkf_lib_id}`
-    const session = await getSession()
 
-    let config = {
-      headers: {
-        'balis-token': session.user.accessToken
-      }
-    }
+    let config = {}
     const resp = await customFetch.put(url, dataform, config)
 
     return resp.data
@@ -142,13 +115,8 @@ export const editLfkLib = createAsyncThunk('tabel/editLfkLib', async ({ lkf_lib_
 
 export const deleteLfkLib = createAsyncThunk('tabel/deleteLfkLib', async (lkf_lib_id, thunkAPI) => {
   try {
-    const session = await getSession()
 
-    const resp = await customFetch.delete(`/api/lfkLib/${lkf_lib_id}`, {
-      headers: {
-        'balis-token': session.user.accessToken
-      }
-    })
+    const resp = await customFetch.delete(`/api/lfkLib/${lkf_lib_id}`)
 
     if (resp.data.status === 200) {
       return resp.data
@@ -168,13 +136,8 @@ export const deleteLfkLib = createAsyncThunk('tabel/deleteLfkLib', async (lkf_li
 
 export const getJenisTabel = createAsyncThunk('tabel/getJenisTabel', async thunkAPI => {
   let url = `/api/lkfJenisTabel`
-  const session = await getSession()
 
-  let config = {
-    headers: {
-      'balis-token': session.user.accessToken
-    }
-  }
+  let config = {}
 
   try {
     const resp = await customFetch.get(url, config)
@@ -199,12 +162,8 @@ export const getJenisTabel = createAsyncThunk('tabel/getJenisTabel', async thunk
 
 export const getTabelKel = createAsyncThunk('tabel/getTabelKel', async (kelompok_id, thunkAPI) => {
   let url = `/api/tabelSetting`
-  const session = await getSession()
 
   let config = {
-    headers: {
-      'balis-token': session.user.accessToken
-    },
     params: {
       kelompok_id: `${kelompok_id}`
     }
@@ -231,13 +190,8 @@ export const getTabelKel = createAsyncThunk('tabel/getTabelKel', async (kelompok
 
 export const createTabel = createAsyncThunk('tabel/createTabel', async (dataform, thunkAPI) => {
   let url = `/api/tabelSetting`
-  const session = await getSession()
 
-  let config = {
-    headers: {
-      'balis-token': session.user.accessToken
-    }
-  }
+  let config = {}
 
   try {
     const resp = await customFetch.post(url, dataform, config)
@@ -262,12 +216,8 @@ export const createTabel = createAsyncThunk('tabel/createTabel', async (dataform
 
 export const getStruktur = createAsyncThunk('tabel/getStruktur', async (tabel_id, thunkAPI) => {
   let url = `/api/strukturTabel`
-  const session = await getSession()
 
   let config = {
-    headers: {
-      'balis-token': session.user.accessToken
-    },
     params: {
       tabel_id: `${tabel_id}`
     }
@@ -295,13 +245,8 @@ export const getStruktur = createAsyncThunk('tabel/getStruktur', async (tabel_id
 export const createStruktur = createAsyncThunk('tabel/createStruktur', async (dataform, thunkAPI) => {
   try {
     let url = `/api/strukturTabel`
-    const session = await getSession()
 
-    let config = {
-      headers: {
-        'balis-token': session.user.accessToken
-      }
-    }
+    let config = {}
     const resp = await customFetch.post(url, dataform, config)
 
     return resp.data
@@ -319,13 +264,8 @@ export const createStruktur = createAsyncThunk('tabel/createStruktur', async (da
 export const editStruktur = createAsyncThunk('tabel/editStruktur', async ({ id, dataform }, thunkAPI) => {
   try {
     let url = `/api/strukturTabel/${id}`
-    const session = await getSession()
 
-    let config = {
-      headers: {
-        'balis-token': session.user.accessToken
-      }
-    }
+    let config = {}
 
     const resp = await customFetch.put(url, dataform, config)
 
@@ -343,12 +283,8 @@ export const editStruktur = createAsyncThunk('tabel/editStruktur', async ({ id, 
 
 export const deleteStruktur = createAsyncThunk('tabel/deleteStruktur', async (data, thunkAPI) => {
   try {
-    const session = await getSession()
 
     const resp = await customFetch.delete(`/api/strukturTabel/${data.id}`, {
-      headers: {
-        'balis-token': session.user.accessToken
-      },
       params: {
         tabel: `${data.tabel}`
       }
@@ -372,13 +308,8 @@ export const deleteStruktur = createAsyncThunk('tabel/deleteStruktur', async (da
 
 export const getTabelHeader = createAsyncThunk('tabel/getTabelHeader', async (tabel_id, thunkAPI) => {
   let url = `/api/getTabelHeader/${tabel_id}`
-  const session = await getSession()
 
-  let config = {
-    headers: {
-      'balis-token': session.user.accessToken
-    }
-  }
+  let config = {}
 
   try {
     const resp = await customFetch.get(url, config)
@@ -401,13 +332,8 @@ export const getTabelHeader = createAsyncThunk('tabel/getTabelHeader', async (ta
 
 export const getTipeKolom = createAsyncThunk('tabel/getTipeKolom', async (_, thunkAPI) => {
   let url = `/api/getTipeKolom`
-  const session = await getSession()
 
-  let config = {
-    headers: {
-      'balis-token': session.user.accessToken
-    }
-  }
+  let config = {}
 
   try {
     const resp = await customFetch.get(url, config)

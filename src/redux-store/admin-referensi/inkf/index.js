@@ -1,8 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { toast } from 'react-toastify'
 
-import { getSession } from 'next-auth/react'
-
 import { handleLogout } from '@/redux-store/auth'
 import customFetch from '@/utils/axios'
 
@@ -24,12 +22,7 @@ const initialState = {
 
 export const getInkf = createAsyncThunk('inkf/getInkf', async (_, thunkAPI) => {
   let url = `/api/inkf`
-  const session = await getSession()
-  let config = {
-    headers: {
-      'balis-token': session.user.accessToken
-    }
-  }
+  let config = {}
 
   try {
     const resp = await customFetch.get(url, config)
@@ -54,11 +47,7 @@ export const getInkf = createAsyncThunk('inkf/getInkf', async (_, thunkAPI) => {
 
 export const getDetailInkf = createAsyncThunk('ikk/getDetailInkf', async (_, thunkAPI) => {
   let url = `/api/inkf`
-  const session = await getSession()
   let config = {
-    headers: {
-      'balis-token': session.user.accessToken
-    },
     params: {
       inkf_id: `${thunkAPI.getState().inkf.inkf_id}`
     }
@@ -88,12 +77,7 @@ export const getDetailInkf = createAsyncThunk('ikk/getDetailInkf', async (_, thu
 export const createInkf = createAsyncThunk('inkf/createInkf', async (dataform, thunkAPI) => {
   try {
     let url = `/api/inkf`
-    const session = await getSession()
-    let config = {
-      headers: {
-        'balis-token': session.user.accessToken
-      }
-    }
+    let config = {}
     const resp = await customFetch.post(url, dataform, config)
 
     return resp.data
@@ -111,12 +95,7 @@ export const createInkf = createAsyncThunk('inkf/createInkf', async (dataform, t
 export const editInkf = createAsyncThunk('inkf/editInkf', async ({ inkf_id, dataform }, thunkAPI) => {
   try {
     let url = `/api/inkf/${inkf_id}`
-    const session = await getSession()
-    let config = {
-      headers: {
-        'balis-token': session.user.accessToken
-      }
-    }
+    let config = {}
     const resp = await customFetch.put(url, dataform, config)
 
     return resp.data
@@ -133,13 +112,8 @@ export const editInkf = createAsyncThunk('inkf/editInkf', async ({ inkf_id, data
 
 export const deleteInkf = createAsyncThunk('inkf/deleteInkf', async (inkf_id, thunkAPI) => {
   try {
-    const session = await getSession()
 
-    const resp = await customFetch.delete(`/api/inkf/${inkf_id}`, {
-      headers: {
-        'balis-token': session.user.accessToken
-      }
-    })
+    const resp = await customFetch.delete(`/api/inkf/${inkf_id}`)
 
     if (resp.data.status === 200) {
       return resp.data

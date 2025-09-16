@@ -1,8 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { toast } from 'react-toastify'
 
-import { getSession } from 'next-auth/react'
-
 import { handleLogout } from '@/redux-store/auth'
 import customFetch from '@/utils/axios'
 
@@ -28,12 +26,8 @@ const initialState = {
 
 export const getJadwalFas = createAsyncThunk('jadwalFas/getJadwalFas', async (_, thunkAPI) => {
   let url = `/api/jadwalFas`
-  const session = await getSession()
 
   let config = {
-    headers: {
-      'balis-token': session.user.accessToken
-    },
     params: {
       page: `${thunkAPI.getState().jadwalFas.current_page}`,
       limit: `${thunkAPI.getState().jadwalFas.per_page}`,
@@ -67,13 +61,8 @@ export const getJadwalFas = createAsyncThunk('jadwalFas/getJadwalFas', async (_,
 
 export const jadwalKonfirm = createAsyncThunk('jadwalFas/jadwalKonfirm', async (dataform, thunkAPI) => {
   let url = `/api/jadwalKonfirm/fas`
-  const session = await getSession()
 
-  let config = {
-    headers: {
-      'balis-token': session.user.accessToken
-    }
-  }
+  let config = {}
 
   try {
     const resp = await customFetch.post(url, dataform, config)
@@ -92,13 +81,8 @@ export const jadwalKonfirm = createAsyncThunk('jadwalFas/jadwalKonfirm', async (
 
 export const jadwalKonfirmSimpan = createAsyncThunk('jadwalFas/jadwalKonfirmSimpan', async (dataform, thunkAPI) => {
   let url = `/api/jadwalKonfirm/simpan`
-  const session = await getSession()
 
-  let config = {
-    headers: {
-      'balis-token': session.user.accessToken
-    }
-  }
+  let config = {}
 
   try {
     const resp = await customFetch.post(url, dataform, config)
@@ -117,13 +101,8 @@ export const jadwalKonfirmSimpan = createAsyncThunk('jadwalFas/jadwalKonfirmSimp
 
 export const selesaiJadwalFas = createAsyncThunk('jadwalFas/selesaiJadwalFas', async (id, thunkAPI) => {
   let url = `/api/jadwalKonfirm/selesai/${id}`
-  const session = await getSession()
 
-  let config = {
-    headers: {
-      'balis-token': session.user.accessToken
-    }
-  }
+  let config = {}
 
   try {
     const resp = await customFetch.put(url, id, config)

@@ -9,13 +9,9 @@ const initialState = {
 
 export const postloginVirtual = createAsyncThunk('authUser/postloginVirtual', async ({ token }, thunkAPI) => {
   try {
-    const session = await getSession()
     let url = `/api/cekLoginVirtual/${token}`
 
     let config = {
-      headers: {
-        'balis-token': session.user.accessToken
-      },
       params: {
         akses_modul: 3
       }

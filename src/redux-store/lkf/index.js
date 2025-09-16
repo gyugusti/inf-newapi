@@ -1,8 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { toast } from 'react-toastify'
 
-import { getSession } from 'next-auth/react'
-
 import { STATUS_LKF } from '@/configs/lkfConfig'
 import { handleLogout } from '@/redux-store/auth'
 import customFetch from '@/utils/axios'
@@ -38,12 +36,8 @@ const initialState = {
 
 export const getLkf = createAsyncThunk('jadwal/getLkf', async (_, thunkAPI) => {
   let url = `/api/lkf`
-  const session = await getSession()
 
   let config = {
-    headers: {
-      'balis-token': session.user.accessToken
-    },
     params: {
       page: `${thunkAPI.getState().lkf.current_page}`,
       limit: `${thunkAPI.getState().lkf.per_page}`,
@@ -77,13 +71,8 @@ export const getLkf = createAsyncThunk('jadwal/getLkf', async (_, thunkAPI) => {
 
 export const getShowLkf = createAsyncThunk('lkf/getShowLkf', async (id, thunkAPI) => {
   let url = `/api/lkf/${id}`
-  const session = await getSession()
 
-  let config = {
-    headers: {
-      'balis-token': session.user.accessToken
-    }
-  }
+  let config = {}
 
   try {
     const resp = await customFetch.get(url, config)
@@ -108,13 +97,8 @@ export const getShowLkf = createAsyncThunk('lkf/getShowLkf', async (id, thunkAPI
 
 export const getInkfDetail = createAsyncThunk('lkf/getInkfDetail', async (id, thunkAPI) => {
   let url = `/api/lkfInkfDetail/${id}`
-  const session = await getSession()
 
-  let config = {
-    headers: {
-      'balis-token': session.user.accessToken
-    }
-  }
+  let config = {}
 
   try {
     const resp = await customFetch.get(url, config)
@@ -139,13 +123,8 @@ export const getInkfDetail = createAsyncThunk('lkf/getInkfDetail', async (id, th
 
 export const lkfNilai = createAsyncThunk('lkf/lkfNilai', async (id, thunkAPI) => {
   let url = `/api/lkfNilai/${id}`
-  const session = await getSession()
 
-  let config = {
-    headers: {
-      'balis-token': session.user.accessToken
-    }
-  }
+  let config = {}
 
   try {
     const resp = await customFetch.get(url, config)
@@ -171,13 +150,8 @@ export const lkfNilai = createAsyncThunk('lkf/lkfNilai', async (id, thunkAPI) =>
 export const simpanEva = createAsyncThunk('lkf/simpanEva', async ({ id, dataform }, thunkAPI) => {
   try {
     let url = `/api/lkfSimpanEva/${id}`
-    const session = await getSession()
 
-    let config = {
-      headers: {
-        'balis-token': session.user.accessToken
-      }
-    }
+    let config = {}
 
     const resp = await customFetch.put(url, dataform, config)
 
@@ -196,13 +170,8 @@ export const simpanEva = createAsyncThunk('lkf/simpanEva', async ({ id, dataform
 export const lkfSimpan = createAsyncThunk('lkf/lkfSimpan', async ({ lkf_id, dataform }, thunkAPI) => {
   try {
     let url = `/api/lkfSimpan/${lkf_id}`
-    const session = await getSession()
 
-    let config = {
-      headers: {
-        'balis-token': session.user.accessToken
-      }
-    }
+    let config = {}
     const resp = await customFetch.put(url, dataform, config)
 
     return resp.data
@@ -219,14 +188,9 @@ export const lkfSimpan = createAsyncThunk('lkf/lkfSimpan', async ({ lkf_id, data
 
 export const lkfSelesai = createAsyncThunk('lkf/lkfSelesai', async (lkf_id, thunkAPI) => {
   try {
-    const session = await getSession()
     let url = `/api/lkfSelesai/${lkf_id}`
 
-    let config = {
-      headers: {
-        'balis-token': session.user.accessToken
-      }
-    }
+    let config = {}
     const resp = await customFetch.put(url, lkf_id, config)
 
     return resp.data
@@ -243,14 +207,9 @@ export const lkfSelesai = createAsyncThunk('lkf/lkfSelesai', async (lkf_id, thun
 
 export const lkfKembalikan = createAsyncThunk('lkf/lkfKembalikan', async (lkf_id, thunkAPI) => {
   try {
-    const session = await getSession()
     let url = `/api/lkfKembalikan/${lkf_id}`
 
-    let config = {
-      headers: {
-        'balis-token': session.user.accessToken
-      }
-    }
+    let config = {}
     const resp = await customFetch.put(url, lkf_id, config)
 
     return resp.data
@@ -266,14 +225,9 @@ export const lkfKembalikan = createAsyncThunk('lkf/lkfKembalikan', async (lkf_id
 })
 
 export const lkfFormTabel = createAsyncThunk('lkf/lkfFormTabel', async (dataform, thunkAPI) => {
-  const session = await getSession()
   let url = `/api/lkfFormTabel`
 
-  let config = {
-    headers: {
-      'balis-token': session.user.accessToken
-    }
-  }
+  let config = {}
 
   try {
     const resp = await customFetch.post(url, dataform, config)
@@ -292,14 +246,9 @@ export const lkfFormTabel = createAsyncThunk('lkf/lkfFormTabel', async (dataform
 
 export const lkfFormTabeledit = createAsyncThunk('lkf/lkfFormTabeledit', async ({ id, dataform }, thunkAPI) => {
   try {
-    const session = await getSession()
     let url = `/api/lkfFormTabel/${id}`
 
-    let config = {
-      headers: {
-        'balis-token': session.user.accessToken
-      }
-    }
+    let config = {}
 
     const resp = await customFetch.put(url, dataform, config)
 
@@ -317,12 +266,8 @@ export const lkfFormTabeledit = createAsyncThunk('lkf/lkfFormTabeledit', async (
 
 export const lkfFormTabeldelete = createAsyncThunk('lkf/lkfFormTabeldelete', async (params, thunkAPI) => {
   try {
-    const session = await getSession()
 
     const resp = await customFetch.delete(`/api/lkfFormTabel/${params.id}`, {
-      headers: {
-        'balis-token': session.user.accessToken
-      },
       params: {
         lkf_id: params.lkf_id
       }
@@ -346,14 +291,9 @@ export const lkfFormTabeldelete = createAsyncThunk('lkf/lkfFormTabeldelete', asy
 
 export const lkfKirim = createAsyncThunk('lkf/lkfKirim', async (lkf_id, thunkAPI) => {
   try {
-    const session = await getSession()
     let url = `/api/lkfKirim/${lkf_id}`
 
-    let config = {
-      headers: {
-        'balis-token': session.user.accessToken
-      }
-    }
+    let config = {}
     const resp = await customFetch.put(url, lkf_id, config)
 
     return resp.data

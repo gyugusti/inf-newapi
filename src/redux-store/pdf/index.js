@@ -1,8 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { toast } from 'react-toastify'
 
-import { getSession } from 'next-auth/react'
-
 import { handleLogout } from '@/redux-store/auth'
 import customFetch from '@/utils/axios'
 
@@ -31,14 +29,9 @@ const initialState = {
 }
 
 export const getcetakSpi = createAsyncThunk('cetakPdf/getcetakSpi', async (surat_id, thunkAPI) => {
-  const session = await getSession()
   let url = `/api/pdf/spi/${surat_id}`
 
-  let config = {
-    headers: {
-      'balis-token': session.user.accessToken
-    }
-  }
+  let config = {}
 
   try {
     const resp = await customFetch.get(url, config)
@@ -62,14 +55,9 @@ export const getcetakSpi = createAsyncThunk('cetakPdf/getcetakSpi', async (surat
 })
 
 export const getcetakSbi = createAsyncThunk('cetakPdf/getcetakSbi', async (surat_id, thunkAPI) => {
-  const session = await getSession()
   let url = `/api/pdf/sbi/${surat_id}`
 
-  let config = {
-    headers: {
-      'balis-token': session.user.accessToken
-    }
-  }
+  let config = {}
 
   try {
     const resp = await customFetch.get(url, config)
@@ -93,14 +81,9 @@ export const getcetakSbi = createAsyncThunk('cetakPdf/getcetakSbi', async (surat
 })
 
 export const getcetakKonfirmasiFas = createAsyncThunk('cetakPdf/getcetakKonfirmasiFas', async (surat_id, thunkAPI) => {
-  const session = await getSession()
   let url = `/api/pdf/konfirmasiFas/${surat_id}`
 
-  let config = {
-    headers: {
-      'balis-token': session.user.accessToken
-    }
-  }
+  let config = {}
 
   try {
     const resp = await customFetch.get(url, config)
@@ -126,14 +109,9 @@ export const getcetakKonfirmasiFas = createAsyncThunk('cetakPdf/getcetakKonfirma
 export const getcetakKonfirmasiInsp = createAsyncThunk(
   'cetakPdf/getcetakKonfirmasiInsp',
   async (jadwal_id, thunkAPI) => {
-    const session = await getSession()
     let url = `/api/pdf/konfirmasiInsp/${jadwal_id}`
 
-    let config = {
-      headers: {
-        'balis-token': session.user.accessToken
-      }
-    }
+    let config = {}
 
     try {
       const resp = await customFetch.get(url, config)
@@ -158,14 +136,9 @@ export const getcetakKonfirmasiInsp = createAsyncThunk(
 )
 
 export const getcetakFihi = createAsyncThunk('cetakPdf/getcetakFihi', async (fihi_id, thunkAPI) => {
-  const session = await getSession()
   let url = `/api/pdf/fihi/${fihi_id}`
 
-  let config = {
-    headers: {
-      'balis-token': session.user.accessToken
-    }
-  }
+  let config = {}
 
   try {
     const resp = await customFetch.get(url, config)
@@ -189,14 +162,9 @@ export const getcetakFihi = createAsyncThunk('cetakPdf/getcetakFihi', async (fih
 })
 
 export const getcetakFihiResume = createAsyncThunk('cetakPdf/getcetakFihiResume', async (fihi_id, thunkAPI) => {
-  const session = await getSession()
   let url = `/api/pdf/resumeFihi/${fihi_id}`
 
-  let config = {
-    headers: {
-      'balis-token': session.user.accessToken
-    }
-  }
+  let config = {}
 
   try {
     const resp = await customFetch.get(url, config)
@@ -220,14 +188,9 @@ export const getcetakFihiResume = createAsyncThunk('cetakPdf/getcetakFihiResume'
 })
 
 export const getcetakLkf = createAsyncThunk('cetakPdf/getcetakLkf', async (lkf_id, thunkAPI) => {
-  const session = await getSession()
   let url = `/api/pdf/lkf/${lkf_id}`
 
-  let config = {
-    headers: {
-      'balis-token': session.user.accessToken
-    }
-  }
+  let config = {}
 
   try {
     const resp = await customFetch.get(url, config)
@@ -251,14 +214,9 @@ export const getcetakLkf = createAsyncThunk('cetakPdf/getcetakLkf', async (lkf_i
 })
 
 export const getcetakJadwal = createAsyncThunk('cetakPdf/getcetakJadwal', async (jadwal_id, thunkAPI) => {
-  const session = await getSession()
   let url = `/api/pdf/jadwal/${jadwal_id}`
 
-  let config = {
-    headers: {
-      'balis-token': session.user.accessToken
-    }
-  }
+  let config = {}
 
   try {
     const resp = await customFetch.get(url, config)
@@ -282,14 +240,9 @@ export const getcetakJadwal = createAsyncThunk('cetakPdf/getcetakJadwal', async 
 })
 
 export const getcetakLhi = createAsyncThunk('cetakPdf/getcetakLhi', async (lhi_id, thunkAPI) => {
-  const session = await getSession()
   let url = `/api/pdf/lhi/${lhi_id}`
 
-  let config = {
-    headers: {
-      'balis-token': session.user.accessToken
-    }
-  }
+  let config = {}
 
   try {
     const resp = await customFetch.get(url, config)
@@ -313,14 +266,9 @@ export const getcetakLhi = createAsyncThunk('cetakPdf/getcetakLhi', async (lhi_i
 })
 
 export const getDraftSphi = createAsyncThunk('cetakPdf/getDraftSphi', async (lhi_id, thunkAPI) => {
-  const session = await getSession()
   let url = `/api/pdf/draftSphi/${lhi_id}`
 
-  let config = {
-    headers: {
-      'balis-token': session.user.accessToken
-    }
-  }
+  let config = {}
 
   try {
     const resp = await customFetch.get(url, config)
@@ -344,14 +292,10 @@ export const getDraftSphi = createAsyncThunk('cetakPdf/getDraftSphi', async (lhi
 })
 
 export const downloadDokfile = createAsyncThunk('cetakPdf/downloadDokfile', async (id, thunkAPI) => {
-  const session = await getSession()
 
   const url = `/api/downloadDokFile/${id}`
 
   const config = {
-    headers: {
-      'balis-token': session.user.accessToken
-    },
     responseType: 'blob' // Set response type to blob to handle binary data
   }
 
@@ -378,14 +322,10 @@ export const downloadDokfile = createAsyncThunk('cetakPdf/downloadDokfile', asyn
 })
 
 export const downloadKtun = createAsyncThunk('cetakPdf/downloadKtun', async (id, thunkAPI) => {
-  const session = await getSession()
 
   const url = `/api/downloadKtun/${id}`
 
   const config = {
-    headers: {
-      'balis-token': session.user.accessToken
-    },
     responseType: 'blob' // Set response type to blob to handle binary data
   }
 

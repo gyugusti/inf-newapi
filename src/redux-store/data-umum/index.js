@@ -1,8 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { toast } from 'react-toastify'
 
-import { getSession } from 'next-auth/react'
-
 import { handleLogout } from '@/redux-store/auth'
 import customFetch from '@/utils/axios'
 
@@ -25,24 +23,18 @@ const initialState = {
 
 export const getDataJadwal = createAsyncThunk('dataUmum/getDataJadwal', async (_, thunkAPI) => {
   let url = `/api/data/jadwal`
-  const session = await getSession()
 
-  let config = {
-    headers: {
-      'balis-token': session.user.accessToken
-    },
-    params: {
-      page: `${thunkAPI.getState().jadwal.current_page}`,
-      limit: `${thunkAPI.getState().jadwal.per_page}`,
-      status_id: thunkAPI.getState().jadwal.status,
-      propinsi_id: thunkAPI.getState().jadwal.propinsi_id,
-      bidang_id: thunkAPI.getState().jadwal.bidang_id,
-      fas_id: thunkAPI.getState().jadwal.fas_id
-    }
+  const params = {
+    page: `${thunkAPI.getState().jadwal.current_page}`,
+    limit: `${thunkAPI.getState().jadwal.per_page}`,
+    status_id: thunkAPI.getState().jadwal.status,
+    propinsi_id: thunkAPI.getState().jadwal.propinsi_id,
+    bidang_id: thunkAPI.getState().jadwal.bidang_id,
+    fas_id: thunkAPI.getState().jadwal.fas_id
   }
 
   try {
-    const resp = await customFetch.get(url, config)
+    const resp = await customFetch.get(url, { params })
 
     if (resp.data.status === 200) {
       return resp.data.response
@@ -64,24 +56,18 @@ export const getDataJadwal = createAsyncThunk('dataUmum/getDataJadwal', async (_
 
 export const getDataPengawasan = createAsyncThunk('dataUmum/getDataPengawasan', async (_, thunkAPI) => {
   let url = `/api/data/pengawasan`
-  const session = await getSession()
 
-  let config = {
-    headers: {
-      'balis-token': session.user.accessToken
-    },
-    params: {
-      page: `${thunkAPI.getState().jadwal.current_page}`,
-      limit: `${thunkAPI.getState().jadwal.per_page}`,
-      status_id: thunkAPI.getState().jadwal.status,
-      propinsi_id: thunkAPI.getState().jadwal.propinsi_id,
-      bidang_id: thunkAPI.getState().jadwal.bidang_id,
-      fas_id: thunkAPI.getState().jadwal.fas_id
-    }
+  const params = {
+    page: `${thunkAPI.getState().jadwal.current_page}`,
+    limit: `${thunkAPI.getState().jadwal.per_page}`,
+    status_id: thunkAPI.getState().jadwal.status,
+    propinsi_id: thunkAPI.getState().jadwal.propinsi_id,
+    bidang_id: thunkAPI.getState().jadwal.bidang_id,
+    fas_id: thunkAPI.getState().jadwal.fas_id
   }
 
   try {
-    const resp = await customFetch.get(url, config)
+    const resp = await customFetch.get(url, { params })
 
     if (resp.data.status === 200) {
       return resp.data.response
@@ -103,24 +89,18 @@ export const getDataPengawasan = createAsyncThunk('dataUmum/getDataPengawasan', 
 
 export const getDataFasilitas = createAsyncThunk('dataUmum/getDataFasilitas', async (_, thunkAPI) => {
   let url = `/api/data/fasilitas`
-  const session = await getSession()
 
-  let config = {
-    headers: {
-      'balis-token': session.user.accessToken
-    },
-    params: {
-      page: `${thunkAPI.getState().jadwal.current_page}`,
-      limit: `${thunkAPI.getState().jadwal.per_page}`,
-      status_id: thunkAPI.getState().jadwal.status,
-      propinsi_id: thunkAPI.getState().jadwal.propinsi_id,
-      bidang_id: thunkAPI.getState().jadwal.bidang_id,
-      fas_id: thunkAPI.getState().jadwal.fas_id
-    }
+  const params = {
+    page: `${thunkAPI.getState().jadwal.current_page}`,
+    limit: `${thunkAPI.getState().jadwal.per_page}`,
+    status_id: thunkAPI.getState().jadwal.status,
+    propinsi_id: thunkAPI.getState().jadwal.propinsi_id,
+    bidang_id: thunkAPI.getState().jadwal.bidang_id,
+    fas_id: thunkAPI.getState().jadwal.fas_id
   }
 
   try {
-    const resp = await customFetch.get(url, config)
+    const resp = await customFetch.get(url, { params })
 
     if (resp.data.status === 200) {
       return resp.data.response
