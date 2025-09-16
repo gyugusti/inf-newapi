@@ -18,6 +18,7 @@ import fihi from './fihi'
 import dataFihi from './fihi/dataFihi'
 import jadwal from './jadwal'
 import jadwalFas from './jadwal-fas'
+import jadwalKoor from './jadwal-koord'
 import lhi from './lhi'
 import dataLhi from './lhi/dataLhi'
 import lkf from './lkf'
@@ -42,6 +43,7 @@ export const store = configureStore({
     ikk,
     tabel,
     jadwal,
+    jadwalKoor,
     jadwalFas,
     akun,
     sbi,
