@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 
 import { useDispatch, useSelector } from 'react-redux'
 import Grid from '@mui/material/Grid2'
@@ -8,24 +8,43 @@ import DialogContent from '@mui/material/DialogContent'
 import DialogActions from '@mui/material/DialogActions'
 import Button from '@mui/material/Button'
 import { useForm, Controller } from 'react-hook-form'
-import { Table, IconButton, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material'
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material'
 
 import { getdetailJadwal, kembaliJadwal } from '@/redux-store/jadwal'
+import { detail as getKoordDetail, returnJadwal as returnKoord } from '@/redux-store/jadwal-koord'
 
 // ** Custom Components
 import CustomTextField from '@/@core/components/mui/TextField'
 
-const ModalKembali = ({ data, openBack, handleClose }) => {
+const ModalKembali = ({ data, openBack, handleClose, view = 'verifikator' }) => {
   const dispatch = useDispatch()
   const jadwal_id = data.jadwal_id
 
-  const { detailJadwal, isLoading, tab } = useSelector(store => store.jadwal)
+  const useKoordinator = view === 'koordinator'
+
+  const { detailJadwal, tab } = useSelector(store => {
+    if (useKoordinator) {
+      return {
+        detailJadwal: store.jadwalKoord.detailJadwal,
+        tab: store.jadwalKoord.tab
+      }
+    }
+
+    return {
+      detailJadwal: store.jadwal.detailJadwal,
+      tab: store.jadwal.tab
+    }
+  })
 
   useEffect(() => {
     if (jadwal_id !== undefined && jadwal_id !== null) {
-      dispatch(getdetailJadwal(jadwal_id))
+      if (useKoordinator) {
+        dispatch(getKoordDetail(jadwal_id))
+      } else {
+        dispatch(getdetailJadwal(jadwal_id))
+      }
     }
-  }, [jadwal_id, dispatch, tab])
+  }, [jadwal_id, dispatch, tab, useKoordinator])
 
   const defaultValues = {
     catatan_koordinator: data.catatan_koordinator ? data.catatan_koordinator : ''
@@ -39,7 +58,11 @@ const ModalKembali = ({ data, openBack, handleClose }) => {
 
   const onSubmit = dataform => {
     if (dataform) {
-      dispatch(kembaliJadwal({ jadwal_id: jadwal_id, dataform }))
+      if (useKoordinator) {
+        dispatch(returnKoord({ id: jadwal_id, dataform }))
+      } else {
+        dispatch(kembaliJadwal({ jadwal_id: jadwal_id, dataform }))
+      }
       handleClose()
     }
   }

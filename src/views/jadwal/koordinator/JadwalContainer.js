@@ -1,21 +1,8 @@
-import React, { Fragment, useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 
 import Link from 'next/link'
 
-import {
-  Table,
-  IconButton,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  MenuItem,
-  Menu,
-  ListItemIcon,
-  ListItemText,
-  Typography
-} from '@mui/material'
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, MenuItem, Menu, Typography } from '@mui/material'
 import ButtonGroup from '@mui/material/ButtonGroup'
 import Button from '@mui/material/Button'
 import { Icon } from '@iconify/react/dist/iconify.js'
@@ -23,17 +10,7 @@ import { useDispatch, useSelector } from 'react-redux'
 
 import Pagination from '@mui/material/Pagination'
 
-import {
-  changePage,
-  clearValues,
-  deleteJadwal,
-  getJadwal,
-  jadwalPelaksanaan,
-  jadwalSelesai,
-  kembaliJadwal,
-  kirimJadwal,
-  setEditJadwal
-} from '@/redux-store/jadwal-koord'
+import { changePage, fetchList, jadwalPelaksanaan, jadwalSelesai, approve, setEditJadwal } from '@/redux-store/jadwal-koord'
 import DialogKonfirmasi from '@/components/widget/DialogKonfirmasi'
 import Loading from '@/components/Loading'
 import ModalKembali from '../action/ModalKembali'
@@ -49,16 +26,14 @@ import {
   JADWAL_SELESAI
 } from '@/configs/jadwalConfig'
 
-const JadwalContainer = prop => {
+const JadwalContainer = () => {
   const dispatch = useDispatch()
 
-  const [showConfirmationDel, setShowConfirmationDel] = useState(false)
-  const [showConfirmationSend, setShowConfirmationSend] = useState(false)
   const [showConfirmationLaksana, setShowConfirmationLaksana] = useState(false)
   const [showConfirmationSelesai, setShowConfirmationSelesai] = useState(false)
 
   const [showConfirmation, setShowConfirmation] = useState(false)
-  const [messageConfirm, setMessageConfirm] = useState(false)
+  const [messageConfirm, setMessageConfirm] = useState('')
   const [openBack, setOpenBack] = useState(false)
   const [openLog, setOpenLog] = useState(false)
   const [openDetail, setOpenDetail] = useState(false)
@@ -89,7 +64,7 @@ const JadwalContainer = prop => {
   const handleModalBackClose = () => setOpenBack(false)
 
   useEffect(() => {
-    dispatch(getJadwal())
+    dispatch(fetchList())
   }, [dispatch, current_page, status, bidang_id, propinsi_id, tab])
 
   if (isLoading || !listJadwal) {
@@ -113,41 +88,27 @@ const JadwalContainer = prop => {
     }
 
     const handleRowOptionsClose = item => {
-      dispatch(
-        setEditJadwal({
-          editJadwalId: item.jadwal_id,
-          ...item
-        })
-      )
+      setAnchorEl(null)
+
+      if (item && item.jadwal_id) {
+        dispatch(
+          setEditJadwal({
+            editJadwalId: item.jadwal_id,
+            ...item
+          })
+        )
+      }
     }
 
-    const handleDelete = () => {
-      dispatch(deleteUser(id))
-      handleRowOptionsClose()
-    }
-
-    const handleEditJadwal = item => {
-      dispatch(clearValues())
-      dispatch(setEditJadwal(item))
-    }
-
-    const handleDeleteClick = jadwalId => {
-      setJadwalId(jadwalId)
-      setShowConfirmationDel(true)
-    }
-
-    const handleKirimClick = jadwalId => {
-      setJadwalId(jadwalId)
-      setShowConfirmationSend(true)
-    }
-
-    const handleConfirmClick = (jadwalId, pesan) => {
+    const handleApproveClick = (jadwalId, pesan) => {
+      setAnchorEl(null)
       setJadwalId(jadwalId)
       setShowConfirmation(true)
       setMessageConfirm(pesan)
     }
 
     const handleClickLog = ({ id, data }) => {
+      setAnchorEl(null)
       setOpenLog(true)
       setDataJadwal(data)
       dispatch(handleLog({ name: 'jadwal_id', value: id }))
@@ -155,17 +116,20 @@ const JadwalContainer = prop => {
     }
 
     const handleClickDetail = ({ id, data }) => {
+      setAnchorEl(null)
       setOpenDetail(true)
       setDataJadwal(data)
     }
 
     const handleLaksanaClick = jadwalId => {
+      setAnchorEl(null)
       setJadwalId(jadwalId)
       setShowConfirmationLaksana(true)
       console.log('klick laksana')
     }
 
     const handleSelesaiClick = jadwalId => {
+      setAnchorEl(null)
       setJadwalId(jadwalId)
       setShowConfirmationSelesai(true)
       console.log('klick selesai')
@@ -185,7 +149,7 @@ const JadwalContainer = prop => {
             keepMounted
             anchorEl={anchorEl}
             open={rowOptionsOpen}
-            onClose={handleRowOptionsClose}
+            onClose={() => handleRowOptionsClose()}
             anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
             transformOrigin={{ vertical: 'top', horizontal: 'right' }}
             PaperProps={{ style: { minWidth: '8rem' } }}
@@ -196,57 +160,36 @@ const JadwalContainer = prop => {
             <MenuItem key='log' onClick={() => handleClickLog({ id: item.jadwal_id, data: item })}>
               <Icon icon='tabler:logs' fontSize={20} /> Log Proses
             </MenuItem>
-            <MenuItem key='update' component={Link} href={`/jadwal/${item.jadwal_id}`}>
+            <MenuItem key='update' component={Link} href={`/jadwal/${item.jadwal_id}`} onClick={() => handleRowOptionsClose(item)}>
               <Icon icon='tabler:eye' fontSize={20} /> Update Data Jadwal
             </MenuItem>
 
-            {isDraftOrPerbaikan && [
-              // <MenuItem key='update' component={Link} href={`/jadwal/${item.jadwal_id}`}>
-              //   <Icon icon='tabler:eye' fontSize={20} /> Update Data Jadwal
-              // </MenuItem>,
-
-              ...(prop.view === 'verifikator'
-                ? [
-                    <MenuItem
-                      key='edit'
-                      onClick={() => handleEditJadwal(item)}
-                      component={Link}
-                      href={{
-                        pathname: 'form-jadwal',
-                        query: { id: item.jadwal_id, ...item }
-                      }}
-                    >
-                      <Icon icon='tabler:edit' fontSize={20} /> Edit
-                    </MenuItem>,
-                    <MenuItem key='delete' onClick={() => handleDeleteClick(item.jadwal_id)}>
-                      <Icon icon='tabler:trash' fontSize={20} /> Delete
-                    </MenuItem>,
-                    <MenuItem key='send' onClick={() => handleKirimClick(item.jadwal_id)}>
-                      <Icon icon='tabler:send-2' fontSize={20} /> Kirim
-                    </MenuItem>
-                  ]
-                : [
-                    <MenuItem
-                      key='back'
-                      onClick={() => handleModalBackOpen(item)}
-                      sx={{ backgroundColor: 'error.main' }}
-                    >
-                      <Icon icon='tabler:arrow-back' fontSize={20} /> Kembali ke Verifikator
-                    </MenuItem>,
-                    <MenuItem
-                      key='approve'
-                      onClick={() =>
-                        handleConfirmClick(
-                          item.jadwal_id,
-                          `Jadwal inspeksi ${item.kode_area} pada ${item.tgl_mulai} s/d ${item.tgl_akhir} disetujui untuk dilaksanakan`
-                        )
-                      }
-                      sx={{ backgroundColor: 'success.main' }}
-                    >
-                      <Icon icon='tabler:square-check' fontSize={20} /> Setujui Jadwal
-                    </MenuItem>
-                  ])
-            ]}
+            {isDraftOrPerbaikan && (
+              <>
+                <MenuItem
+                  key='back'
+                  onClick={() => {
+                    handleRowOptionsClose()
+                    handleModalBackOpen(item)
+                  }}
+                  sx={{ backgroundColor: 'error.main' }}
+                >
+                  <Icon icon='tabler:arrow-back' fontSize={20} /> Kembali ke Verifikator
+                </MenuItem>
+                <MenuItem
+                  key='approve'
+                  onClick={() => {
+                    handleApproveClick(
+                      item.jadwal_id,
+                      `Jadwal inspeksi ${item.kode_area} pada ${item.tgl_mulai} s/d ${item.tgl_akhir} disetujui untuk dilaksanakan`
+                    )
+                  }}
+                  sx={{ backgroundColor: 'success.main' }}
+                >
+                  <Icon icon='tabler:square-check' fontSize={20} /> Setujui Jadwal
+                </MenuItem>
+              </>
+            )}
 
             {isTerjadwal && (
               <MenuItem key='to-pelaksana' onClick={() => handleLaksanaClick(item.jadwal_id)}>
@@ -314,32 +257,6 @@ const JadwalContainer = prop => {
       {openDetail && <DetailJadwal data={dataJadwal} open={openDetail} handleClose={handleModalDetailClose} />}
 
       <DialogKonfirmasi
-        open={showConfirmationDel}
-        setOpen={showConfirmationDel}
-        jadwalId={jadwalId}
-        onConfirm={jadwalId => {
-          if (jadwalId !== 'no') {
-            dispatch(deleteJadwal(jadwalId))
-          }
-
-          setShowConfirmationDel(false)
-        }}
-        message='Jadwal Ini akan dihapus'
-      />
-      <DialogKonfirmasi
-        open={showConfirmationSend}
-        setOpen={showConfirmationSend}
-        jadwalId={jadwalId}
-        onConfirm={jadwalId => {
-          if (jadwalId !== 'no') {
-            dispatch(kirimJadwal(jadwalId))
-          }
-
-          setShowConfirmationSend(false)
-        }}
-        message='Jadwal Ini akan dikirim ke Koordinator'
-      />
-      <DialogKonfirmasi
         open={showConfirmationLaksana}
         setOpen={showConfirmationLaksana}
         jadwalId={jadwalId}
@@ -371,14 +288,16 @@ const JadwalContainer = prop => {
         jadwalId={jadwalId}
         onConfirm={jadwalId => {
           if (jadwalId !== 'no') {
-            dispatch(kembaliJadwal(jadwalId))
+            dispatch(approve(jadwalId))
           }
 
           setShowConfirmation(false)
         }}
         message={messageConfirm}
       />
-      {openBack && <ModalKembali data={dataForm} openBack={openBack} handleClose={handleModalBackClose} />}
+      {openBack && (
+        <ModalKembali view='koordinator' data={dataForm} openBack={openBack} handleClose={handleModalBackClose} />
+      )}
     </>
   )
 }

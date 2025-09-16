@@ -68,6 +68,16 @@ const handleThunkError = (error, thunkAPI, defaultMessage = 'There was an error'
   })
 }
 
+const extractIdAndDataform = payload => {
+  if (typeof payload === 'object' && payload !== null) {
+    const { id, dataform, jadwal_id } = payload
+
+    return { id: id ?? jadwal_id, dataform }
+  }
+
+  return { id: payload, dataform: undefined }
+}
+
 export const fetchList = createAsyncThunk('jadwalKoord/fetchList', async (_, thunkAPI) => {
   const state = thunkAPI.getState().jadwalKoord
   const params = {
@@ -156,9 +166,15 @@ export const remove = createAsyncThunk('jadwalKoord/remove', async (id, thunkAPI
   }
 })
 
-export const approve = createAsyncThunk('jadwalKoord/approve', async ({ id, dataform }, thunkAPI) => {
+export const approve = createAsyncThunk('jadwalKoord/approve', async (payload, thunkAPI) => {
+  const { id, dataform } = extractIdAndDataform(payload)
+
+  if (!id) {
+    return thunkAPI.rejectWithValue({ status: 400, message: 'ID jadwal tidak ditemukan' })
+  }
+
   try {
-    const resp = await customFetch.put(`/api/koor/jadwalSetujui/${id}`, dataform)
+    const resp = await customFetch.put(`/api/koor/jadwalSetujui/${id}`, dataform ?? {})
 
     return resp.data
   } catch (error) {
@@ -166,13 +182,51 @@ export const approve = createAsyncThunk('jadwalKoord/approve', async ({ id, data
   }
 })
 
-export const returnJadwal = createAsyncThunk('jadwalKoord/return', async ({ id, dataform }, thunkAPI) => {
+export const returnJadwal = createAsyncThunk('jadwalKoord/return', async (payload, thunkAPI) => {
+  const { id, dataform } = extractIdAndDataform(payload)
+
+  if (!id) {
+    return thunkAPI.rejectWithValue({ status: 400, message: 'ID jadwal tidak ditemukan' })
+  }
+
   try {
-    const resp = await customFetch.put(`/api/koor/jadwalKembali/${id}`, dataform)
+    const resp = await customFetch.put(`/api/koor/jadwalKembali/${id}`, dataform ?? {})
 
     return resp.data
   } catch (error) {
     return handleThunkError(error, thunkAPI, 'Gagal mengembalikan jadwal')
+  }
+})
+
+export const jadwalPelaksanaan = createAsyncThunk('jadwalKoord/jadwalPelaksanaan', async (payload, thunkAPI) => {
+  const { id, dataform } = extractIdAndDataform(payload)
+
+  if (!id) {
+    return thunkAPI.rejectWithValue({ status: 400, message: 'ID jadwal tidak ditemukan' })
+  }
+
+  try {
+    const resp = await customFetch.put(`/api/koor/jadwalPelaksanaan/${id}`, dataform ?? {})
+
+    return resp.data
+  } catch (error) {
+    return handleThunkError(error, thunkAPI, 'Gagal mengubah status jadwal menjadi pelaksanaan')
+  }
+})
+
+export const jadwalSelesai = createAsyncThunk('jadwalKoord/jadwalSelesai', async (payload, thunkAPI) => {
+  const { id, dataform } = extractIdAndDataform(payload)
+
+  if (!id) {
+    return thunkAPI.rejectWithValue({ status: 400, message: 'ID jadwal tidak ditemukan' })
+  }
+
+  try {
+    const resp = await customFetch.put(`/api/koor/jadwalSelesai/${id}`, dataform ?? {})
+
+    return resp.data
+  } catch (error) {
+    return handleThunkError(error, thunkAPI, 'Gagal mengubah status jadwal menjadi selesai')
   }
 })
 
@@ -379,6 +433,44 @@ const jadwalKoordSlice = createSlice({
         toast.success('Jadwal berhasil disetujui...')
       })
       .addCase(approve.rejected, (state, { payload }) => {
+        state.isLoading = false
+
+        if (payload?.status === 401) {
+          toast.error('User Belum memiliki akses ! Logging Out...')
+          window.location.href = '/'
+        } else {
+          toast.error(payload?.message || 'Terjadi kesalahan')
+        }
+      })
+
+      .addCase(jadwalPelaksanaan.pending, state => {
+        state.isLoading = true
+      })
+      .addCase(jadwalPelaksanaan.fulfilled, (state, { payload }) => {
+        state.isLoading = false
+        state.tab = JSON.stringify(payload)
+        toast.success('Status jadwal diubah menjadi pelaksanaan.')
+      })
+      .addCase(jadwalPelaksanaan.rejected, (state, { payload }) => {
+        state.isLoading = false
+
+        if (payload?.status === 401) {
+          toast.error('User Belum memiliki akses ! Logging Out...')
+          window.location.href = '/'
+        } else {
+          toast.error(payload?.message || 'Terjadi kesalahan')
+        }
+      })
+
+      .addCase(jadwalSelesai.pending, state => {
+        state.isLoading = true
+      })
+      .addCase(jadwalSelesai.fulfilled, (state, { payload }) => {
+        state.isLoading = false
+        state.tab = JSON.stringify(payload)
+        toast.success('Status jadwal diubah menjadi selesai')
+      })
+      .addCase(jadwalSelesai.rejected, (state, { payload }) => {
         state.isLoading = false
 
         if (payload?.status === 401) {
