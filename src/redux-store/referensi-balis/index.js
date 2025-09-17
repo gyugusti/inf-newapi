@@ -21,6 +21,7 @@ const initialState = {
   per_page: 10,
   fas_id: '',
   page: 1,
+  status_aktif_user: '',
   limit: 100
 }
 
@@ -137,6 +138,11 @@ export const getSatuan = createAsyncThunk('refbalis/getSatuan', async (_, thunkA
 
   let config = {}
 
+  const params = {
+    page: thunkAPI.getState().refbalis.current_page,
+    limit: thunkAPI.getState().refbalis.per_page
+  }
+
   try {
     const resp = await customFetch.get(url, config)
 
@@ -187,7 +193,12 @@ export const getJenisPekerja = createAsyncThunk('refbalis/getJenisPekerja', asyn
 export const getListUser = createAsyncThunk('refbalis/getListUser', async (_, thunkAPI) => {
   let url = `apiBalis/getListUser`
 
-  let config = {}
+  let config = {
+    params: {
+      status: thunkAPI.getState().refbalis.status_aktif_user,
+      fas_id: thunkAPI.getState().refbalis.fas_id
+    }
+  }
 
   try {
     const resp = await customFetch.get(url, config)
@@ -309,7 +320,14 @@ const refbalisSlice = createSlice({
   reducers: {
     changePage: (state, { payload }) => {
       state.current_page = payload
-    }
+    },
+
+    handleChangeUser: (state, { payload }) => {
+      for (const [k, v] of Object.entries(payload)) {
+        if (v !== undefined) state[k] = v
+      }
+    },
+    resetUser: () => initialState
   },
   extraReducers: builder => {
     builder
@@ -377,7 +395,7 @@ const refbalisSlice = createSlice({
         state.isLoading = false
 
         const userdata = payload.data.map(({ id, nama }) => ({
-          label: nama,
+          label: `${nama} - ${id}`,
           value: id
         }))
 
@@ -489,6 +507,6 @@ const refbalisSlice = createSlice({
   }
 })
 
-export const { clearValues, changePage } = refbalisSlice.actions
+export const { clearValues, changePage, handleChangeUser, resetUser } = refbalisSlice.actions
 
 export default refbalisSlice.reducer

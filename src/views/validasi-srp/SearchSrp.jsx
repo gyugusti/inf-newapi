@@ -3,30 +3,30 @@ import { useEffect, useMemo } from 'react'
 import Grid from '@mui/material/Grid2'
 import { useDispatch, useSelector } from 'react-redux'
 
-import { Button, IconButton, Card, CardContent, Typography } from '@mui/material'
+import { Button, Typography } from '@mui/material'
 
-import { useForm, Controller } from 'react-hook-form'
+import { Controller, useForm } from 'react-hook-form'
 
 import CustomTextField from '@/@core/components/mui/TextField'
-import { clearSrpfilter, handleChangeSrp } from '@/redux-store/validasi-data'
 import CustomAutocomplete from '@/components/widget/CustomAutocomplete'
 import { getModelSumber } from '@/redux-store/referensi-balis'
+import { clearSrpfilter, handleChangeSrp } from '@/redux-store/validasi-data'
 
 const SearchSrp = ({ data } = null) => {
   const dispatch = useDispatch()
-  const { merk, merk_tabung, no_seri, no_seri_tabung, tipe, tipe_tabung } = useSelector(
-    store => store.validasiData
-  )
-  const { dafModelSumber } = useSelector(store => store.refbalis)
+
+  const { merk, merk_tabung, no_seri, no_seri_tabung, tipe, tipe_tabung } = useSelector(store => store.validasiData)
+
+  const { dafModelSumber = [] } = useSelector(store => store.refbalis)
 
   const defaultValues = useMemo(
     () => ({
-      merk: merk || '',
-      merk_tabung: merk_tabung || '',
-      no_seri: no_seri || '',
-      no_seri_tabung: no_seri_tabung || '',
-      tipe: tipe || '',
-      tipe_tabung: tipe_tabung || ''
+      merk: merk ?? '',
+      merk_tabung: merk_tabung ?? '',
+      no_seri: no_seri ?? '',
+      no_seri_tabung: no_seri_tabung ?? '',
+      tipe: tipe ?? '',
+      tipe_tabung: tipe_tabung ?? ''
     }),
     [merk, merk_tabung, no_seri, no_seri_tabung, tipe, tipe_tabung]
   )
@@ -43,8 +43,6 @@ const SearchSrp = ({ data } = null) => {
   }, [defaultValues, reset])
 
   const onSubmit = dataform => {
-    console.log(dataform)
-
     dispatch(handleChangeSrp(dataform))
   }
 
@@ -52,15 +50,15 @@ const SearchSrp = ({ data } = null) => {
     dispatch(clearSrpfilter())
   }
 
-  const optMerk = Object.values(
-    dafModelSumber.reduce((acc, { model_sumber_id, nama }) => {
-      if (!acc[nama]) {
-        acc[nama] = { label: nama, value: model_sumber_id }
-      }
+  const optMerk = useMemo(() => {
+    return Object.values(
+      dafModelSumber.reduce((acc, { model_sumber_id, nama }) => {
+        if (!acc[nama]) acc[nama] = { label: nama, value: model_sumber_id }
 
-      return acc
-    }, {})
-  )
+        return acc
+      }, {})
+    )
+  }, [dafModelSumber])
 
   useEffect(() => {
     dispatch(getModelSumber())
@@ -83,6 +81,7 @@ const SearchSrp = ({ data } = null) => {
             required={false}
           />
         </Grid>
+
         <Grid size={{ xs: 3 }}>
           <Controller
             name='merk_tabung'
@@ -99,6 +98,7 @@ const SearchSrp = ({ data } = null) => {
             )}
           />
         </Grid>
+
         <Grid size={{ xs: 3 }}>
           <Controller
             name='no_seri'
@@ -115,6 +115,7 @@ const SearchSrp = ({ data } = null) => {
             )}
           />
         </Grid>
+
         <Grid size={{ xs: 3 }}>
           <Controller
             name='no_seri_tabung'
@@ -131,6 +132,7 @@ const SearchSrp = ({ data } = null) => {
             )}
           />
         </Grid>
+
         <Grid size={{ xs: 3 }}>
           <Controller
             name='tipe'
@@ -147,6 +149,7 @@ const SearchSrp = ({ data } = null) => {
             )}
           />
         </Grid>
+
         <Grid size={{ xs: 3 }}>
           <Controller
             name='tipe_tabung'
@@ -163,6 +166,7 @@ const SearchSrp = ({ data } = null) => {
             )}
           />
         </Grid>
+
         <Grid size={12} display='flex' justifyContent='flex-end' gap={2}>
           <Button type='submit' variant='contained'>
             Cari

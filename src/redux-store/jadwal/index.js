@@ -77,7 +77,7 @@ export const getJadwal = createAsyncThunk('jadwal/getJadwal', async (_, thunkAPI
   }
 
   try {
-    const resp = await customFetch.get('/api/jadwal', { params })
+    const resp = await customFetch.get('/api/ver/jadwal', { params })
 
     if (resp.data.status === 200) {
       return resp.data.response
@@ -137,7 +137,7 @@ export const getJadwalIns = createAsyncThunk('jadwal/getJadwalIns', async (_, th
 
 export const createJadwal = createAsyncThunk('jadwal/createJadwal', async (dataform, thunkAPI) => {
   try {
-    const resp = await customFetch.post('/api/jadwal', dataform)
+    const resp = await customFetch.post('/api/ver/jadwal', dataform)
 
     return resp.data
   } catch (error) {
@@ -153,7 +153,7 @@ export const createJadwal = createAsyncThunk('jadwal/createJadwal', async (dataf
 
 export const editJadwal = createAsyncThunk('jadwal/editJadwal', async ({ jadwal_id, data }, thunkAPI) => {
   try {
-    const resp = await customFetch.patch(`/api/jadwal/${jadwal_id}`, data)
+    const resp = await customFetch.patch(`/api/ver/jadwal/${jadwal_id}`, data)
 
     thunkAPI.dispatch(clearValues())
 
@@ -171,7 +171,7 @@ export const editJadwal = createAsyncThunk('jadwal/editJadwal', async ({ jadwal_
 
 export const deleteJadwal = createAsyncThunk('jadwal/deleteJadwal', async (jadwal_id, thunkAPI) => {
   try {
-    const resp = await customFetch.delete(`/api/jadwal/${jadwal_id}`)
+    const resp = await customFetch.delete(`/api/ver/jadwal/${jadwal_id}`)
 
     if (resp.data.status === 200) {
       return resp.data
@@ -191,7 +191,7 @@ export const deleteJadwal = createAsyncThunk('jadwal/deleteJadwal', async (jadwa
 
 export const kirimJadwal = createAsyncThunk('jadwal/kirimJadwal', async (jadwal_id, thunkAPI) => {
   try {
-    const resp = await customFetch.put(`/api/jadwalKirim/koor/${jadwal_id}`, jadwal_id)
+    const resp = await customFetch.put(`/api/ver/jadwalKirim/${jadwal_id}`, jadwal_id)
 
     return resp.data
   } catch (error) {
@@ -207,7 +207,7 @@ export const kirimJadwal = createAsyncThunk('jadwal/kirimJadwal', async (jadwal_
 
 export const setujuiJadwal = createAsyncThunk('jadwal/jadwalSetujui', async (jadwal_id, thunkAPI) => {
   try {
-    const resp = await customFetch.put(`/api/jadwalSetujui/${jadwal_id}`, jadwal_id)
+    const resp = await customFetch.put(`/api/ver/jadwalSetujui/${jadwal_id}`, jadwal_id)
 
     return resp.data
   } catch (error) {
@@ -223,7 +223,7 @@ export const setujuiJadwal = createAsyncThunk('jadwal/jadwalSetujui', async (jad
 
 export const kembaliJadwal = createAsyncThunk('jadwal/kembaliJadwal', async ({ jadwal_id, dataform }, thunkAPI) => {
   try {
-    const resp = await customFetch.put(`/api/jadwalKembali/${jadwal_id}`, dataform)
+    const resp = await customFetch.put(`/api/ver/jadwalKembali/${jadwal_id}`, dataform)
 
     thunkAPI.dispatch(clearValues())
 
@@ -241,7 +241,7 @@ export const kembaliJadwal = createAsyncThunk('jadwal/kembaliJadwal', async ({ j
 
 export const jadwalPelaksanaan = createAsyncThunk('jadwal/jadwalPelaksanaan', async (jadwal_id, thunkAPI) => {
   try {
-    const resp = await customFetch.put(`/api/jadwalPelaksanaan/${jadwal_id}`, jadwal_id)
+    const resp = await customFetch.put(`/api/ver/jadwalPelaksanaan/${jadwal_id}`, jadwal_id)
 
     return resp.data
   } catch (error) {
@@ -257,7 +257,7 @@ export const jadwalPelaksanaan = createAsyncThunk('jadwal/jadwalPelaksanaan', as
 
 export const jadwalSelesai = createAsyncThunk('jadwal/jadwalSelesai', async (jadwal_id, thunkAPI) => {
   try {
-    const resp = await customFetch.put(`/api/jadwalSelesai/${jadwal_id}`, jadwal_id)
+    const resp = await customFetch.put(`/api/ver/jadwalSelesai/${jadwal_id}`, jadwal_id)
 
     return resp.data
   } catch (error) {
@@ -275,7 +275,7 @@ export const getdetailJadwal = createAsyncThunk('jadwal/getdetailJadwal', async 
   const params = { status_fihi: thunkAPI.getState().jadwal.status_fihi }
 
   try {
-    const resp = await customFetch.get(`/api/jadwal/${id}`, { params })
+    const resp = await customFetch.get(`/api/ver/jadwal/${id}`, { params })
 
     if (resp.data.status === 200) {
       return resp.data.response
@@ -295,7 +295,7 @@ export const getdetailJadwal = createAsyncThunk('jadwal/getdetailJadwal', async 
 
 export const createJadwalTim = createAsyncThunk('jadwal/createJadwalTim', async (dataform, thunkAPI) => {
   try {
-    const resp = await customFetch.post('/api/jadwalTim', dataform)
+    const resp = await customFetch.post('/api/ver/jadwalTim', dataform)
 
     return resp.data
   } catch (error) {
@@ -311,7 +311,7 @@ export const createJadwalTim = createAsyncThunk('jadwal/createJadwalTim', async 
 
 export const deleteJadwalTim = createAsyncThunk('jadwal/deleteJadwalTim', async (inspektur_id, thunkAPI) => {
   try {
-    const resp = await customFetch.delete(`/api/jadwalTim/${inspektur_id}`)
+    const resp = await customFetch.delete(`/api/ver/jadwalTim/${inspektur_id}`)
 
     if (resp.data.status === 200) {
       return resp.data
@@ -331,7 +331,7 @@ export const deleteJadwalTim = createAsyncThunk('jadwal/deleteJadwalTim', async 
 
 export const editJadwalTim = createAsyncThunk('jadwal/editJadwalTim', async ({ inspektur_id, dataform }, thunkAPI) => {
   try {
-    const resp = await customFetch.patch(`/api/jadwalTim/${inspektur_id}`, dataform)
+    const resp = await customFetch.patch(`/api/ver/jadwalTim/${inspektur_id}`, dataform)
 
     thunkAPI.dispatch(clearValues())
 
@@ -349,7 +349,7 @@ export const editJadwalTim = createAsyncThunk('jadwal/editJadwalTim', async ({ i
 
 export const createJadwalFas = createAsyncThunk('jadwal/createJadwalFas', async (dataform, thunkAPI) => {
   try {
-    const resp = await customFetch.post('/api/jadwalFas', dataform)
+    const resp = await customFetch.post('/api/ver/jadwalFas', dataform)
 
     return resp.data
   } catch (error) {
@@ -365,7 +365,7 @@ export const createJadwalFas = createAsyncThunk('jadwal/createJadwalFas', async 
 
 export const editJadwalFas = createAsyncThunk('jadwal/editJadwalFas', async ({ insp_fas_id, datas }, thunkAPI) => {
   try {
-    const resp = await customFetch.put(`/api/jadwalFas/${insp_fas_id}`, datas)
+    const resp = await customFetch.put(`/api/ver/jadwalFas/${insp_fas_id}`, datas)
 
     thunkAPI.dispatch(clearValues())
 
@@ -383,7 +383,7 @@ export const editJadwalFas = createAsyncThunk('jadwal/editJadwalFas', async ({ i
 
 export const deleteJadwalFas = createAsyncThunk('jadwal/deleteJadwalFas', async (insp_fas_id, thunkAPI) => {
   try {
-    const resp = await customFetch.delete(`/api/jadwalFas/${insp_fas_id}`)
+    const resp = await customFetch.delete(`/api/ver/jadwalFas/${insp_fas_id}`)
 
     if (resp.data.status === 200) {
       return resp.data
@@ -403,7 +403,7 @@ export const deleteJadwalFas = createAsyncThunk('jadwal/deleteJadwalFas', async 
 
 export const createJadwalKeg = createAsyncThunk('jadwal/createJadwalKeg', async (dataform, thunkAPI) => {
   try {
-    const resp = await customFetch.post('/api/jadwalKeg', dataform)
+    const resp = await customFetch.post('/api/ver/jadwalKeg', dataform)
 
     return resp.data
   } catch (error) {

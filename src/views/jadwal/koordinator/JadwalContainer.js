@@ -1,30 +1,40 @@
-import React, { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 import Link from 'next/link'
 
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, MenuItem, Menu, Typography } from '@mui/material'
-import ButtonGroup from '@mui/material/ButtonGroup'
-import Button from '@mui/material/Button'
 import { Icon } from '@iconify/react/dist/iconify.js'
+import {
+  Menu,
+  MenuItem,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Typography
+} from '@mui/material'
+import Button from '@mui/material/Button'
+import ButtonGroup from '@mui/material/ButtonGroup'
 import { useDispatch, useSelector } from 'react-redux'
 
 import Pagination from '@mui/material/Pagination'
 
-import { changePage, fetchList, jadwalPelaksanaan, jadwalSelesai, approve, setEditJadwal } from '@/redux-store/jadwal-koord'
-import DialogKonfirmasi from '@/components/widget/DialogKonfirmasi'
 import Loading from '@/components/Loading'
-import ModalKembali from '../action/ModalKembali'
-import LogJadwal from '../action/Logjadwal'
-import { getProsesLog, handleLog } from '@/redux-store/referensi-infara'
-import DetailJadwal from '../DetailJadwal'
+import DialogKonfirmasi from '@/components/widget/DialogKonfirmasi'
+import { JADWAL_PELAKSANAAN, JADWAL_PERSETUJUAN, JADWAL_TERJADWAL } from '@/configs/jadwalConfig'
 import {
-  JADWAL_DRAFT,
-  JADWAL_PERSETUJUAN,
-  JADWAL_TERJADWAL,
-  JADWAL_PERBAIKAN,
-  JADWAL_PELAKSANAAN,
-  JADWAL_SELESAI
-} from '@/configs/jadwalConfig'
+  approve,
+  changePage,
+  fetchList,
+  jadwalPelaksanaan,
+  jadwalSelesai,
+  setEditJadwal
+} from '@/redux-store/jadwal-koord'
+import { getProsesLog, handleLog } from '@/redux-store/referensi-infara'
+import LogJadwal from '../action/Logjadwal'
+import ModalKembali from '../action/ModalKembali'
+import DetailJadwal from '../DetailJadwal'
 
 const JadwalContainer = () => {
   const dispatch = useDispatch()
@@ -135,7 +145,7 @@ const JadwalContainer = () => {
       console.log('klick selesai')
     }
 
-    const isDraftOrPerbaikan = [JADWAL_DRAFT, JADWAL_PERBAIKAN].includes(status_jadwal)
+    const isPersetujuan = [JADWAL_PERSETUJUAN].includes(status_jadwal)
     const isTerjadwal = [JADWAL_TERJADWAL].includes(status_jadwal)
     const isLaksana = [JADWAL_PELAKSANAAN].includes(status_jadwal)
 
@@ -160,11 +170,16 @@ const JadwalContainer = () => {
             <MenuItem key='log' onClick={() => handleClickLog({ id: item.jadwal_id, data: item })}>
               <Icon icon='tabler:logs' fontSize={20} /> Log Proses
             </MenuItem>
-            <MenuItem key='update' component={Link} href={`/jadwal/${item.jadwal_id}`} onClick={() => handleRowOptionsClose(item)}>
+            <MenuItem
+              key='update'
+              component={Link}
+              href={`/jadwal/${item.jadwal_id}`}
+              onClick={() => handleRowOptionsClose(item)}
+            >
               <Icon icon='tabler:eye' fontSize={20} /> Update Data Jadwal
             </MenuItem>
 
-            {isDraftOrPerbaikan && (
+            {isPersetujuan && (
               <>
                 <MenuItem
                   key='back'
@@ -228,7 +243,9 @@ const JadwalContainer = () => {
             {listJadwal.map((item, index) => {
               return (
                 <TableRow key={index}>
-                  <TableCell scope='row'>{indexOfFirstItem + index + 1}</TableCell>
+                  <TableCell scope='row'>
+                    {indexOfFirstItem + index + 1} {item.status.status_id}
+                  </TableCell>
                   <TableCell>
                     <RowOptions id={item.jadwal_id} item={item} />
                   </TableCell>

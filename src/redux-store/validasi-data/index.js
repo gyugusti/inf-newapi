@@ -53,7 +53,7 @@ const initialState = {
 }
 
 export const getRegistrasiSrp = createAsyncThunk('validasiData/getRegistrasiSrp', async (_, thunkAPI) => {
-  let url = `/apiRegistrasi/srp`
+  let url = `/api/registrasi/srp`
 
   let config = {
     params: {
@@ -92,7 +92,7 @@ export const getRegistrasiSrp = createAsyncThunk('validasiData/getRegistrasiSrp'
 })
 
 export const getRegsrpDetail = createAsyncThunk('validasiData/getRegsrpDetail', async (id, thunkAPI) => {
-  let url = `/apiRegistrasi/srp/${id}`
+  let url = `/api/registrasi/srp/${id}`
 
   let config = {}
 
@@ -118,7 +118,7 @@ export const getRegsrpDetail = createAsyncThunk('validasiData/getRegsrpDetail', 
 })
 
 export const createRegSumber = createAsyncThunk('validasiData/createRegSumber', async (dataform, thunkAPI) => {
-  let url = `/apiRegistrasi/srp`
+  let url = `/api/registrasi/srp`
 
   let config = {}
 
@@ -148,7 +148,7 @@ export const createRegSumber = createAsyncThunk('validasiData/createRegSumber', 
 
 export const editRegSumber = createAsyncThunk('validasiData/editRegSumber', async ({ id, dataforms }, thunkAPI) => {
   try {
-    let url = `/apiRegistrasi/srp/${id}`
+    let url = `/api/registrasi/srp/${id}`
 
     let config = {}
 
@@ -177,8 +177,7 @@ export const editRegSumber = createAsyncThunk('validasiData/editRegSumber', asyn
 
 export const deleteRegSumber = createAsyncThunk('validasiData/deleteRegSumber', async (params, thunkAPI) => {
   try {
-
-    const resp = await customFetch.delete(`/apiRegistrasi/srp/destroy`, {
+    const resp = await customFetch.delete(`/api/registrasi/srp/destroy`, {
       params: {
         reg_srp_id: [params.id]
       }
@@ -206,7 +205,7 @@ export const deleteRegSumber = createAsyncThunk('validasiData/deleteRegSumber', 
 })
 
 export const insertDocSumber = createAsyncThunk('validasiData/insertDocSumber', async (dataform, thunkAPI) => {
-  let url = `/apiRegistrasi/srp/doc`
+  let url = `/api/registrasi/srp/doc`
 
   let config = {}
 
@@ -237,7 +236,7 @@ export const insertDocSumber = createAsyncThunk('validasiData/insertDocSumber', 
 export const kevalidatorRegSumber = createAsyncThunk(
   'validasiData/kevalidatorRegSumber',
   async (dataform, thunkAPI) => {
-    let url = `/apiRegistrasi/srp/kirim`
+    let url = `/api/registrasi/srp/kirim`
 
     let config = {}
 
@@ -270,8 +269,7 @@ export const kirimOtorisatorSrp = createAsyncThunk(
   'validasiData/kirimOtorisatorSrp',
   async ({ id, dataform }, thunkAPI) => {
     try {
-
-      let url = `/apiRegistrasi/srp/kirimOtorisator/${id}`
+      let url = `/api/registrasi/srp/kirimOtorisator/${id}`
 
       let config = {}
       const resp = await customFetch.put(url, dataform, config)
@@ -291,8 +289,7 @@ export const kirimOtorisatorSrp = createAsyncThunk(
 
 export const kembalikanSrp = createAsyncThunk('validasiData/kembalikanSrp', async ({ id, dataform }, thunkAPI) => {
   try {
-
-    let url = `/apiRegistrasi/srp/kembalikan/${id}`
+    let url = `/api/registrasi/srp/kembalikan/${id}`
 
     let config = {}
     const resp = await customFetch.put(url, dataform, config)
@@ -311,8 +308,7 @@ export const kembalikanSrp = createAsyncThunk('validasiData/kembalikanSrp', asyn
 
 export const tolakSrp = createAsyncThunk('validasiData/tolakSrp', async ({ id, dataform }, thunkAPI) => {
   try {
-
-    let url = `/apiRegistrasi/srp/ditolak/${id}`
+    let url = `/api/registrasi/srp/ditolak/${id}`
 
     let config = {}
     const resp = await customFetch.put(url, dataform, config)
@@ -331,8 +327,7 @@ export const tolakSrp = createAsyncThunk('validasiData/tolakSrp', async ({ id, d
 
 export const selesaiSrp = createAsyncThunk('validasiData/selesaiSrp', async ({ id, dataform }, thunkAPI) => {
   try {
-
-    let url = `/apiRegistrasi/srp/selesai/${id}`
+    let url = `/api/registrasi/srp/selesai/${id}`
 
     let config = {}
     const resp = await customFetch.put(url, dataform, config)
@@ -358,7 +353,7 @@ export const selesaiSrp = createAsyncThunk('validasiData/selesaiSrp', async ({ i
 })
 
 export const dokumenRegSumber = createAsyncThunk('validasiData/dokumenRegSumber', async (reg_srp_id, thunkAPI) => {
-  let url = `/apiRegistrasi/srp/doc`
+  let url = `/api/registrasi/srp/doc`
 
   let config = {
     params: {
@@ -392,7 +387,7 @@ export const validasiSrpSimpan = createAsyncThunk(
   'validasiData/validasiSrpSimpan',
   async ({ id, dataform }, thunkAPI) => {
     try {
-      let url = `/apiRegistrasi/srp/simpan/${id}`
+      let url = `/api/registrasi/srp/simpan/${id}`
 
       let config = {}
       const resp = await customFetch.put(url, dataform, config)
@@ -411,7 +406,7 @@ export const validasiSrpSimpan = createAsyncThunk(
 )
 
 export const getListMasterSrp = createAsyncThunk('validasiData/getListMasterSrp', async (_, thunkAPI) => {
-  let url = `/apiRegistrasi/srp/list`
+  let url = `/api/registrasi/srp/list`
 
   let config = {
     params: {
@@ -452,10 +447,9 @@ export const getListMasterSrp = createAsyncThunk('validasiData/getListMasterSrp'
 
 export const dispoManualSrp = createAsyncThunk('validasiData/dispoManualSrp', async ({ id, dataforms }, thunkAPI) => {
   try {
-
     console.log(dataforms)
 
-    let url = `/apiRegistrasi/srp/dispoManual/${id}`
+    let url = `/api/registrasi/srp/dispoManual/${id}`
 
     let config = {}
     const resp = await customFetch.put(url, dataforms, config)
@@ -573,7 +567,6 @@ export const updateSumber = createAsyncThunk('validasiData/updateSumber', async 
 
 export const ubahStatusSrp = createAsyncThunk('validasiData/ubahStatusSrp', async ({ id, dataform }, thunkAPI) => {
   try {
-
     let url = `/api/validasi/sumber/ubahStatusFas/${id}`
 
     console.log(dataform)
@@ -625,7 +618,6 @@ export const validasiSensusSimpan = createAsyncThunk(
 
 export const simpanInstansi = createAsyncThunk('validasiData/simpanInstansi', async (dataform, thunkAPI) => {
   try {
-
     const url = `/api/validasi/sumber/fasSumber`
 
     let config = {}
@@ -671,7 +663,6 @@ export const uploadSrpDok = createAsyncThunk('validasiData/uploadSrpDok', async 
 
 export const deleteSrpDok = createAsyncThunk('validasiData/deleteSrpDok', async (params, thunkAPI) => {
   try {
-
     const resp = await customFetch.delete(`/api/validasi/sumber/deleteDoc/${params.id}`, {
       params: {
         reg_srp_id: [params.id]

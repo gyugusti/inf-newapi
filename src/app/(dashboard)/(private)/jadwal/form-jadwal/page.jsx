@@ -4,21 +4,21 @@ import { forwardRef, useEffect } from 'react'
 
 import { useParams, useRouter, useSearchParams } from 'next/navigation'
 
-import { useDispatch, useSelector } from 'react-redux'
-import { useForm, Controller } from 'react-hook-form'
-import { useSession } from 'next-auth/react'
 import { format } from 'date-fns'
+import { useSession } from 'next-auth/react'
+import { Controller, useForm } from 'react-hook-form'
+import { useDispatch, useSelector } from 'react-redux'
 
-import { Button, Card, CardContent, CardHeader, Select, MenuItem } from '@mui/material'
+import { Button, Card, CardContent, CardHeader, MenuItem } from '@mui/material'
 import Grid from '@mui/material/Grid2'
 
-import CustomAutocomplete from '@/components/widget/CustomAutocomplete'
 import CustomTextField from '@/@core/components/mui/TextField'
+import CustomAutocomplete from '@/components/widget/CustomAutocomplete'
 import CustomBreadcrumb from '@/components/widget/CustomBreadcrumb'
 import AppReactDatepicker from '@/libs/styles/AppReactDatepicker'
 
-import { getBidang, getListUser, getPropinsi } from '@/redux-store/referensi-balis'
-import { createJadwal, editJadwal, setStatus } from '@/redux-store/jadwal'
+import { createJadwal, editJadwal } from '@/redux-store/jadwal'
+import { getBidang, getListUser, getPropinsi, handleChangeUser } from '@/redux-store/referensi-balis'
 
 const CustomInput = forwardRef(({ ...props }, ref) => {
   return <CustomTextField fullWidth inputRef={ref} {...props} sx={{ width: '100%' }} />
@@ -38,6 +38,12 @@ const FormJadwal = () => {
   const { propinsi, bidang, listUser } = useSelector(store => store.refbalis)
 
   useEffect(() => {
+    dispatch(
+      handleChangeUser({
+        status_aktif_user: 10,
+        fas_id: 4100
+      })
+    )
     dispatch(getPropinsi())
     dispatch(getBidang())
     dispatch(getListUser())

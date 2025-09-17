@@ -80,6 +80,7 @@ const extractIdAndDataform = payload => {
 
 export const fetchList = createAsyncThunk('jadwalKoord/fetchList', async (_, thunkAPI) => {
   const state = thunkAPI.getState().jadwalKoord
+
   const params = {
     page: state.current_page,
     limit: state.per_page,
