@@ -187,7 +187,7 @@ const FormSumber = ({ data }) => {
         <CardHeader title='Form Data Registrasi SRP' />
         <CardContent>
           <form id='myForm' onSubmit={handleSubmit(onSubmit)}>
-            <Grid2 item='true' xs={12}>
+            <Grid2 item='true' size={{ xs: 12 }}>
               <Box display='flex' alignItems='stretch' gap={2}>
                 <Box flex={1}>
                   <Controller

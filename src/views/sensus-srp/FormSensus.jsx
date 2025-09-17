@@ -145,7 +145,7 @@ const FormSensus = ({ detailSrp, id }) => {
           </Grid>
 
           {/* CATATAN VALIDASI */}
-          <Grid item='true' xs={12} sm={6}>
+          <Grid item='true' size={{ xs: 12, sm: 6 }}>
             <Controller
               name='catatan'
               control={control}
@@ -185,7 +185,7 @@ const FormSensus = ({ detailSrp, id }) => {
             flexDirection: 'column'
           }}
         >
-          <Grid item='true' xs={12} sm={6}>
+          <Grid item='true' size={{ xs: 12, sm: 6 }}>
             <FormControl error={Boolean(errors.konfirmasi)} fullWidth>
               <FormLabel sx={{ mb: 1 }}>
                 <b>Kelengkapan</b>
@@ -216,7 +216,7 @@ const FormSensus = ({ detailSrp, id }) => {
           </Grid>
 
           {/* CATATAN KELENGKAPAN */}
-          <Grid item='true' xs={12} sm={6}>
+          <Grid item='true' size={{ xs: 12, sm: 6 }}>
             <Controller
               name='catatan_lengkap'
               control={control}
@@ -240,7 +240,7 @@ const FormSensus = ({ detailSrp, id }) => {
           </Grid>
         </Grid>
 
-        <Grid item='true' xs={12}>
+        <Grid item='true' size={{ xs: 12 }}>
           <Button type='submit' variant='contained' sx={{ float: 'right' }}>
             Submit
           </Button>

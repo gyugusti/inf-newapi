@@ -102,7 +102,7 @@ const SearchContainer = () => {
             required={false}
           />
         </Grid>
-        <Grid xs={3} size={{ xs: 3 }}>
+        <Grid size={{ xs: 3 }}>
           <Controller
             name='search'
             control={control}

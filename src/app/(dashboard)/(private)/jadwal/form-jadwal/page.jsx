@@ -122,7 +122,7 @@ const FormJadwal = () => {
               </Grid>
               <Grid size={{ xs: 12, md: 12, sm: 12 }}>
                 <Grid container spacing={2}>
-                  <Grid sm={6} size={{ sm: 6 }}>
+                  <Grid size={{ sm: 6 }}>
                     <Controller
                       name='tgl_mulai'
                       control={control}

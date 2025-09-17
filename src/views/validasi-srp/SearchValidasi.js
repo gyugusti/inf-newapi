@@ -119,7 +119,7 @@ const SearchValidasi = ({ showExcelSelect }) => {
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <Grid container spacing={2} alignItems='center'>
-        <Grid item='true' xs={4}>
+        <Grid item='true' size={{ xs: 4 }}>
           <Controller
             name='cari'
             control={control}
@@ -139,7 +139,7 @@ const SearchValidasi = ({ showExcelSelect }) => {
             )}
           />
         </Grid>
-        <Grid item='true' xs={2}>
+        <Grid item='true' size={{ xs: 2 }}>
           <Controller
             name='per_page'
             control={control}
@@ -155,7 +155,7 @@ const SearchValidasi = ({ showExcelSelect }) => {
           />
         </Grid>
 
-        <Grid item='true' xs={6} container justifyContent='flex-end' spacing={2}>
+        <Grid item='true' size={{ xs: 6 }} container justifyContent='flex-end' spacing={2}>
           <Grid item='true'>
             <Button type='submit' variant='contained'>
               Cari
