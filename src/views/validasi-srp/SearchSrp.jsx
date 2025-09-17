@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useEffect, useMemo } from 'react'
 
 import Grid from '@mui/material/Grid2'
 import { useDispatch, useSelector } from 'react-redux'
@@ -14,18 +14,22 @@ import { getModelSumber } from '@/redux-store/referensi-balis'
 
 const SearchSrp = ({ data } = null) => {
   const dispatch = useDispatch()
-
-  const { searchSrp } = useSelector(store => store.lkf)
+  const { merk, merk_tabung, no_seri, no_seri_tabung, tipe, tipe_tabung } = useSelector(
+    store => store.validasiData
+  )
   const { dafModelSumber } = useSelector(store => store.refbalis)
 
-  let defaultValues = {
-    merk: '',
-    merk_tabung: '',
-    no_seri: '',
-    no_seri_tabung: '',
-    tipe: '',
-    tipe_tabung: ''
-  }
+  const defaultValues = useMemo(
+    () => ({
+      merk: merk || '',
+      merk_tabung: merk_tabung || '',
+      no_seri: no_seri || '',
+      no_seri_tabung: no_seri_tabung || '',
+      tipe: tipe || '',
+      tipe_tabung: tipe_tabung || ''
+    }),
+    [merk, merk_tabung, no_seri, no_seri_tabung, tipe, tipe_tabung]
+  )
 
   const {
     control,
@@ -33,6 +37,10 @@ const SearchSrp = ({ data } = null) => {
     reset,
     formState: { errors }
   } = useForm({ defaultValues })
+
+  useEffect(() => {
+    reset(defaultValues)
+  }, [defaultValues, reset])
 
   const onSubmit = dataform => {
     console.log(dataform)
@@ -42,7 +50,6 @@ const SearchSrp = ({ data } = null) => {
 
   const handleReset = () => {
     dispatch(clearSrpfilter())
-    reset(defaultValues) // reset form ke nilai awal dari data
   }
 
   const optMerk = Object.values(
