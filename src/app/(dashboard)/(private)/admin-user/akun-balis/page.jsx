@@ -119,7 +119,7 @@ function Index() {
       <form onSubmit={handleSubmit(onSubmit)}>
         <Grid2 container spacing={2} columns={{ xs: 12, md: 12 }} alignItems='center' sx={{ mb: 2 }}>
           {/* cari */}
-          <Grid2 xs={12} md={3}>
+          <Grid2 size={{ xs: 12, md: 3 }}>
             <Controller
               name='cari'
               control={control}
@@ -139,7 +139,7 @@ function Index() {
           </Grid2>
 
           {/* fasilitas */}
-          <Grid2 xs={12} md={4}>
+          <Grid2 size={{ xs: 12, md: 4 }}>
             <Controller
               name='fas_id'
               control={control}
@@ -156,7 +156,7 @@ function Index() {
           </Grid2>
 
           {/* akses */}
-          <Grid2 xs={12} md={3}>
+          <Grid2 size={{ xs: 12, md: 3 }}>
             <CustomAutocomplete
               control={control}
               errors={errors.merk}
@@ -169,13 +169,13 @@ function Index() {
           </Grid2>
 
           {/* tombol */}
-          <Grid2 xs={12} md={1}>
+          <Grid2 size={{ xs: 12, md: 1 }}>
             <Button type='submit' fullWidth variant='contained' startIcon={<Icon icon='tabler:search' fontSize={18} />}>
               cari
             </Button>
           </Grid2>
 
-          <Grid2 xs={12} md={1}>
+          <Grid2 size={{ xs: 12, md: 1 }}>
             <Button variant='tonal' color='primary' type='reset' onClick={handleReset} fullWidth>
               Reset
             </Button>
