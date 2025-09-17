@@ -138,7 +138,7 @@ const FormEvaluasiLhi = ({ inkf, temuanItem, detailIkk }) => {
                 <Tooltip key={index} title={uraian} placement='top'>
                   <Grid
                     item
-                    xs={12 / detailIkk.length}
+                    size={{ xs: 12 / detailIkk.length }}
                     sx={{ backgroundColor: '#d6cbe0', padding: 1, borderRadius: 1, textAlign: 'center' }}
                   >
                     <FormControlLabel value={ikk_item_id} control={<Radio />} label={`${kode} (${nilai_ikk})`} />

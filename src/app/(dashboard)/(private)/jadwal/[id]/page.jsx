@@ -45,7 +45,7 @@ const Detail = () => {
         </Grid>
       </Grid>
       <Grid container sx={{ marginTop: 4 }}>
-        <Grid xs={12} size={{ xs: 12 }}>
+        <Grid size={{ xs: 12 }}>
           {detailJadwal && <Inspektur detail={detailJadwal} />}
         </Grid>
       </Grid>

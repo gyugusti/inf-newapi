@@ -91,9 +91,9 @@ const FormLhiLokasi = ({ data, open, handleClose }) => {
         </TableHead>
       </Table>
       <form id='myForm' onSubmit={handleSubmit(onSubmit)}>
-        <Grid item xs={12} sm={12}>
+        <Grid item size={{ xs: 12, sm: 12 }}>
           <Grid container spacing={2} sx={{ marginTop: 2 }}>
-            <Grid item sm={6}>
+            <Grid item size={{ sm: 6 }}>
               <Controller
                 name='tgl_mulai'
                 control={control}
@@ -129,7 +129,7 @@ const FormLhiLokasi = ({ data, open, handleClose }) => {
                 }}
               />
             </Grid>
-            <Grid item='true' sm={6}>
+            <Grid item='true' size={{ sm: 6 }}>
               <Controller
                 name='tgl_akhir'
                 control={control}
@@ -167,7 +167,7 @@ const FormLhiLokasi = ({ data, open, handleClose }) => {
             </Grid>
           </Grid>
         </Grid>
-        <Grid item='true' xs={12} sm={6} sx={{ marginTop: 2 }}>
+        <Grid item='true' size={{ xs: 12, sm: 6 }} sx={{ marginTop: 2 }}>
           <Controller
             name='status_inspeksi'
             control={control}
@@ -215,7 +215,7 @@ const FormLhiLokasi = ({ data, open, handleClose }) => {
             }}
           />
         </Grid>
-        <Grid item='true' xs={12} sm={12} sx={{ marginTop: 4 }}>
+        <Grid item='true' size={{ xs: 12, sm: 12 }} sx={{ marginTop: 4 }}>
           <CustomAutocomplete
             control={control}
             errors={errors.alamat_id}

@@ -137,7 +137,7 @@ export default function LkfCreateButton({
           </Box>
 
           <Grid container spacing={2}>
-            <Grid item xs={12}>
+            <Grid item size={{ xs: 12 }}>
               <FormControl fullWidth size='small'>
                 <InputLabel id='kelompok-label'>Pilih Kelompok</InputLabel>
                 <Select
@@ -158,7 +158,7 @@ export default function LkfCreateButton({
               </FormControl>
             </Grid>
 
-            <Grid item xs={12} md={6}>
+            <Grid item size={{ xs: 12, md: 6 }}>
               <FormControl fullWidth size='small'>
                 <InputLabel id='propinsi-label'>Propinsi</InputLabel>
                 <Select
@@ -179,7 +179,7 @@ export default function LkfCreateButton({
               </FormControl>
             </Grid>
 
-            <Grid item xs={12} md={6}>
+            <Grid item size={{ xs: 12, md: 6 }}>
               <FormControl fullWidth size='small'>
                 <InputLabel id='kab-label'>Kabupaten / Kota</InputLabel>
                 <Select
@@ -200,7 +200,7 @@ export default function LkfCreateButton({
               </FormControl>
             </Grid>
 
-            <Grid item xs={12}>
+            <Grid item size={{ xs: 12 }}>
               <FormControl fullWidth size='small'>
                 <InputLabel id='alamat-label'>Alamat</InputLabel>
                 <Select

@@ -138,7 +138,7 @@ const FormValidasiSrp = ({ detailRegsrp, id, mastersumber }) => {
           </Grid>
 
           {/* CATATAN VALIDASI */}
-          <Grid item='true' xs={12} sm={6}>
+          <Grid item='true' size={{ xs: 12, sm: 6 }}>
             <Controller
               name='catatan'
               control={control}
@@ -178,7 +178,7 @@ const FormValidasiSrp = ({ detailRegsrp, id, mastersumber }) => {
             flexDirection: 'column'
           }}
         >
-          <Grid item='true' xs={12} sm={6}>
+          <Grid item='true' size={{ xs: 12, sm: 6 }}>
             <FormControl error={Boolean(errors.konfirmasi)} fullWidth>
               <FormLabel sx={{ mb: 1 }}>
                 <b>Kelengkapan</b>
@@ -209,7 +209,7 @@ const FormValidasiSrp = ({ detailRegsrp, id, mastersumber }) => {
           </Grid>
 
           {/* CATATAN KELENGKAPAN */}
-          <Grid item='true' xs={12} sm={6}>
+          <Grid item='true' size={{ xs: 12, sm: 6 }}>
             <Controller
               name='catatan_lengkap'
               control={control}
@@ -234,7 +234,7 @@ const FormValidasiSrp = ({ detailRegsrp, id, mastersumber }) => {
         </Grid>
 
         {[1, 2].includes(detailRegsrp.tahap_reg_id) && (
-          <Grid item='true' xs={12}>
+          <Grid item='true' size={{ xs: 12 }}>
             <Button type='submit' variant='contained' sx={{ float: 'right' }}>
               Submit
             </Button>

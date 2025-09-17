@@ -81,7 +81,7 @@ const FormDisposisi = ({ datasrp, regsrpId, open, handleClose }) => {
             </div>
             <form id='myForm' onSubmit={handleSubmit(onSubmit)}>
               <Grid container spacing={1} alignItems='center'>
-                <Grid item='true' xs={12} sm={8}>
+                <Grid item='true' size={{ xs: 12, sm: 8 }}>
                   <Controller
                     name='validator_id'
                     control={control}
@@ -99,7 +99,7 @@ const FormDisposisi = ({ datasrp, regsrpId, open, handleClose }) => {
                   />
                 </Grid>
 
-                <Grid item='true' xs={12} sm={2}>
+                <Grid item='true' size={{ xs: 12, sm: 2 }}>
                   <Button type='submit' variant='outlined' sx={{ mt: 5 }}>
                     disposisi
                   </Button>

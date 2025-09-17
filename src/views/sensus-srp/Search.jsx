@@ -249,7 +249,7 @@ const Search = () => {
             )}
           />
         </Grid>
-        <Grid item='true' xs={6} container justifyContent='flex-end' spacing={2}>
+        <Grid item='true' size={{ xs: 6 }} container justifyContent='flex-end' spacing={2}>
           <Grid item='true'>
             <Button type='submit' variant='contained'>
               Cari

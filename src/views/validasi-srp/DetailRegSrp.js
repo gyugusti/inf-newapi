@@ -17,7 +17,7 @@ const DetailRegSrp = ({ detailRegsrp }) => {
     <>
       {Number(detailRegsrp.jenis_sumber_id) === 2 && (
         <Grid container>
-          <Grid item='true' xl={12} md={6} xs={12} sm={12} paddingRight={2}>
+          <Grid item='true' size={{ xs: 12, sm: 12, md: 6, xl: 12 }} paddingRight={2}>
             <h5>Detail Unit Sumber Radiasi Pengion</h5>
             <Table size='small' sx={{ border: '1px solid #ccc', borderCollapse: 'collapse' }}>
               <TableHead>
