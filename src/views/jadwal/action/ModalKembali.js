@@ -1,14 +1,14 @@
-import React, { useEffect } from 'react'
+import { useEffect } from 'react'
 
-import { useDispatch, useSelector } from 'react-redux'
-import Grid from '@mui/material/Grid2'
-import Dialog from '@mui/material/Dialog'
-import DialogTitle from '@mui/material/DialogTitle'
-import DialogContent from '@mui/material/DialogContent'
-import DialogActions from '@mui/material/DialogActions'
+import { Table, TableBody, TableCell, TableRow } from '@mui/material'
 import Button from '@mui/material/Button'
-import { useForm, Controller } from 'react-hook-form'
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material'
+import Dialog from '@mui/material/Dialog'
+import DialogActions from '@mui/material/DialogActions'
+import DialogContent from '@mui/material/DialogContent'
+import DialogTitle from '@mui/material/DialogTitle'
+import Grid from '@mui/material/Grid2'
+import { Controller, useForm } from 'react-hook-form'
+import { useDispatch, useSelector } from 'react-redux'
 
 import { getdetailJadwal, kembaliJadwal } from '@/redux-store/jadwal'
 import { detail as getKoordDetail, returnJadwal as returnKoord } from '@/redux-store/jadwal-koord'
@@ -63,6 +63,7 @@ const ModalKembali = ({ data, openBack, handleClose, view = 'verifikator' }) => 
       } else {
         dispatch(kembaliJadwal({ jadwal_id: jadwal_id, dataform }))
       }
+
       handleClose()
     }
   }

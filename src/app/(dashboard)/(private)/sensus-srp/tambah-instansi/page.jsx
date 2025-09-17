@@ -16,9 +16,6 @@ const Page = () => {
   const searchParams = useSearchParams()
   const dispatch = useDispatch()
 
-  // ekstrak toString() sekali di luar useMemo
-  const queryString = searchParams.toString()
-
   const params = useMemo(() => {
     const obj = {}
 
@@ -31,7 +28,7 @@ const Page = () => {
     })
 
     return obj
-  }, [queryString]) // aman: dependency jadi string, bukan ekspresi complex
+  }, [searchParams]) // aman: dependency jadi string, bukan ekspresi complex
 
   const masterId = params.id || params.master_sumber_id
   const breadcrumbs = [{ name: 'Sensus Sumber', path: '/sensus-srp' }, { name: 'Tambah Instansi' }]
