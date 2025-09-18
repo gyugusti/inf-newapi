@@ -17,7 +17,7 @@ import CustomTextField from '@/@core/components/mui/TextField'
 
 const ModalKembali = ({ data, openBack, handleClose }) => {
   const dispatch = useDispatch()
-  const { detailJadwal } = useSelector(state => state.jadwalKoord)
+  const { detailJadwal, isDetailLoading } = useSelector(state => state.jadwalKoord)
   const jadwal_id = data.jadwal_id
 
   useEffect(() => {
@@ -85,7 +85,9 @@ const ModalKembali = ({ data, openBack, handleClose }) => {
             <TableRow>
               <TableCell>Tim</TableCell>
               <TableCell>
-                {detailJadwal.jadwal_tim && detailJadwal.jadwal_tim.length > 0 ? (
+                {isDetailLoading ? (
+                  <div>Memuat data tim...</div>
+                ) : detailJadwal.jadwal_tim && detailJadwal.jadwal_tim.length > 0 ? (
                   detailJadwal.jadwal_tim.map((item, index) => (
                     <div key={index}>
                       {index + 1} . {item.inspektur?.nama}
