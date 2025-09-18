@@ -22,19 +22,10 @@ const ModalKembali = ({ data, openBack, handleClose, view = 'verifikator' }) => 
 
   const useKoordinator = view === 'koordinator'
 
-  const { detailJadwal, tab } = useSelector(store => {
-    if (useKoordinator) {
-      return {
-        detailJadwal: store.jadwalKoord.detailJadwal,
-        tab: store.jadwalKoord.tab
-      }
-    }
-
-    return {
-      detailJadwal: store.jadwal.detailJadwal,
-      tab: store.jadwal.tab
-    }
-  })
+  const detailJadwal = useSelector(store =>
+    useKoordinator ? store.jadwalKoord.detailJadwal : store.jadwal.detailJadwal
+  )
+  const tab = useSelector(store => (useKoordinator ? store.jadwalKoord.tab : store.jadwal.tab))
 
   useEffect(() => {
     if (jadwal_id !== undefined && jadwal_id !== null) {
