@@ -25,7 +25,7 @@ const initialState = {
 }
 
 export const getJadwalFas = createAsyncThunk('jadwalFas/getJadwalFas', async (_, thunkAPI) => {
-  let url = `/api/jadwalFas`
+  let url = `/api/ver/jadwalFas`
 
   let config = {
     params: {

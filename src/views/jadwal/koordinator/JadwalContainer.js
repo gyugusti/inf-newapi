@@ -68,6 +68,7 @@ const JadwalContainer = () => {
 
   const handleModalBackOpen = data => {
     setDataForm(data)
+
     setOpenBack(true)
   }
 
@@ -85,7 +86,6 @@ const JadwalContainer = () => {
   const handleModalDetailClose = () => setOpenDetail(false)
 
   const RowOptions = ({ id, item }) => {
-    // ** Hooks
     const dispatch = useDispatch()
     const anchorRef = useRef(null)
     const [anchorEl, setAnchorEl] = useState(null)
@@ -93,20 +93,12 @@ const JadwalContainer = () => {
 
     const status_jadwal = item.status.status_id
 
-    const handleRowOptionsClick = event => {
-      setAnchorEl(event.currentTarget)
-    }
+    const handleRowOptionsClick = event => setAnchorEl(event.currentTarget)
 
-    const handleRowOptionsClose = item => {
+    const handleRowOptionsClose = itemData => {
       setAnchorEl(null)
-
-      if (item && item.jadwal_id) {
-        dispatch(
-          setEditJadwal({
-            editJadwalId: item.jadwal_id,
-            ...item
-          })
-        )
+      if (itemData && itemData.jadwal_id) {
+        dispatch(setEditJadwal({ editJadwalId: itemData.jadwal_id, ...itemData }))
       }
     }
 
@@ -135,14 +127,12 @@ const JadwalContainer = () => {
       setAnchorEl(null)
       setJadwalId(jadwalId)
       setShowConfirmationLaksana(true)
-      console.log('klick laksana')
     }
 
     const handleSelesaiClick = jadwalId => {
       setAnchorEl(null)
       setJadwalId(jadwalId)
       setShowConfirmationSelesai(true)
-      console.log('klick selesai')
     }
 
     const isPersetujuan = [JADWAL_PERSETUJUAN].includes(status_jadwal)
@@ -155,70 +145,71 @@ const JadwalContainer = () => {
           <Button onClick={handleRowOptionsClick}>
             <Icon icon='tabler:dots-vertical' />
           </Button>
-          <Menu
-            keepMounted
-            anchorEl={anchorEl}
-            open={rowOptionsOpen}
-            onClose={() => handleRowOptionsClose()}
-            anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-            transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-            PaperProps={{ style: { minWidth: '8rem' } }}
-          >
-            <MenuItem key='detail' onClick={() => handleClickDetail({ id: item.jadwal_id, data: item })}>
-              <Icon icon='tabler:details' fontSize={20} /> Detail Jadwal
-            </MenuItem>
-            <MenuItem key='log' onClick={() => handleClickLog({ id: item.jadwal_id, data: item })}>
-              <Icon icon='tabler:logs' fontSize={20} /> Log Proses
-            </MenuItem>
-            <MenuItem
-              key='update'
-              component={Link}
-              href={`/jadwal/${item.jadwal_id}`}
-              onClick={() => handleRowOptionsClose(item)}
-            >
-              <Icon icon='tabler:eye' fontSize={20} /> Update Data Jadwal
-            </MenuItem>
-
-            {isPersetujuan && (
-              <>
-                <MenuItem
-                  key='back'
-                  onClick={() => {
-                    handleRowOptionsClose()
-                    handleModalBackOpen(item)
-                  }}
-                  sx={{ backgroundColor: 'error.main' }}
-                >
-                  <Icon icon='tabler:arrow-back' fontSize={20} /> Kembali ke Verifikator
-                </MenuItem>
-                <MenuItem
-                  key='approve'
-                  onClick={() => {
-                    handleApproveClick(
-                      item.jadwal_id,
-                      `Jadwal inspeksi ${item.kode_area} pada ${item.tgl_mulai} s/d ${item.tgl_akhir} disetujui untuk dilaksanakan`
-                    )
-                  }}
-                  sx={{ backgroundColor: 'success.main' }}
-                >
-                  <Icon icon='tabler:square-check' fontSize={20} /> Setujui Jadwal
-                </MenuItem>
-              </>
-            )}
-
-            {isTerjadwal && (
-              <MenuItem key='to-pelaksana' onClick={() => handleLaksanaClick(item.jadwal_id)}>
-                <Icon icon='tabler:settings' fontSize={20} /> Ubah menjadi Pelaksana
-              </MenuItem>
-            )}
-
-            {isLaksana && (
-              <MenuItem key='to-selesai' onClick={() => handleSelesaiClick(item.jadwal_id)}>
-                <Icon icon='tabler:check' fontSize={20} /> Ubah menjadi Selesai
-              </MenuItem>
-            )}
-          </Menu>
         </ButtonGroup>
+
+        <Menu
+          keepMounted
+          anchorEl={anchorEl}
+          open={rowOptionsOpen}
+          onClose={() => handleRowOptionsClose()}
+          anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+          transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+          PaperProps={{ style: { minWidth: '8rem' } }}
+        >
+          <MenuItem key='detail' onClick={() => handleClickDetail({ id: item.jadwal_id, data: item })}>
+            <Icon icon='tabler:details' fontSize={20} /> Detail Jadwal
+          </MenuItem>
+
+          <MenuItem key='log' onClick={() => handleClickLog({ id: item.jadwal_id, data: item })}>
+            <Icon icon='tabler:logs' fontSize={20} /> Log Proses
+          </MenuItem>
+
+          <MenuItem
+            key='update'
+            component={Link}
+            href={`/jadwal/${item.jadwal_id}`}
+            onClick={() => handleRowOptionsClose(item)}
+          >
+            <Icon icon='tabler:eye' fontSize={20} /> Update Data Jadwal
+          </MenuItem>
+
+          {isPersetujuan && [
+            <MenuItem
+              key='back'
+              onClick={() => {
+                handleRowOptionsClose()
+                handleModalBackOpen(item)
+              }}
+              sx={{ backgroundColor: 'error.main' }}
+            >
+              <Icon icon='tabler:arrow-back' fontSize={20} /> Kembali ke Verifikator
+            </MenuItem>,
+            <MenuItem
+              key='approve'
+              onClick={() =>
+                handleApproveClick(
+                  item.jadwal_id,
+                  `Jadwal inspeksi ${item.kode_area} pada ${item.tgl_mulai} s/d ${item.tgl_akhir} disetujui untuk dilaksanakan`
+                )
+              }
+              sx={{ backgroundColor: 'success.main' }}
+            >
+              <Icon icon='tabler:square-check' fontSize={20} /> Setujui Jadwal
+            </MenuItem>
+          ]}
+
+          {isTerjadwal && (
+            <MenuItem key='to-pelaksana' onClick={() => handleLaksanaClick(item.jadwal_id)}>
+              <Icon icon='tabler:settings' fontSize={20} /> Ubah menjadi Pelaksana
+            </MenuItem>
+          )}
+
+          {isLaksana && (
+            <MenuItem key='to-selesai' onClick={() => handleSelesaiClick(item.jadwal_id)}>
+              <Icon icon='tabler:check' fontSize={20} /> Ubah menjadi Selesai
+            </MenuItem>
+          )}
+        </Menu>
       </>
     )
   }
@@ -243,9 +234,7 @@ const JadwalContainer = () => {
             {listJadwal.map((item, index) => {
               return (
                 <TableRow key={index}>
-                  <TableCell scope='row'>
-                    {indexOfFirstItem + index + 1} {item.status.status_id}
-                  </TableCell>
+                  <TableCell scope='row'>{indexOfFirstItem + index + 1}</TableCell>
                   <TableCell>
                     <RowOptions id={item.jadwal_id} item={item} />
                   </TableCell>

@@ -620,7 +620,7 @@ const jadwalSlice = createSlice({
 
       .addCase(kirimJadwal.fulfilled, (state, { payload }) => {
         state.isLoading = false
-        state.tab = JSON.stringify(payload)
+        state.tab = JSON.stringify(`${payload} - kirim`)
         toast.success('Jadwal berhasil dikirim...')
       })
       .addCase(kirimJadwal.rejected, (state, { payload }) => {
