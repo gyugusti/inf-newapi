@@ -301,9 +301,7 @@ const JadwalContainer = () => {
         }}
         message={messageConfirm}
       />
-      {openBack && (
-        <ModalKembali view='koordinator' data={dataForm} openBack={openBack} handleClose={handleModalBackClose} />
-      )}
+      {openBack && <ModalKembali data={dataForm} openBack={openBack} handleClose={handleModalBackClose} />}
     </>
   )
 }

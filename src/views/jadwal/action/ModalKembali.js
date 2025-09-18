@@ -1,5 +1,3 @@
-import { useEffect } from 'react'
-
 import { Table, TableBody, TableCell, TableRow } from '@mui/material'
 import Button from '@mui/material/Button'
 import Dialog from '@mui/material/Dialog'
@@ -8,34 +6,16 @@ import DialogContent from '@mui/material/DialogContent'
 import DialogTitle from '@mui/material/DialogTitle'
 import Grid from '@mui/material/Grid2'
 import { Controller, useForm } from 'react-hook-form'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 
-import { getdetailJadwal, kembaliJadwal } from '@/redux-store/jadwal'
-import { detail as getKoordDetail, returnJadwal as returnKoord } from '@/redux-store/jadwal-koord'
+import { returnJadwal as returnKoord } from '@/redux-store/jadwal-koord'
 
 // ** Custom Components
 import CustomTextField from '@/@core/components/mui/TextField'
 
-const ModalKembali = ({ data, openBack, handleClose, view = 'verifikator' }) => {
+const ModalKembali = ({ data, openBack, handleClose }) => {
   const dispatch = useDispatch()
   const jadwal_id = data.jadwal_id
-
-  const useKoordinator = view === 'koordinator'
-
-  const detailJadwal = useSelector(store =>
-    useKoordinator ? store.jadwalKoord.detailJadwal : store.jadwal.detailJadwal
-  )
-  const tab = useSelector(store => (useKoordinator ? store.jadwalKoord.tab : store.jadwal.tab))
-
-  useEffect(() => {
-    if (jadwal_id !== undefined && jadwal_id !== null) {
-      if (useKoordinator) {
-        dispatch(getKoordDetail(jadwal_id))
-      } else {
-        dispatch(getdetailJadwal(jadwal_id))
-      }
-    }
-  }, [jadwal_id, dispatch, tab, useKoordinator])
 
   const defaultValues = {
     catatan_koordinator: data.catatan_koordinator ? data.catatan_koordinator : ''
@@ -49,11 +29,7 @@ const ModalKembali = ({ data, openBack, handleClose, view = 'verifikator' }) => 
 
   const onSubmit = dataform => {
     if (dataform) {
-      if (useKoordinator) {
-        dispatch(returnKoord({ id: jadwal_id, dataform }))
-      } else {
-        dispatch(kembaliJadwal({ jadwal_id: jadwal_id, dataform }))
-      }
+      dispatch(returnKoord({ id: jadwal_id, dataform }))
 
       handleClose()
     }

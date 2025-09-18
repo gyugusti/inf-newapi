@@ -1,28 +1,28 @@
-import React, { Fragment, useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 import Link from 'next/link'
 
+import { Icon } from '@iconify/react/dist/iconify.js'
 import {
+  Menu,
+  MenuItem,
   Table,
-  IconButton,
   TableBody,
   TableCell,
   TableContainer,
   TableHead,
   TableRow,
-  MenuItem,
-  Menu,
-  ListItemIcon,
-  ListItemText,
   Typography
 } from '@mui/material'
-import ButtonGroup from '@mui/material/ButtonGroup'
 import Button from '@mui/material/Button'
-import { Icon } from '@iconify/react/dist/iconify.js'
+import ButtonGroup from '@mui/material/ButtonGroup'
 import { useDispatch, useSelector } from 'react-redux'
 
 import Pagination from '@mui/material/Pagination'
 
+import Loading from '@/components/Loading'
+import DialogKonfirmasi from '@/components/widget/DialogKonfirmasi'
+import { JADWAL_DRAFT, JADWAL_PELAKSANAAN, JADWAL_PERBAIKAN, JADWAL_TERJADWAL } from '@/configs/jadwalConfig'
 import {
   changePage,
   clearValues,
@@ -34,20 +34,9 @@ import {
   kirimJadwal,
   setEditJadwal
 } from '@/redux-store/jadwal'
-import DialogKonfirmasi from '@/components/widget/DialogKonfirmasi'
-import Loading from '@/components/Loading'
-import ModalKembali from './action/ModalKembali'
-import LogJadwal from './action/Logjadwal'
 import { getProsesLog, handleLog } from '@/redux-store/referensi-infara'
+import LogJadwal from './action/Logjadwal'
 import DetailJadwal from './DetailJadwal'
-import {
-  JADWAL_DRAFT,
-  JADWAL_PERSETUJUAN,
-  JADWAL_TERJADWAL,
-  JADWAL_PERBAIKAN,
-  JADWAL_PELAKSANAAN,
-  JADWAL_SELESAI
-} from '@/configs/jadwalConfig'
 
 const JadwalContainer = prop => {
   const dispatch = useDispatch()
@@ -59,7 +48,6 @@ const JadwalContainer = prop => {
 
   const [showConfirmation, setShowConfirmation] = useState(false)
   const [messageConfirm, setMessageConfirm] = useState(false)
-  const [openBack, setOpenBack] = useState(false)
   const [openLog, setOpenLog] = useState(false)
   const [openDetail, setOpenDetail] = useState(false)
 
@@ -80,13 +68,6 @@ const JadwalContainer = prop => {
   const handlePageChange = (event, value) => {
     dispatch(changePage(value))
   }
-
-  const handleModalBackOpen = data => {
-    setDataForm(data)
-    setOpenBack(true)
-  }
-
-  const handleModalBackClose = () => setOpenBack(false)
 
   useEffect(() => {
     dispatch(getJadwal())
@@ -205,47 +186,25 @@ const JadwalContainer = prop => {
               //   <Icon icon='tabler:eye' fontSize={20} /> Update Data Jadwal
               // </MenuItem>,
 
-              ...(prop.view === 'verifikator'
-                ? [
-                    <MenuItem
-                      key='edit'
-                      onClick={() => handleEditJadwal(item)}
-                      component={Link}
-                      href={{
-                        pathname: 'form-jadwal',
-                        query: { id: item.jadwal_id, ...item }
-                      }}
-                    >
-                      <Icon icon='tabler:edit' fontSize={20} /> Edit
-                    </MenuItem>,
-                    <MenuItem key='delete' onClick={() => handleDeleteClick(item.jadwal_id)}>
-                      <Icon icon='tabler:trash' fontSize={20} /> Delete
-                    </MenuItem>,
-                    <MenuItem key='send' onClick={() => handleKirimClick(item.jadwal_id)}>
-                      <Icon icon='tabler:send-2' fontSize={20} /> Kirim
-                    </MenuItem>
-                  ]
-                : [
-                    <MenuItem
-                      key='back'
-                      onClick={() => handleModalBackOpen(item)}
-                      sx={{ backgroundColor: 'error.main' }}
-                    >
-                      <Icon icon='tabler:arrow-back' fontSize={20} /> Kembali ke Verifikator
-                    </MenuItem>,
-                    <MenuItem
-                      key='approve'
-                      onClick={() =>
-                        handleConfirmClick(
-                          item.jadwal_id,
-                          `Jadwal inspeksi ${item.kode_area} pada ${item.tgl_mulai} s/d ${item.tgl_akhir} disetujui untuk dilaksanakan`
-                        )
-                      }
-                      sx={{ backgroundColor: 'success.main' }}
-                    >
-                      <Icon icon='tabler:square-check' fontSize={20} /> Setujui Jadwal
-                    </MenuItem>
-                  ])
+              [
+                <MenuItem
+                  key='edit'
+                  onClick={() => handleEditJadwal(item)}
+                  component={Link}
+                  href={{
+                    pathname: 'form-jadwal',
+                    query: { id: item.jadwal_id, ...item }
+                  }}
+                >
+                  <Icon icon='tabler:edit' fontSize={20} /> Edit
+                </MenuItem>,
+                <MenuItem key='delete' onClick={() => handleDeleteClick(item.jadwal_id)}>
+                  <Icon icon='tabler:trash' fontSize={20} /> Delete
+                </MenuItem>,
+                <MenuItem key='send' onClick={() => handleKirimClick(item.jadwal_id)}>
+                  <Icon icon='tabler:send-2' fontSize={20} /> Kirim
+                </MenuItem>
+              ]
             ]}
 
             {isTerjadwal && (
@@ -378,7 +337,6 @@ const JadwalContainer = prop => {
         }}
         message={messageConfirm}
       />
-      {openBack && <ModalKembali data={dataForm} openBack={openBack} handleClose={handleModalBackClose} />}
     </>
   )
 }
