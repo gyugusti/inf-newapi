@@ -24,6 +24,7 @@ const initialFiltersState = {
 
 const initialState = {
   isLoading: false,
+  isDetailLoading: false,
   listJadwal: [],
   tab: '',
   total: 0,
@@ -371,14 +372,14 @@ const jadwalKoordSlice = createSlice({
       })
 
       .addCase(detail.pending, state => {
-        state.isLoading = true
+        state.isDetailLoading = true
       })
       .addCase(detail.fulfilled, (state, { payload }) => {
-        state.isLoading = false
+        state.isDetailLoading = false
         state.detailJadwal = payload
       })
       .addCase(detail.rejected, (state, { payload }) => {
-        state.isLoading = false
+        state.isDetailLoading = false
 
         if (payload?.status === 401) {
           toast.error('User Belum memiliki akses ! Logging Out...')
