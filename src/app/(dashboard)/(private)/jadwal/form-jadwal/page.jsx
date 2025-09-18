@@ -37,6 +37,8 @@ const FormJadwal = () => {
 
   const { propinsi, bidang, listUser } = useSelector(store => store.refbalis)
 
+  console.log(propinsi)
+
   useEffect(() => {
     dispatch(
       handleChangeUser({
@@ -295,12 +297,36 @@ const FormJadwal = () => {
                 />
               </Grid>
               <Grid size={{ xs: 12, md: 12, sm: 12 }}>
-                <CustomAutocomplete
-                  control={control}
-                  errors={errors.propinsi_id}
+                <Controller
                   name='propinsi_id'
-                  label='Propinsi'
-                  options={propinsi}
+                  control={control}
+                  rules={{ required: true }}
+                  render={({ field: { value, onChange } }) => (
+                    <CustomTextField
+                      select
+                      fullWidth
+                      defaultValue=''
+                      label='Propinsi'
+                      SelectProps={{
+                        value: value,
+                        onChange: e => onChange(e)
+                      }}
+                      id='validation-basic-select'
+                      error={Boolean(errors.propinsi_id)}
+                      aria-describedby='validation-basic-select'
+                      {...(errors.propinsi_id && { helperText: 'This field is required' })}
+                    >
+                      {propinsi.map((item, index) => {
+                        const { value, label } = item
+
+                        return (
+                          <MenuItem key={index} value={value}>
+                            {label}
+                          </MenuItem>
+                        )
+                      })}
+                    </CustomTextField>
+                  )}
                 />
               </Grid>
               <Grid size={{ xs: 12, md: 12, sm: 12 }}>

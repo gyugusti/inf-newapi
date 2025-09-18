@@ -83,7 +83,7 @@ export const getInspekturRiwayat = createAsyncThunk('refInfara/getInspekturRiway
 })
 
 export const getProsesLog = createAsyncThunk('refinfara/getProsesLog', async (_, thunkAPI) => {
-  let url = `api/proses/log`
+  let url = `api/data/proses/log`
 
   let config = {
     params: {
