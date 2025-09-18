@@ -1,3 +1,5 @@
+import { useEffect } from 'react'
+
 import { Table, TableBody, TableCell, TableRow } from '@mui/material'
 import Button from '@mui/material/Button'
 import Dialog from '@mui/material/Dialog'
@@ -6,16 +8,23 @@ import DialogContent from '@mui/material/DialogContent'
 import DialogTitle from '@mui/material/DialogTitle'
 import Grid from '@mui/material/Grid2'
 import { Controller, useForm } from 'react-hook-form'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 
-import { returnJadwal as returnKoord } from '@/redux-store/jadwal-koord'
+import { detail as fetchDetailJadwal, returnJadwal as returnKoord } from '@/redux-store/jadwal-koord'
 
 // ** Custom Components
 import CustomTextField from '@/@core/components/mui/TextField'
 
 const ModalKembali = ({ data, openBack, handleClose }) => {
   const dispatch = useDispatch()
+  const { detailJadwal } = useSelector(state => state.jadwalKoord)
   const jadwal_id = data.jadwal_id
+
+  useEffect(() => {
+    if (openBack && jadwal_id) {
+      dispatch(fetchDetailJadwal(jadwal_id))
+    }
+  }, [dispatch, jadwal_id, openBack])
 
   const defaultValues = {
     catatan_koordinator: data.catatan_koordinator ? data.catatan_koordinator : ''
