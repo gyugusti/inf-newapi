@@ -9,28 +9,39 @@ const CustomAutocomplete = ({ control, name, label, options, errors, required, s
       name={name}
       control={control}
       rules={{ required: required }}
-      render={({ field: { value = null, onChange } }) => (
-        <Autocomplete
-          options={options}
-          getOptionLabel={option => option.label || ''}
-          value={options.find(option => option.value === value) || null}
-          onChange={(_, newValue) => {
-            onChange(newValue ? newValue.value : '')
-          }}
-          sx={sx}
-          {...rest}
-          renderInput={params => (
-            <TextField
-              {...params}
-              label={label}
-              fullWidth={fullWidth}
-              error={Boolean(errors)}
-              size='small'
-              helperText={errors ? errors.message : ''}
-            />
-          )}
-        />
-      )}
+      render={({ field: { value = null, onChange } }) => {
+        const selectedOption = options.find(option => `${option.value}` === `${value}`) || null
+
+        return (
+          <Autocomplete
+            options={options}
+            getOptionLabel={option => option.label || ''}
+            value={selectedOption}
+            onChange={(_, newValue) => {
+              onChange(newValue ? newValue.value : '')
+            }}
+            isOptionEqualToValue={(option, currentValue) => {
+              if (!currentValue) return false
+
+              const current = typeof currentValue === 'object' ? currentValue.value : currentValue
+
+              return `${option.value}` === `${current}`
+            }}
+            sx={sx}
+            {...rest}
+            renderInput={params => (
+              <TextField
+                {...params}
+                label={label}
+                fullWidth={fullWidth}
+                error={Boolean(errors)}
+                size='small'
+                helperText={errors ? errors.message : ''}
+              />
+            )}
+          />
+        )
+      }}
     />
   )
 }
