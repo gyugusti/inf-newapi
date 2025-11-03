@@ -167,7 +167,7 @@ const JadwalContainer = () => {
           <MenuItem
             key='update'
             component={Link}
-            href={`/jadwal/${item.jadwal_id}`}
+            href={`/jadwal-koord/${item.jadwal_id}`}
             onClick={() => handleRowOptionsClose(item)}
           >
             <Icon icon='tabler:eye' fontSize={20} /> Update Data Jadwal
