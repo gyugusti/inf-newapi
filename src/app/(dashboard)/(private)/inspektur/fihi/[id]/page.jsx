@@ -1,33 +1,29 @@
 'use client'
 
 // ** React Imports
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
 
 import { useParams, useRouter } from 'next/navigation'
 
-import Link from 'next/link'
-
-import { useDispatch, useSelector } from 'react-redux'
-import { Button, Card, CardContent } from '@mui/material'
 import Grid from '@mui/material/Grid2'
+import { useDispatch, useSelector } from 'react-redux'
 
 import CircularProgress from '@mui/material/CircularProgress'
 import Typography from '@mui/material/Typography'
 
-import { Icon } from '@iconify/react/dist/iconify.js'
 import Tab from '@mui/material/Tab'
 
-import TabPanel from '@mui/lab/TabPanel'
 import TabContext from '@mui/lab/TabContext'
+import TabPanel from '@mui/lab/TabPanel'
 import Box from '@mui/material/Box'
 
 import { CustomTabList } from '@/components/styles/TabPIlls'
-import { getdetailJadwal, setFihi } from '@/redux-store/jadwal'
 import CustomBreadcrumb from '@/components/widget/CustomBreadcrumb'
+import { getdetailJadwal } from '@/redux-store/jadwal'
 import Priview from '@/views/jadwal/Priview'
 
-import DetailBar from '@/views/fihi/DetailBar'
 import { getfihiJadwal, setStatusFihi } from '@/redux-store/fihi'
+import DetailBar from '@/views/fihi/DetailBar'
 
 const Index = () => {
   const [value, setValue] = useState('0')

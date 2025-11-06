@@ -8,15 +8,16 @@ import { useParams } from 'next/navigation'
 import { useDispatch, useSelector } from 'react-redux'
 
 // ** MUI Imports
-import Grid from '@mui/material/Grid2'
-
 import Priview from '@/views/jadwal/Priview'
+import { Icon } from '@iconify/react/dist/iconify.js'
+import Button from '@mui/material/Button'
+import Grid from '@mui/material/Grid2'
+import Link from 'next/link'
 
 import CustomBreadcrumb from '@/components/widget/CustomBreadcrumb'
 import { getdetailJadwal } from '@/redux-store/jadwal'
 import ListAlamat from '@/views/jadwal/fas/ListAlamat'
 import Inspektur from '@/views/jadwal/Inspektur'
-import PreviewActions from '@/views/jadwal/PreviewAction'
 
 const Detail = () => {
   const { id } = useParams()
@@ -38,9 +39,19 @@ const Detail = () => {
       <CustomBreadcrumb breadcrumbs={breadcrumbs} />
 
       <Grid container spacing={6} sx={{ marginTop: 2 }}>
-        <Grid size={{ xs: 12, md: 8, xl: 9 }}>{detailJadwal && <Priview detail={detailJadwal} />}</Grid>
-        <Grid size={{ xs: 12, md: 4, xl: 3 }}>
-          <PreviewActions id={id} detail={detailJadwal} />
+        <Grid size={{ xs: 12, md: 12, xl: 12 }}>
+          {detailJadwal && <Priview detail={detailJadwal} />}
+
+          <Button
+            sx={{ mb: 2, '& svg': { mr: 2 } }}
+            variant='tonal'
+            component={Link}
+            color='primary'
+            href={`/jadwal-koord`}
+          >
+            <Icon fontSize='1.125rem' icon='tabler:arrow-back' />
+            Kembali
+          </Button>
         </Grid>
       </Grid>
       <Grid container sx={{ marginTop: 4 }}>
