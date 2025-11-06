@@ -1,0 +1,103 @@
+'use client'
+
+import React from 'react'
+
+import { usePathname, useRouter, useSearchParams } from 'next/navigation'
+
+import {
+  Card,
+  CardContent,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Typography
+} from '@mui/material'
+import Pagination from '@mui/material/Pagination'
+
+import { alamatPusat } from '@/utils/balishelper'
+
+const FasilitasTable = ({ data, currentPage, perPage, totalPages }) => {
+  const router = useRouter()
+  const pathname = usePathname()
+  const searchParams = useSearchParams()
+
+  const indexOfFirstItem = (currentPage - 1) * perPage
+
+  const handlePageChange = (_, value) => {
+    const params = new URLSearchParams(searchParams.toString())
+
+    if (value === 1) {
+      params.delete('page')
+    } else {
+      params.set('page', value.toString())
+    }
+
+    const queryString = params.toString()
+    const target = queryString ? `${pathname}?${queryString}` : pathname
+
+    router.push(target, { scroll: false })
+  }
+
+  const hasData = Array.isArray(data) && data.length > 0
+
+  return (
+    <Card>
+      <CardContent>
+        <TableContainer>
+          <Table sx={{ minWidth: 650 }} aria-label='tabel data fasilitas'>
+            <TableHead>
+              <TableRow>
+                <TableCell component='th'>NO</TableCell>
+                <TableCell> Nama Fasilitas </TableCell>
+                <TableCell> Fas ID</TableCell>
+                <TableCell>Alamat Pusat</TableCell>
+                <TableCell>Bidang</TableCell>
+                <TableCell>KTUN</TableCell>
+                <TableCell>SRP</TableCell>
+                <TableCell>Pekerja</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {hasData ? (
+                data.map((item, index) => (
+                  <TableRow key={`${item.fas_id ?? 'fas'}-${index}`}>
+                    <TableCell scope='row'>{indexOfFirstItem + index + 1}</TableCell>
+                    <TableCell>{item.nama}</TableCell>
+                    <TableCell>{item.fas_id}</TableCell>
+                    <TableCell>{alamatPusat(item.alamat_pusat)}</TableCell>
+                    <TableCell>{item.bidang?.nama}</TableCell>
+                    <TableCell>{(item.ktun20_count || 0) + (item.ktun25_count || 0)}</TableCell>
+                    <TableCell>{item.sumber_count}</TableCell>
+                    <TableCell>{item.pekerja_count}</TableCell>
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell colSpan={8} align='center'>
+                    <Typography component='span' variant='body2'>
+                      Tidak ada data fasilitas.
+                    </Typography>
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </TableContainer>
+
+        {totalPages > 1 && (
+          <Pagination
+            count={totalPages}
+            page={currentPage}
+            onChange={handlePageChange}
+            sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}
+          />
+        )}
+      </CardContent>
+    </Card>
+  )
+}
+
+export default FasilitasTable
