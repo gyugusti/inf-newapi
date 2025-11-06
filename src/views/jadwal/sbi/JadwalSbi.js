@@ -1,81 +1,79 @@
-import React, { Fragment, useEffect, useRef, useState } from 'react'
+'use client'
+
+import React, { useCallback, useMemo, useState, useTransition } from 'react'
 
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 
-import {
-  Table,
-  IconButton,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Typography,
-  MenuItem,
-  Menu,
-  ListItemIcon,
-  ListItemText
-} from '@mui/material'
-import ButtonGroup from '@mui/material/ButtonGroup'
-import Button from '@mui/material/Button'
+import { Button, ButtonGroup, Menu, MenuItem, Pagination, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material'
 import { Icon } from '@iconify/react/dist/iconify.js'
 
-import { useDispatch, useSelector } from 'react-redux'
-
-import Pagination from '@mui/material/Pagination'
-
 import CustomChip from '@core/components/mui/Chip'
-import { changePage, clearValues, getJadwal } from '@/redux-store/jadwal'
 
-import Loading from '@/components/Loading'
 import FormSpi from './FormSpi'
 
-export const JadwalSbi = () => {
-  const dispatch = useDispatch()
+const DEFAULT_TOTAL_PAGES = 1
+
+export const JadwalSbi = ({ data = [], currentPage = 1, perPage = 20, totalPages = DEFAULT_TOTAL_PAGES, onPageChange }) => {
+  const router = useRouter()
+  const [, startTransition] = useTransition()
   const [open, setOpen] = useState(false)
   const [edit, setEdit] = useState(false)
-  const [dataForm, setDataForm] = useState()
-  const [dataSurat, setDataSurat] = useState()
+  const [dataForm, setDataForm] = useState(null)
+  const [dataSurat, setDataSurat] = useState({})
 
-  const { listJadwal, isLoading, numOfPages, current_page, per_page, status, bidang_id, propinsi_id, tab } =
-    useSelector(store => store.jadwal)
+  const indexOfFirstItem = useMemo(() => {
+    return (currentPage - 1) * perPage
+  }, [currentPage, perPage])
 
-  const indexOfLastItem = current_page * per_page
-  const indexOfFirstItem = indexOfLastItem - per_page
+  const handlePaginationChange = useCallback(
+    (_, page) => {
+      if (typeof onPageChange === 'function') {
+        onPageChange(page)
 
-  const handlePageChange = (event, value) => {
-    dispatch(changePage(value))
-  }
+        return
+      }
 
-  useEffect(() => {
-    dispatch(getJadwal())
-  }, [dispatch, current_page, status, bidang_id, propinsi_id, tab])
+      startTransition(() => {
+        router.push(`?page=${page}`)
+      })
+    },
+    [onPageChange, router, startTransition]
+  )
 
-  if (isLoading || !listJadwal) {
-    return <Loading />
-  }
-
-  // Handle Edit dialog
-  const handleClickOpen = data => {
-    setDataForm(data)
-    setOpen(true)
-  }
-
-  const handleClickEdit = (item, spi) => {
-    setDataSurat(spi)
+  const handleClickOpen = useCallback(item => {
     setDataForm(item)
+    setDataSurat({})
+    setEdit(false)
     setOpen(true)
+  }, [])
+
+  const handleClickEdit = useCallback((item, spi) => {
+    setDataForm(item)
+    setDataSurat(spi || {})
     setEdit(true)
-  }
+    setOpen(true)
+  }, [])
 
-  const handleClose = () => setOpen(false)
+  const handleClose = useCallback(() => {
+    setOpen(false)
+    setEdit(false)
+    setDataForm(null)
+    setDataSurat({})
+  }, [])
 
-  const RowOptions = ({ id, item }) => {
-    // ** Hooks
-    const dispatch = useDispatch()
-    const anchorRef = useRef(null)
+  const handleDetailClick = useCallback(
+    jadwalId => {
+      if (!jadwalId) return
 
-    // ** State
+      startTransition(() => {
+        router.push(`/jadwal/${jadwalId}`)
+      })
+    },
+    [router, startTransition]
+  )
+
+  const RowOptions = ({ item }) => {
     const [anchorEl, setAnchorEl] = useState(null)
     const rowOptionsOpen = Boolean(anchorEl)
 
@@ -87,103 +85,106 @@ export const JadwalSbi = () => {
       setAnchorEl(null)
     }
 
+    const handleCreateSpi = () => {
+      handleRowOptionsClose()
+      handleClickOpen(item)
+    }
+
+    const handleEditSpi = () => {
+      handleRowOptionsClose()
+      handleClickEdit(item, item.spi)
+    }
+
+    const handleDetail = () => {
+      handleRowOptionsClose()
+      handleDetailClick(item.jadwal_id)
+    }
+
     return (
       <>
-        <ButtonGroup variant='outlined' color='primary' ref={anchorRef} aria-label='split button'>
+        <ButtonGroup variant='outlined' color='primary' aria-label='jadwal spi options'>
           <Button size='small' onClick={handleRowOptionsClick}>
             <Icon icon='tabler:dots-vertical' />
           </Button>
-          <Menu
-            keepMounted
-            anchorEl={anchorEl}
-            open={rowOptionsOpen}
-            onClose={handleRowOptionsClose}
-            anchorOrigin={{
-              vertical: 'bottom',
-              horizontal: 'right'
-            }}
-            transformOrigin={{
-              vertical: 'top',
-              horizontal: 'right'
-            }}
-            PaperProps={{ style: { minWidth: '8rem' } }}
+        </ButtonGroup>
+        <Menu
+          keepMounted
+          anchorEl={anchorEl}
+          open={rowOptionsOpen}
+          onClose={handleRowOptionsClose}
+          anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'right'
+          }}
+          transformOrigin={{
+            vertical: 'top',
+            horizontal: 'right'
+          }}
+          PaperProps={{ style: { minWidth: '10rem' } }}
+        >
+          <MenuItem sx={{ '& svg': { mr: 2 } }} onClick={handleDetail}>
+            <Icon icon='tabler:details' fontSize={18} />
+            <Typography variant='inherit' fontSize={15}>
+              Detail Jadwal
+            </Typography>
+          </MenuItem>
+          <MenuItem
+            component={Link}
+            href={{ pathname: `/spi-sbi/${item.jadwal_id}`, query: { id: item.jadwal_id } }}
+            sx={{ '& svg': { mr: 2 } }}
+            onClick={handleRowOptionsClose}
           >
-            <MenuItem
-              key={`detail${item.jadwal_id}`}
-              sx={{ '& svg': { mr: 2 } }}
-              href='/jadwal'
-              onClick={() => handleKirimClick(item.jadwal_id)}
-            >
-              <Icon icon='tabler:details' fontSize={18} />
-              <Typography variant='inherit' fontSize={15}>
-                Detail Jadwal
-              </Typography>
-            </MenuItem>
-            <MenuItem
-              key={`update${item.jadwal_id}`}
-              component={Link}
-              sx={{ '& svg': { mr: 2 } }}
-              href={{ pathname: `spi-sbi/${item.jadwal_id}`, query: { id: item.jadwal_id } }}
-            >
-              <Icon icon='tabler:border-right-plus' fontSize={18} />
-              <Typography variant='inherit' fontSize={15}>
-                Buat SBI
-              </Typography>
-            </MenuItem>
-            {item.spi && (
-              <>
-                <MenuItem
-                  key={`kirim${item.jadwal_id}`}
-                  sx={{ '& svg': { mr: 2 } }}
-                  onClick={() => handleClickEdit(item, item.spi)}
-                >
-                  <Icon icon='tabler:edit' fontSize={18} />
-                  <Typography variant='inherit' fontSize={15}>
-                    Edit SPI {item.data_surat_count}
-                  </Typography>
-                </MenuItem>
-                <MenuItem
-                  key={`cetak${item.jadwal_id}`}
-                  sx={{ '& svg': { mr: 2 } }}
-                  component={Link}
-                  target='_blank'
-                  href={{ pathname: `/cetak/spi`, query: { ...item.spi } }}
-                >
-                  <Icon icon='tabler:file' fontSize={18} />
-                  <Typography variant='inherit' fontSize={15}>
-                    Surat SPI {item.data_surat_count}
-                  </Typography>
-                </MenuItem>
-              </>
-            )}
-            {!item.spi && (
-              <MenuItem
-                key={`kirim${item.jadwal_id}`}
-                sx={{ '& svg': { mr: 2 } }}
-                onClick={() => handleClickOpen(item)}
-              >
-                <Icon icon='tabler:plus' fontSize={18} />
+            <Icon icon='tabler:border-right-plus' fontSize={18} />
+            <Typography variant='inherit' fontSize={15}>
+              Buat SBI
+            </Typography>
+          </MenuItem>
+          {item.spi ? (
+            <>
+              <MenuItem sx={{ '& svg': { mr: 2 } }} onClick={handleEditSpi}>
+                <Icon icon='tabler:edit' fontSize={18} />
                 <Typography variant='inherit' fontSize={15}>
-                  Buat SPI {item.data_surat_count}
+                  Edit SPI {item.data_surat_count}
                 </Typography>
               </MenuItem>
-            )}
-          </Menu>
-        </ButtonGroup>
+              <MenuItem
+                component={Link}
+                target='_blank'
+                href={{ pathname: `/cetak/spi`, query: { ...item.spi } }}
+                sx={{ '& svg': { mr: 2 } }}
+                onClick={handleRowOptionsClose}
+              >
+                <Icon icon='tabler:file' fontSize={18} />
+                <Typography variant='inherit' fontSize={15}>
+                  Surat SPI {item.data_surat_count}
+                </Typography>
+              </MenuItem>
+            </>
+          ) : (
+            <MenuItem sx={{ '& svg': { mr: 2 } }} onClick={handleCreateSpi}>
+              <Icon icon='tabler:plus' fontSize={18} />
+              <Typography variant='inherit' fontSize={15}>
+                Buat SPI {item.data_surat_count}
+              </Typography>
+            </MenuItem>
+          )}
+        </Menu>
       </>
     )
   }
 
+  const hasData = Array.isArray(data) && data.length > 0
+
   return (
     <>
       <TableContainer>
-        <Table sx={{ minWidth: 650 }} aria-label='simple table'>
+        <Table sx={{ minWidth: 650 }} aria-label='tabel jadwal spi sbi'>
           <TableHead>
             <TableRow>
               <TableCell component='th'>NO</TableCell>
-              <TableCell>Action </TableCell>
+              <TableCell>Action</TableCell>
               <TableCell>Tanggal</TableCell>
-              <TableCell>Kode Area / Bidang </TableCell>
+              <TableCell>Kode Area / Bidang</TableCell>
               <TableCell>Propinsi</TableCell>
               <TableCell>Jml. Instansi</TableCell>
               <TableCell>Jml. Kegiatan</TableCell>
@@ -192,37 +193,61 @@ export const JadwalSbi = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {listJadwal.map((item, index) => {
-              return (
-                <TableRow key={index}>
+            {hasData ? (
+              data.map((item, index) => (
+                <TableRow key={`${item.jadwal_id ?? 'jadwal'}-${index}`}>
                   <TableCell scope='row'>{indexOfFirstItem + index + 1}</TableCell>
                   <TableCell>
-                    <RowOptions id={item.jadwal_id} item={item} />
+                    <RowOptions item={item} />
                   </TableCell>
                   <TableCell>
                     {item.tgl_mulai} - {item.tgl_akhir}
                   </TableCell>
                   <TableCell>
-                    {item.kode_area} - {item.bidang.nama}
+                    {item.kode_area} - {item.bidang?.nama}
                   </TableCell>
-                  <TableCell>{item.propinsi.nama}</TableCell>
-                  <TableCell>{item.jadwal_fas_count} </TableCell>
-                  <TableCell>{item.jadwal_tujuan_count} </TableCell>
+                  <TableCell>{item.propinsi?.nama}</TableCell>
+                  <TableCell>{item.jadwal_fas_count}</TableCell>
+                  <TableCell>{item.jadwal_tujuan_count}</TableCell>
                   <TableCell>{item.sbi_count}</TableCell>
                   <TableCell>
-                    {item.status.nama} <br />
-                    {item.status_sbi === 1 && <CustomChip label='SPI telah dikirimkan ' skin='light' color='success' />}
+                    <Typography component='span' variant='body2'>
+                      {item.status?.nama}
+                    </Typography>
                     <br />
-                    {item.status_spi === 1 && <CustomChip label='SBI telah dikirimkan ' skin='light' color='success' />}
+                    {item.status_sbi === 1 && (
+                      <CustomChip label='SPI telah dikirimkan' skin='light' color='success' sx={{ mt: 1 }} />
+                    )}
+                    <br />
+                    {item.status_spi === 1 && (
+                      <CustomChip label='SBI telah dikirimkan' skin='light' color='success' sx={{ mt: 1 }} />
+                    )}
                   </TableCell>
                 </TableRow>
-              )
-            })}
+              ))
+            ) : (
+              <TableRow>
+                <TableCell colSpan={9} align='center'>
+                  <Typography component='span' variant='body2'>
+                    Tidak ada data jadwal.
+                  </Typography>
+                </TableCell>
+              </TableRow>
+            )}
           </TableBody>
         </Table>
       </TableContainer>
-      <Pagination count={numOfPages} page={current_page} onChange={handlePageChange} />
-      {open && <FormSpi dataForm={dataForm} dataSurat={dataSurat} open={open} edit={edit} handleClose={handleClose} />}
+      {totalPages > 1 && (
+        <Pagination
+          sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}
+          count={totalPages}
+          page={currentPage}
+          onChange={handlePaginationChange}
+        />
+      )}
+      {open && dataForm && (
+        <FormSpi dataForm={dataForm} dataSurat={dataSurat} open={open} edit={edit} handleClose={handleClose} />
+      )}
     </>
   )
 }

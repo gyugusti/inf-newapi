@@ -1,12 +1,11 @@
 'use client'
-import { useEffect, useMemo, useState } from 'react'
 
-import Link from 'next/link'
+import { useCallback, useEffect, useMemo, useState, useTransition } from 'react'
 
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 
-import { useDispatch, useSelector } from 'react-redux'
-import { Typography, IconButton, CircularProgress, Chip } from '@mui/material'
+import { Typography, CircularProgress, Button, MenuItem, Card, CardContent } from '@mui/material'
+import Grid from '@mui/material/Grid2'
 import {
   createColumnHelper,
   flexRender,
@@ -16,90 +15,100 @@ import {
   getSortedRowModel,
   getPaginationRowModel
 } from '@tanstack/react-table'
-import classnames from 'classnames'
-import { useSession } from 'next-auth/react'
 
-import {
-  getRegistrasiSrp,
-  changePage,
-  clearFilters,
-  clearValues,
-  deleteRegSumber,
-  kevalidatorRegSumber,
-  kirimOtorisatorSrp,
-  selesaiSrp,
-  tolakSrp,
-  kembalikanSrp
-} from '@/redux-store/validasi-data'
-import tableStyles from '@core/styles/table.module.css'
 import TablePaginationComponent from '@/components/TablePaginationComponent'
-import OptionMenu from '@/@core/components/option-menu'
-import KonfirmasiDialog from '@/components/widget/KonfirmasiDialog'
 import LogSrp from '../validasi-srp/LogSrp'
 import ActionsColumn from './ActionColumn'
-import { getTahapanValidasi, getFlagValid, getFlagLengkap } from '@/utils/balishelper'
-import SearchValidasi from '../validasi-srp/SearchValidasi'
+import { getFlagValid, getFlagLengkap, getKategoriSumber } from '@/utils/balishelper'
+import CustomTextField from '@/@core/components/mui/TextField'
+import * as XLSX from 'xlsx'
+import tableStyles from '@core/styles/table.module.css'
 
-const ViewRegSrp = ({ view }) => {
-  const dispatch = useDispatch()
-  const columnHelper = createColumnHelper()
-  const { data: session } = useSession()
+const PER_PAGE_OPTIONS = [5, 10, 20, 50, 100, 500]
+
+const ViewRegSrp = ({ data = [], currentPage, perPage, total, totalPages, searchTerm }) => {
+  const router = useRouter()
   const pathname = usePathname()
-  const username = session?.user?.name || ''
+  const searchParams = useSearchParams()
+  const columnHelper = createColumnHelper()
 
-  const [open, setOpen] = useState(false)
   const [openlog, setOpenlog] = useState(false)
-  const [opendispo, setOpendispo] = useState(false)
-  const [datasrp, setDatarp] = useState(false)
-
   const [regsrpId, setRegsrpId] = useState()
   const [fasId, setFasId] = useState()
-  const [showConfirmationDel, setShowConfirmationDel] = useState(false)
-  const [showConfirmationSend, setShowConfirmationSend] = useState(false)
-  const [showConfirmationSendOtorisator, setShowConfirmationSendOtorisator] = useState(false)
-  const [showConfirmationSelesai, setShowConfirmationSelesai] = useState(false)
-  const [showConfirmationKembalikan, setShowConfirmationKembalikan] = useState(false)
-  const [showConfirmationTolak, setShowConfirmationTolak] = useState(false)
+  const [cariValue, setCariValue] = useState(searchTerm || '')
+  const [perPageValue, setPerPageValue] = useState(perPage)
+  const [isPending, startTransition] = useTransition()
 
-  const { total, tab, per_page, current_page, listRegsrp, tahap_reg_id, isLoading, cari } = useSelector(
-    store => store.validasiData
+  useEffect(() => {
+    setCariValue(searchTerm || '')
+  }, [searchTerm])
+
+  useEffect(() => {
+    setPerPageValue(perPage)
+  }, [perPage])
+
+  const handleShowLog = useCallback((selectedRegsrpId, selectedFasId) => {
+    setRegsrpId(selectedRegsrpId)
+    setFasId(selectedFasId)
+    setOpenlog(true)
+  }, [])
+
+  const handleModalClose = useCallback(() => {
+    setOpenlog(false)
+  }, [])
+
+  const updateSearchParams = useCallback(
+    newParams => {
+      const params = new URLSearchParams(searchParams.toString())
+
+      Object.entries(newParams).forEach(([key, value]) => {
+        if (value === undefined || value === null || value === '') {
+          params.delete(key)
+        } else {
+          params.set(key, String(value))
+        }
+      })
+
+      const target = params.toString() ? `${pathname}?${params.toString()}` : pathname
+
+      startTransition(() => {
+        router.push(target, { scroll: false })
+      })
+    },
+    [pathname, router, searchParams, startTransition]
   )
 
-  useEffect(() => {
-    dispatch(clearValues())
-    dispatch(clearFilters())
-  }, [pathname, dispatch])
+  const handleSearchSubmit = useCallback(
+    event => {
+      event.preventDefault()
 
-  useEffect(() => {
-    dispatch(getRegistrasiSrp())
-  }, [dispatch, current_page, tahap_reg_id, tab, cari, per_page, total])
+      updateSearchParams({ cari: cariValue, per_page: perPageValue, page: undefined })
+    },
+    [cariValue, perPageValue, updateSearchParams]
+  )
 
-  const handlePageChange = newPage => {
-    dispatch(changePage(newPage))
-  }
+  const handleReset = useCallback(() => {
+    setCariValue('')
+    updateSearchParams({ cari: undefined, per_page: undefined, page: undefined })
+  }, [updateSearchParams])
 
-  const handleShowLog = (regsrpId, fas_id) => {
-    setRegsrpId(regsrpId)
-    setFasId(fas_id)
-    setOpenlog(true)
-  }
-
-  const handleModalClose = () => {
-    setOpen(false)
-    setOpenlog(false)
-    setOpendispo(false)
-  }
+  const handlePageChange = useCallback(
+    page => {
+      updateSearchParams({ page })
+    },
+    [updateSearchParams]
+  )
 
   const columns = useMemo(
     () => [
       columnHelper.display({
         id: 'no',
         header: 'No',
-        cell: ({ row }) => <Typography>{(current_page - 1) * per_page + row.index + 1}</Typography>
+        cell: ({ row }) => <Typography>{(currentPage - 1) * perPage + row.index + 1}</Typography>
       }),
       columnHelper.accessor('actions', {
         header: 'Actions',
-        cell: ({ row }) => <ActionsColumn row={row} handleShowLog={handleShowLog} view={view} />,
+        cell: ({ row }) => <ActionsColumn row={row} handleShowLog={handleShowLog} view='registrasi' />,
         enableSorting: false
       }),
       columnHelper.accessor('no_reg', {
@@ -108,13 +117,15 @@ const ViewRegSrp = ({ view }) => {
       }),
       columnHelper.accessor('Kode Sumber', {
         header: 'Kode Sumber',
-        cell: ({ row }) => <Typography>{row.original.master_sumber_id?.toString().padStart(7, '0')}</Typography>
+        cell: ({ row }) => (
+          <Typography>{row.original.master_sumber_id?.toString().padStart(7, '0')}</Typography>
+        )
       }),
       columnHelper.accessor('tahap_reg_id', {
         header: 'Status',
         cell: ({ row }) => (
           <div>
-            {row.original.tahapan.nama}
+            {row.original.tahapan?.nama}
             <br />
             {getFlagValid(row.original.flag_valid)} <br />
             {getFlagLengkap(row.original.flag_lengkap)}
@@ -125,7 +136,6 @@ const ViewRegSrp = ({ view }) => {
         header: 'Validator',
         cell: ({ row }) => <div>{row.original.validator?.username}</div>
       }),
-
       columnHelper.accessor('merk_sumber', {
         header: `Merk Unit/Radionuklida Tipe/No Seri`,
         cell: ({ row }) => (
@@ -135,7 +145,6 @@ const ViewRegSrp = ({ view }) => {
           </Typography>
         )
       }),
-
       columnHelper.accessor('merk_tabung', {
         header: 'Merk Tabung Tipe/No Seri',
         cell: ({ row }) => (
@@ -145,15 +154,6 @@ const ViewRegSrp = ({ view }) => {
           </Typography>
         )
       }),
-
-      // columnHelper.accessor('tipe_tabung', {
-      //   header: 'Tipe Tabung',
-      //   cell: ({ row }) => <Typography></Typography>
-      // }),
-      // columnHelper.accessor('no_seri_tabung', {
-      //   header: 'No Seri Tabung',
-      //   cell: ({ row }) => <Typography></Typography>
-      // }),
       columnHelper.accessor('jenis_sumber', {
         header: 'Jenis Sumber',
         cell: ({ row }) => <Typography>{row.original.jenis_sumber?.nama || 'N/A'}</Typography>
@@ -163,17 +163,17 @@ const ViewRegSrp = ({ view }) => {
         cell: ({ row }) => <Typography>{row.original.fasilitas?.nama || 'N/A'}</Typography>
       })
     ],
-    [current_page, per_page, columnHelper, view]
+    [columnHelper, currentPage, handleShowLog, perPage]
   )
 
   const table = useReactTable({
-    data: listRegsrp || [],
+    data: Array.isArray(data) ? data : [],
     columns,
-    pageCount: Math.ceil(total / per_page),
+    pageCount: totalPages,
     state: {
       pagination: {
-        pageIndex: current_page - 1,
-        pageSize: per_page
+        pageIndex: Math.max(currentPage - 1, 0),
+        pageSize: perPage
       }
     },
     manualPagination: true,
@@ -183,50 +183,169 @@ const ViewRegSrp = ({ view }) => {
     getPaginationRowModel: getPaginationRowModel()
   })
 
+  const exportExcel = useCallback(() => {
+    if (!Array.isArray(data) || data.length === 0) return
+
+    const formattedData = data.map(item => {
+      const {
+        id_encrypt,
+        jadwal_id,
+        user_id,
+        tgl_kirim,
+        batas_waktu_validasi,
+        kegiatan_id,
+        flag_kegiatan,
+        flag_user,
+        otorisator_id,
+        otorisator,
+        validator_id,
+        validator,
+        model_sumber_id,
+        merk_sumber,
+        fas_id,
+        fasilitas,
+        jenis_sumber_id,
+        jenis_sumber,
+        kat_sumber_id,
+        kategori_sumber,
+        merk_tabung,
+        tabung,
+        sat_aktivitas,
+        satuan_aktivitas,
+        aktivitas,
+        tgl_aktivitas,
+        sat_kv,
+        satuan_kv,
+        kv,
+        sat_ma,
+        satuan_ma,
+        ma,
+        tahap_reg_id,
+        tahapan,
+        master_sumber_id,
+        master_sumber,
+        ...rest
+      } = item
+
+      return {
+        ...rest,
+        master_Id: master_sumber?.master_id || '',
+        jenis_sumber: jenis_sumber?.nama || '',
+        kat_sumber_id: getKategoriSumber(kat_sumber_id),
+        merk_sumber: merk_sumber?.nama || '',
+        tabung: tabung?.nama || '',
+        aktivitas: aktivitas || '',
+        tgl_aktivitas: tgl_aktivitas || '',
+        satuan_aktivitas: satuan_aktivitas?.nama_satuan || '',
+        kv: kv || '',
+        satuan_kv: satuan_kv?.nama_satuan || '',
+        ma: ma || '',
+        satuan_ma: satuan_ma?.nama_satuan || '',
+        fasilitas: fasilitas?.nama || '',
+        validator: validator?.username || '',
+        tahapan: tahapan?.nama || ''
+      }
+    })
+
+    const worksheet = XLSX.utils.json_to_sheet(formattedData)
+    const workbook = XLSX.utils.book_new()
+
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Data')
+    XLSX.writeFile(workbook, 'registrasi-srp.xlsx')
+  }, [data])
+
   return (
-    <>
-      {isLoading ? (
-        <div className='flex justify-center items-center py-10'>
-          <CircularProgress color='inherit' />
-        </div>
-      ) : (
-        <>
-          <SearchValidasi showExcelSelect={true} />
+    <Card>
+      <CardContent>
+        <form onSubmit={handleSearchSubmit} className='mb-4'>
+          <Grid container spacing={2} alignItems='center'>
+            <Grid item='true' size={{ xs: 12, md: 4 }}>
+              <CustomTextField
+                fullWidth
+                value={cariValue}
+                label=''
+                onChange={event => setCariValue(event.target.value)}
+                placeholder='Cari...'
+              />
+            </Grid>
+            <Grid item='true' size={{ xs: 12, md: 2 }}>
+              <CustomTextField
+                select
+                fullWidth
+                value={perPageValue}
+                onChange={event => setPerPageValue(Number(event.target.value))}
+                label=''
+              >
+                {PER_PAGE_OPTIONS.map(option => (
+                  <MenuItem key={option} value={option}>
+                    {option}
+                  </MenuItem>
+                ))}
+              </CustomTextField>
+            </Grid>
+            <Grid item='true' size={{ xs: 12, md: 6 }} container justifyContent='flex-end' spacing={2}>
+              <Grid item='true'>
+                <Button type='submit' variant='contained'>
+                  Cari
+                </Button>
+              </Grid>
+              <Grid item='true'>
+                <Button variant='tonal' color='primary' type='button' onClick={handleReset}>
+                  Reset
+                </Button>
+              </Grid>
+              <Grid item='true'>
+                <Button variant='tonal' color='primary' type='button' onClick={exportExcel}>
+                  Export Excel
+                </Button>
+              </Grid>
+            </Grid>
+          </Grid>
+        </form>
 
-          <div className='overflow-x-auto'>
-            <table className={tableStyles.table}>
-              <thead>
-                {table.getHeaderGroups().map(headerGroup => (
-                  <tr key={headerGroup.id}>
-                    {headerGroup.headers.map(header => (
-                      <th key={header.id}>{flexRender(header.column.columnDef.header, header.getContext())}</th>
-                    ))}
-                  </tr>
-                ))}
-              </thead>
-              <tbody>
-                {table.getRowModel().rows.map(row => (
-                  <tr key={row.id}>
-                    {row.getVisibleCells().map(cell => (
-                      <td key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</td>
-                    ))}
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+        {isPending ? (
+          <div className='flex justify-center items-center py-10'>
+            <CircularProgress color='inherit' />
           </div>
+        ) : (
+          <>
+            <div className='overflow-x-auto'>
+              <table className={tableStyles.table}>
+                <thead>
+                  {table.getHeaderGroups().map(headerGroup => (
+                    <tr key={headerGroup.id}>
+                      {headerGroup.headers.map(header => (
+                        <th key={header.id}>{flexRender(header.column.columnDef.header, header.getContext())}</th>
+                      ))}
+                    </tr>
+                  ))}
+                </thead>
+                <tbody>
+                  {table.getRowModel().rows.map(row => (
+                    <tr key={row.id}>
+                      {row.getVisibleCells().map(cell => (
+                        <td key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</td>
+                      ))}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
 
-          <TablePaginationComponent
-            total={total}
-            per_page={per_page}
-            current_page={current_page}
-            onPageChange={handlePageChange}
-          />
-        </>
+            <TablePaginationComponent
+              total={total}
+              per_page={perPage}
+              current_page={currentPage}
+              onPageChange={handlePageChange}
+            />
+          </>
+        )}
+      </CardContent>
+
+      {openlog && (
+        <LogSrp fasId={fasId} regsrpId={regsrpId} open={openlog} handleClose={handleModalClose} />
       )}
-
-      {openlog && <LogSrp fasId={fasId} regsrpId={regsrpId} open={openlog} handleClose={handleModalClose} />}
-    </>
+    </Card>
   )
 }
 
