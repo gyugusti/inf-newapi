@@ -1,7 +1,6 @@
 'use client'
 
 import { useCallback, useEffect, useMemo, useState, useTransition } from 'react'
-
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 
 import { Button, Card, CardContent, CircularProgress, MenuItem, Typography } from '@mui/material'
@@ -81,7 +80,6 @@ const ViewRegSrp = ({ data = [], currentPage, perPage, total, totalPages, search
   const handleSearchSubmit = useCallback(
     event => {
       event.preventDefault()
-
       updateSearchParams({ cari: cariValue, per_page: perPageValue, page: undefined })
     },
     [cariValue, perPageValue, updateSearchParams]
@@ -117,7 +115,9 @@ const ViewRegSrp = ({ data = [], currentPage, perPage, total, totalPages, search
       }),
       columnHelper.accessor('Kode Sumber', {
         header: 'Kode Sumber',
-        cell: ({ row }) => <Typography>{row.original.master_sumber_id?.toString().padStart(7, '0')}</Typography>
+        cell: ({ row }) => (
+          <Typography>{row.original.master_sumber_id?.toString().padStart(7, '0')}</Typography>
+        )
       }),
       columnHelper.accessor('tahap_reg_id', {
         header: 'Status',
@@ -340,7 +340,9 @@ const ViewRegSrp = ({ data = [], currentPage, perPage, total, totalPages, search
         )}
       </CardContent>
 
-      {openlog && <LogSrp fasId={fasId} regsrpId={regsrpId} open={openlog} handleClose={handleModalClose} />}
+      {openlog && (
+        <LogSrp fasId={fasId} regsrpId={regsrpId} open={openlog} handleClose={handleModalClose} />
+      )}
     </Card>
   )
 }
