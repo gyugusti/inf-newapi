@@ -39,7 +39,7 @@ const initialState = {
 }
 
 export const getFihi = createAsyncThunk('fihi/getFihi', async (_, thunkAPI) => {
-  let url = `/api/fihi`
+  let url = `/api/ins/fihi`
 
   const insep = `${thunkAPI.getState().jadwal.insp_master_id}`
 
@@ -48,7 +48,7 @@ export const getFihi = createAsyncThunk('fihi/getFihi', async (_, thunkAPI) => {
       page: `${thunkAPI.getState().fihi.current_page}`,
       limit: `${thunkAPI.getState().fihi.per_page}`,
       status: `${thunkAPI.getState().fihi.status}`,
-      insp_master_id: thunkAPI.getState().jadwal.inspektur
+      insp_master_id: thunkAPI.getState().fihi.inspektur
     }
   }
 
@@ -74,7 +74,7 @@ export const getFihi = createAsyncThunk('fihi/getFihi', async (_, thunkAPI) => {
 })
 
 export const getfihiJadwal = createAsyncThunk('fihi/getfihiJadwal', async (id, thunkAPI) => {
-  let url = `/api/fihi`
+  let url = `/api/ins/fihi`
 
   let config = {
     params: {
@@ -106,7 +106,7 @@ export const getfihiJadwal = createAsyncThunk('fihi/getfihiJadwal', async (id, t
 })
 
 export const getdataFihi = createAsyncThunk('fihi/getdataFihi', async (id, thunkAPI) => {
-  let url = `/api/fihi/${id}`
+  let url = `/api/ins/fihi/${id}`
 
   let config = {}
 
@@ -132,7 +132,7 @@ export const getdataFihi = createAsyncThunk('fihi/getdataFihi', async (id, thunk
 })
 
 export const createFihi = createAsyncThunk('fihi/createFihi', async (dataform, thunkAPI) => {
-  let url = `/api/fihi`
+  let url = `/api/ins/fihi`
 
   let config = {}
 
@@ -224,7 +224,6 @@ export const editFihiPihak = createAsyncThunk('fihi/editFihiPihak', async ({ id,
 
 export const deleteFihiPihak = createAsyncThunk('fihi/deleteFihiPihak', async (params, thunkAPI) => {
   try {
-
     const resp = await customFetch.delete(`/api/fihiPihak/${params.id}`)
 
     if (resp.data.status === 200) {
@@ -285,7 +284,6 @@ export const fihiFormTabeledit = createAsyncThunk('fihi/fihiFormTabeledit', asyn
 
 export const fihiFormTabeldelete = createAsyncThunk('fihi/fihiFormTabeldelete', async (params, thunkAPI) => {
   try {
-
     const resp = await customFetch.delete(`/api/fihiFormTabel/${params.id}`, {
       params: {
         fihi_id: params.fihi_id
@@ -349,7 +347,6 @@ export const fihiSimpan = createAsyncThunk('fihi/fihiSimpan', async ({ fihi_id, 
 
 export const deleteFihi = createAsyncThunk('fihi/deleteFihi', async (params, thunkAPI) => {
   try {
-
     const resp = await customFetch.delete(`/api/fihi/${params.id}`)
 
     if (resp.data.status === 200) {
@@ -394,7 +391,6 @@ export const uploadFihiDok = createAsyncThunk('fihi/uploadFihiDok', async (dataf
 
 export const deleteFihiDok = createAsyncThunk('fihi/deleteFihiDok', async (params, thunkAPI) => {
   try {
-
     const resp = await customFetch.delete(`/api/fihi/dok/${params.id}`)
 
     if (resp.data.status === 200) {

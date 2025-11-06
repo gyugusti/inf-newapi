@@ -1,7 +1,4 @@
-import React from 'react'
-
 import ViewRegSrp from '@/views/data-umum/ViewRegSrp'
-
 import { fetchRegistrasiSrp } from './server'
 
 const DEFAULT_LIMIT = 20
