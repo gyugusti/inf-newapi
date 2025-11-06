@@ -1,5 +1,3 @@
-import React from 'react'
-
 import ViewRegSrp from '@/views/data-umum/ViewRegSrp'
 
 import { fetchRegistrasiSrp } from './server'
@@ -7,14 +5,17 @@ import { fetchRegistrasiSrp } from './server'
 const DEFAULT_LIMIT = 20
 
 const Page = async ({ searchParams }) => {
-  const page = Number(searchParams?.page) || 1
-  const limitParam = searchParams?.per_page ?? searchParams?.limit
+  const params = await searchParams
+  // const page = params.page;
+
+  const page = Number(params.page) || 1
+  const limitParam = params?.per_page ?? params?.limit
   const limit = Number(limitParam) || DEFAULT_LIMIT
-  const tahapRegId = searchParams?.tahap_reg_id ?? ''
-  const validatorId = searchParams?.validator_id ?? ''
-  const otorisatorId = searchParams?.otorisator_id ?? ''
-  const inspMasterId = searchParams?.insp_master_id ?? ''
-  const cari = searchParams?.cari ?? ''
+  const tahapRegId = params?.tahap_reg_id ?? ''
+  const validatorId = params?.validator_id ?? ''
+  const otorisatorId = params?.otorisator_id ?? ''
+  const inspMasterId = params?.insp_master_id ?? ''
+  const cari = params?.cari ?? ''
 
   const response = await fetchRegistrasiSrp({
     page,
@@ -30,9 +31,7 @@ const Page = async ({ searchParams }) => {
   const currentPage = Number(response?.current_page ?? page)
   const perPage = Number(response?.per_page ?? limit)
   const total = Number(response?.total ?? data.length ?? 0)
-  const totalPages = Number(
-    response?.last_page ?? (total && perPage ? Math.ceil(total / perPage) : 1)
-  )
+  const totalPages = Number(response?.last_page ?? (total && perPage ? Math.ceil(total / perPage) : 1))
 
   return (
     <ViewRegSrp

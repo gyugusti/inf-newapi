@@ -74,7 +74,7 @@ export const getFihi = createAsyncThunk('fihi/getFihi', async (_, thunkAPI) => {
 })
 
 export const getfihiJadwal = createAsyncThunk('fihi/getfihiJadwal', async (id, thunkAPI) => {
-  let url = `/api/fihi`
+  let url = `/api/ins/fihi`
 
   let config = {
     params: {
@@ -106,7 +106,7 @@ export const getfihiJadwal = createAsyncThunk('fihi/getfihiJadwal', async (id, t
 })
 
 export const getdataFihi = createAsyncThunk('fihi/getdataFihi', async (id, thunkAPI) => {
-  let url = `/api/fihi/${id}`
+  let url = `/api/ins/fihi/${id}`
 
   let config = {}
 
@@ -132,7 +132,7 @@ export const getdataFihi = createAsyncThunk('fihi/getdataFihi', async (id, thunk
 })
 
 export const createFihi = createAsyncThunk('fihi/createFihi', async (dataform, thunkAPI) => {
-  let url = `/api/fihi`
+  let url = `/api/ins/fihi`
 
   let config = {}
 
