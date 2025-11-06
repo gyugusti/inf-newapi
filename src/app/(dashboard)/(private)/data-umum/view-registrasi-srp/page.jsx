@@ -1,21 +1,17 @@
-import React from 'react'
-
 import ViewRegSrp from '@/views/data-umum/ViewRegSrp'
-
 import { fetchRegistrasiSrp } from './server'
 
 const DEFAULT_LIMIT = 20
 
-const Page = async props => {
-  const resolvedSearchParams = (await props.searchParams) ?? {}
-  const page = Number(resolvedSearchParams?.page) || 1
-  const limitParam = resolvedSearchParams?.per_page ?? resolvedSearchParams?.limit
+const Page = async ({ searchParams }) => {
+  const page = Number(searchParams?.page) || 1
+  const limitParam = searchParams?.per_page ?? searchParams?.limit
   const limit = Number(limitParam) || DEFAULT_LIMIT
-  const tahapRegId = resolvedSearchParams?.tahap_reg_id ?? ''
-  const validatorId = resolvedSearchParams?.validator_id ?? ''
-  const otorisatorId = resolvedSearchParams?.otorisator_id ?? ''
-  const inspMasterId = resolvedSearchParams?.insp_master_id ?? ''
-  const cari = resolvedSearchParams?.cari ?? ''
+  const tahapRegId = searchParams?.tahap_reg_id ?? ''
+  const validatorId = searchParams?.validator_id ?? ''
+  const otorisatorId = searchParams?.otorisator_id ?? ''
+  const inspMasterId = searchParams?.insp_master_id ?? ''
+  const cari = searchParams?.cari ?? ''
 
   const response = await fetchRegistrasiSrp({
     page,

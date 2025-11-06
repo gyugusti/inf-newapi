@@ -48,7 +48,7 @@ const initialState = {
 }
 
 export const getLhi = createAsyncThunk('lhi/getLhi', async (_, thunkAPI) => {
-  let url = `/api/lhi`
+  let url = `/api/ins/lhi`
 
   let config = {
     params: {
@@ -83,7 +83,7 @@ export const getLhi = createAsyncThunk('lhi/getLhi', async (_, thunkAPI) => {
 })
 
 export const createLhi = createAsyncThunk('lhi/createLhi', async (dataform, thunkAPI) => {
-  let url = `/api/lhi`
+  let url = `/api/ins/lhi`
 
   let config = {}
 
@@ -130,7 +130,6 @@ export const getdataLhi = createAsyncThunk('lhi/getdataLhi', async (id, thunkAPI
 
 export const deleteLhi = createAsyncThunk('lhi/deleteLhi', async (params, thunkAPI) => {
   try {
-
     const resp = await customFetch.delete(`/api/lhi/${params.id}`)
 
     if (resp.data.status === 200) {
@@ -222,7 +221,6 @@ export const editLhiPihak = createAsyncThunk('lhi/editLhiPihak', async ({ id, da
 
 export const deleteLhiPihak = createAsyncThunk('lhi/deleteLhiPihak', async (params, thunkAPI) => {
   try {
-
     const resp = await customFetch.delete(`/api/lhiPihak/${params.id}`)
 
     if (resp.data.status === 200) {
@@ -383,7 +381,6 @@ export const lhiFormTabeledit = createAsyncThunk('lhi/lhiFormTabeledit', async (
 
 export const lhiFormTabeldelete = createAsyncThunk('lhi/lhiFormTabeldelete', async (params, thunkAPI) => {
   try {
-
     const resp = await customFetch.delete(`/api/lhiFormTabel/${params.id}`, {
       params: {
         lhi_id: params.lhi_id
@@ -460,7 +457,6 @@ export const getDokumenlhi = createAsyncThunk('lhi/getDokumenlhi', async (id, th
 
 export const deleteLhiDok = createAsyncThunk('lhi/deleteLhiDok', async (params, thunkAPI) => {
   try {
-
     const resp = await customFetch.delete(`/api/lhi/dok/${params.id}`)
 
     if (resp.data.status === 200) {

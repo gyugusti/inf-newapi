@@ -10,7 +10,7 @@ import CustomTextField from '@/@core/components/mui/TextField'
 import CustomAutocomplete from '@/components/widget/CustomAutocomplete'
 import FasilitasAutocomplete from '@/components/widget/FasilitasAutocomplete'
 import { getModelSumber } from '@/redux-store/referensi-balis'
-import { clearFilters, clearValues, getSensusSrp, handleChangeSrp } from '@/redux-store/validasi-data'
+import { clearFilters, clearSrpfilter, getSensusSrp, handleChangeSrp } from '@/redux-store/validasi-data'
 
 const Search = () => {
   const dispatch = useDispatch()
@@ -52,14 +52,13 @@ const Search = () => {
   } = useForm({ defaultValues })
 
   const onSubmit = dataform => {
-    //  console.log(dataform)
     dispatch(handleChangeSrp(dataform))
     dispatch(getSensusSrp())
   }
 
   const handleReset = () => {
     dispatch(clearFilters())
-    dispatch(clearValues())
+    dispatch(clearSrpfilter())
     reset(defaultValues)
   }
 

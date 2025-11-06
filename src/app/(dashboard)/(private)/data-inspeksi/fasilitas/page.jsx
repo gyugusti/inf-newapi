@@ -5,12 +5,11 @@ import { fetchDataFasilitas } from './server'
 
 const DEFAULT_LIMIT = 20
 
-const Page = async props => {
-  const resolvedSearchParams = (await props.searchParams) ?? {}
-  const page = Number(resolvedSearchParams?.page) || 1
-  const limit = Number(resolvedSearchParams?.limit) || DEFAULT_LIMIT
-  const fasId = resolvedSearchParams?.fas_id ?? ''
-  const cari = resolvedSearchParams?.cari ?? ''
+const Page = async ({ searchParams }) => {
+  const page = Number(searchParams?.page) || 1
+  const limit = Number(searchParams?.limit) || DEFAULT_LIMIT
+  const fasId = searchParams?.fas_id ?? ''
+  const cari = searchParams?.cari ?? ''
 
   const response = await fetchDataFasilitas({
     page,

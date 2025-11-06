@@ -1,28 +1,27 @@
 'use client'
 
 import { useCallback, useEffect, useMemo, useState, useTransition } from 'react'
-
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 
-import { Typography, CircularProgress, Button, MenuItem, Card, CardContent } from '@mui/material'
+import { Button, Card, CardContent, CircularProgress, MenuItem, Typography } from '@mui/material'
 import Grid from '@mui/material/Grid2'
 import {
   createColumnHelper,
   flexRender,
   getCoreRowModel,
-  useReactTable,
   getFilteredRowModel,
+  getPaginationRowModel,
   getSortedRowModel,
-  getPaginationRowModel
+  useReactTable
 } from '@tanstack/react-table'
 
+import CustomTextField from '@/@core/components/mui/TextField'
 import TablePaginationComponent from '@/components/TablePaginationComponent'
+import { getFlagLengkap, getFlagValid, getKategoriSumber } from '@/utils/balishelper'
+import tableStyles from '@core/styles/table.module.css'
+import * as XLSX from 'xlsx'
 import LogSrp from '../validasi-srp/LogSrp'
 import ActionsColumn from './ActionColumn'
-import { getFlagValid, getFlagLengkap, getKategoriSumber } from '@/utils/balishelper'
-import CustomTextField from '@/@core/components/mui/TextField'
-import * as XLSX from 'xlsx'
-import tableStyles from '@core/styles/table.module.css'
 
 const PER_PAGE_OPTIONS = [5, 10, 20, 50, 100, 500]
 
@@ -81,7 +80,6 @@ const ViewRegSrp = ({ data = [], currentPage, perPage, total, totalPages, search
   const handleSearchSubmit = useCallback(
     event => {
       event.preventDefault()
-
       updateSearchParams({ cari: cariValue, per_page: perPageValue, page: undefined })
     },
     [cariValue, perPageValue, updateSearchParams]
@@ -259,7 +257,7 @@ const ViewRegSrp = ({ data = [], currentPage, perPage, total, totalPages, search
       <CardContent>
         <form onSubmit={handleSearchSubmit} className='mb-4'>
           <Grid container spacing={2} alignItems='center'>
-            <Grid item='true' size={{ xs: 12, md: 4 }}>
+            <Grid size={{ xs: 12, md: 4 }}>
               <CustomTextField
                 fullWidth
                 value={cariValue}
@@ -268,7 +266,7 @@ const ViewRegSrp = ({ data = [], currentPage, perPage, total, totalPages, search
                 placeholder='Cari...'
               />
             </Grid>
-            <Grid item='true' size={{ xs: 12, md: 2 }}>
+            <Grid size={{ xs: 12, md: 2 }}>
               <CustomTextField
                 select
                 fullWidth
@@ -283,18 +281,18 @@ const ViewRegSrp = ({ data = [], currentPage, perPage, total, totalPages, search
                 ))}
               </CustomTextField>
             </Grid>
-            <Grid item='true' size={{ xs: 12, md: 6 }} container justifyContent='flex-end' spacing={2}>
-              <Grid item='true'>
+            <Grid size={{ xs: 12, md: 6 }} container justifyContent='flex-end' spacing={2}>
+              <Grid>
                 <Button type='submit' variant='contained'>
                   Cari
                 </Button>
               </Grid>
-              <Grid item='true'>
+              <Grid>
                 <Button variant='tonal' color='primary' type='button' onClick={handleReset}>
                   Reset
                 </Button>
               </Grid>
-              <Grid item='true'>
+              <Grid>
                 <Button variant='tonal' color='primary' type='button' onClick={exportExcel}>
                   Export Excel
                 </Button>
