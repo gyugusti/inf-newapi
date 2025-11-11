@@ -1,16 +1,11 @@
 'use server'
 
-import { getServerSession } from 'next-auth/next'
-
-import { authOptions } from '@/libs/auth'
 import customFetch from '@/utils/axios'
 
 const DEFAULT_PAGE = 1
 const DEFAULT_LIMIT = 20
 
 export async function fetchDataFasilitas(params = {}) {
-  const session = await getServerSession(authOptions)
-
   if (!session) {
     return {
       data: [],
