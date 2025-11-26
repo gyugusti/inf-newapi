@@ -26,17 +26,14 @@ import ShadowBox from '@/components/styles/ShadowBox'
 import CustomAutocomplete from '@/components/widget/CustomAutocomplete'
 import AppReactDatepicker from '@/libs/styles/AppReactDatepicker'
 import { getModelSumber, getSatuan } from '@/redux-store/referensi-balis'
-import { updateSumber } from '@/redux-store/validasi-data'
 
-const FormSrp = ({ data }) => {
+const FormSrp = ({ data, onSubmitAction }) => {
   const searchParams = useSearchParams()
   const dispatch = useDispatch()
   const router = useRouter()
   const { data: session } = useSession()
-  const id = searchParams.get('id')
 
   const { dafSatuan, dafModelSumber } = useSelector(state => state.refbalis)
-  const { tab } = useSelector(state => state.validasiData)
 
   // Helper baca query: jika ada → string; jika tidak → ''
   const sp = searchParams
@@ -113,32 +110,50 @@ const FormSrp = ({ data }) => {
     return Object.values(map)
   }, [dafModelSumber])
 
-  const onSubmit = dataform => {
-    // Coerce tipe data seperlunya
+  const [isSubmitting, setIsSubmitting] = useState(false)
+
+  const onSubmit = async dataform => {
+    if (!onSubmitAction) return
+
     const parsed = {
-      ...dataform,
-
-      // angka
-      jenis_sumber_id: dataform.jenis_sumber_id ? Number(dataform.jenis_sumber_id) : null,
-      kat_sumber_id: dataform.kat_sumber_id ? Number(dataform.kat_sumber_id) : null,
-      model_sumber_id: dataform.model_sumber_id ? Number(dataform.model_sumber_id) : null,
-      satuan_id: dataform.satuan_id ? Number(dataform.satuan_id) : null,
-      status_sumber_id: dataform.status_sumber_id ? Number(dataform.status_sumber_id) : 0,
-      jumlah: dataform.jumlah ? Number(dataform.jumlah) : null,
-      kv: dataform.kv ? Number(dataform.kv) : null,
-      ma: dataform.ma ? Number(dataform.ma) : null,
+      jenis_sumber_id: dataform.jenis_sumber_id ? Number(dataform.jenis_sumber_id) : 0,
+      flag_kegiatan: dataform.flag_kegiatan ?? '',
+      kat_sumber_id: dataform.kat_sumber_id ? Number(dataform.kat_sumber_id) : 0,
+      kegiatan: dataform.kegiatan ? Number(dataform.kegiatan) : 0,
+      model_sumber_id: dataform.model_sumber_id ? Number(dataform.model_sumber_id) : 0,
+      tipe: dataform.tipe ?? '',
+      no_seri: dataform.no_seri ?? '',
+      merk_tabung: dataform.merk_tabung ? Number(dataform.merk_tabung) : 0,
+      tipe_tabung: dataform.tipe_tabung ?? '',
+      no_seri_tabung: dataform.no_seri_tabung ?? '',
       tahun_produksi: dataform.tahun_produksi ? String(dataform.tahun_produksi) : '',
-
-      username: session?.user?.name || '',
-      user_id: session?.user?.id || ''
+      pabrikan: dataform.pabrikan ?? '',
+      aktivitas: dataform.aktivitas ?? '',
+      sat_aktivitas: dataform.satuan_id ? Number(dataform.satuan_id) : 0,
+      tgl_aktivitas: dataform.tgl_aktivitas ?? '',
+      kv: dataform.kv ? Number(dataform.kv) : 0,
+      sat_kv: dataform.sat_kv ? Number(dataform.sat_kv) : 0,
+      ma: dataform.ma ? Number(dataform.ma) : 0,
+      sat_ma: dataform.sat_ma ? Number(dataform.sat_ma) : 0,
+      sifat: dataform.sifat ?? '',
+      bentuk: dataform.bentuk ?? '',
+      fas_id: dataform.fas_id ? Number(dataform.fas_id) : 0,
+      user_id: session?.user?.id ?? 0,
+      flag_user: dataform.flag_user ? Number(dataform.flag_user) : 0,
+      username: session?.user?.name ?? '',
+      jadwal_id: dataform.jadwal_id ? Number(dataform.jadwal_id) : 0
     }
 
-    dispatch(updateSumber({ id, dataforms: parsed }))
-
-    router.push(`/sensus-srp/${id}?tab=${tab}`)
+    try {
+      setIsSubmitting(true)
+      await onSubmitAction(parsed)
+      router.push('/frontend/srp-registrasi')
+    } catch (error) {
+      console.error('Error submitting registrasi SRP:', error)
+    } finally {
+      setIsSubmitting(false)
+    }
   }
-
-  const breadcrumbs = [{ name: 'Sensus Sumber', path: `/sensus-srp/${id}` }, { name: 'Form Sensus Sumber' }]
 
   return (
     <>
@@ -595,8 +610,8 @@ const FormSrp = ({ data }) => {
             </Grid>
 
             <Grid size={10}>
-              <Button type='submit' variant='contained' sx={{ float: 'right' }}>
-                Submit
+              <Button type='submit' variant='contained' sx={{ float: 'right' }} disabled={isSubmitting}>
+                {isSubmitting ? 'Submitting...' : 'Submit'}
               </Button>
             </Grid>
           </Grid>
