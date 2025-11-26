@@ -35,19 +35,17 @@ const fasilitasMenu = [
   {
     label: 'Pelaporan',
     icon: <i className='tabler-smart-home' />,
-    // suffix: <CustomChip label='0' size='small' color='error' round='true' />,
     roles: ['pemohon_admin', 'pemohon_tambahan'], // Accessible by these roles
     children: [{ label: 'LVKF Tahunan', href: '/frontend/lvkf-tahunan', roles: ['pemohon_admin', 'pemohon_tambahan'] }]
   },
   {
     label: 'Validasi SRP',
     icon: <i className='tabler-smart-home' />,
-    //  suffix: <CustomChip label='0' size='small' color='error' round='true' />,
     roles: ['pemohon_admin', 'pemohon_tambahan'], // Accessible by these roles
     children: [
-      { label: 'Registrasi SRP', href: '/frontend/lvkf-tahunan', roles: [] },
-      { label: 'Update Srp', href: '/lvkf-jadwal', roles: ['pemohon_admin', 'pemohon_tambahan', 'admin'] },
-      { label: 'Sensus Srp', href: '/frontend/lvkf', roles: ['pemohon_admin', 'pemohon_tambahan', 'admin'] }
+      { label: 'Registrasi SRP', href: '/frontend/srp-registrasi', roles: [] },
+      { label: 'Update Srp', href: '/frontend/srp-update', roles: ['pemohon_admin', 'pemohon_tambahan', 'admin'] },
+      { label: 'Sensus Srp', href: '/frontend/srp-sensus', roles: ['pemohon_admin', 'pemohon_tambahan', 'admin'] }
     ]
   }
 ]

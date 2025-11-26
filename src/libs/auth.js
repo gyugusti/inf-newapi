@@ -34,6 +34,7 @@ const toEpochMs = value => {
 
 export const authOptions = {
   debug: true,
+  secret: process.env.NEXTAUTH_SECRET, // ⬅️ tambah ini
   adapter: PrismaAdapter(prisma),
 
   providers: [

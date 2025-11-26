@@ -1,23 +1,24 @@
 'use client'
 
-// ** React Imports
 import { useEffect } from 'react'
+
+// ✅ React & Next
+import Link from 'next/link'
 
 import { useParams } from 'next/navigation'
 
-import { useDispatch, useSelector } from 'react-redux'
-
-// ** MUI Imports
-import Priview from '@/views/jadwal/Priview'
+// ✅ External Libraries
 import { Icon } from '@iconify/react/dist/iconify.js'
 import Button from '@mui/material/Button'
 import Grid from '@mui/material/Grid2'
-import Link from 'next/link'
+import { useDispatch, useSelector } from 'react-redux'
 
+// ✅ Internal / Aliases
 import CustomBreadcrumb from '@/components/widget/CustomBreadcrumb'
 import { getdetailJadwal } from '@/redux-store/jadwal'
 import ListAlamat from '@/views/jadwal/fas/ListAlamat'
 import Inspektur from '@/views/jadwal/Inspektur'
+import Priview from '@/views/jadwal/Priview'
 
 const Detail = () => {
   const { id } = useParams()

@@ -1,51 +1,53 @@
 'use server'
 
-import customFetch from '@/utils/axios'
 import { getServerSession } from 'next-auth/next'
 
 import { authOptions } from '@/libs/auth'
-import { getServerAccessToken } from '@/utils/auth-server'
+import customFetch from '@/utils/axios'
 
 const DEFAULT_PAGE = 1
 const DEFAULT_LIMIT = 20
 
-export async function fetchDataFasilitas(params = {}) {
+export async function fetchRegistrasiSrp(params = {}) {
   const session = await getServerSession(authOptions)
-  const accessToken = await getServerAccessToken()
-  console.log(accessToken)
 
   if (!session) {
     return {
       data: [],
       current_page: params.page || DEFAULT_PAGE,
-      per_page: params.limit || DEFAULT_LIMIT,
+      per_page: params.limit || params.per_page || DEFAULT_LIMIT,
       last_page: 1,
       total: 0
     }
   }
+
+  const page = Number(params.page) || DEFAULT_PAGE
+  const limit = Number(params.limit || params.per_page) || DEFAULT_LIMIT
 
   const config = {
     headers: {
       Authorization: `Bearer ${session?.user?.accessToken ?? ''}`
     },
     params: {
-      page: params.page || DEFAULT_PAGE,
-      limit: params.limit || DEFAULT_LIMIT,
-      fas_id: params.fas_id || '',
+      page,
+      limit,
+      tahap_reg_id: params.tahap_reg_id || '',
+      validator_id: params.validator_id || '',
+      otorisator_id: params.otorisator_id || '',
       cari: params.cari || ''
     },
     withCredentials: true
   }
 
   try {
-    const resp = await customFetch.get('/api/data/fasilitas', config)
+    const resp = await customFetch.get('/api/registrasi/srp', config)
     const responseData = resp?.data?.response
 
     if (!responseData) {
       return {
         data: [],
-        current_page: params.page || DEFAULT_PAGE,
-        per_page: params.limit || DEFAULT_LIMIT,
+        current_page: page,
+        per_page: limit,
         last_page: 1,
         total: 0
       }
@@ -53,24 +55,24 @@ export async function fetchDataFasilitas(params = {}) {
 
     return {
       data: Array.isArray(responseData.data) ? responseData.data : [],
-      current_page: Number(responseData.current_page ?? params.page ?? DEFAULT_PAGE),
-      per_page: Number(responseData.per_page ?? params.limit ?? DEFAULT_LIMIT),
+      current_page: Number(responseData.current_page ?? page),
+      per_page: Number(responseData.per_page ?? limit),
       last_page: Number(
         responseData.last_page ??
           responseData.total_pages ??
-          (responseData.total && (responseData.per_page || params.limit)
-            ? Math.ceil(responseData.total / (responseData.per_page || params.limit))
+          (responseData.total && (responseData.per_page || limit)
+            ? Math.ceil(responseData.total / (responseData.per_page || limit))
             : 1)
       ),
       total: Number(responseData.total ?? responseData.data?.length ?? 0)
     }
   } catch (error) {
-    console.error('Error fetching fasilitas:', error)
+    console.error('Error fetching registrasi SRP:', error)
 
     return {
       data: [],
-      current_page: params.page || DEFAULT_PAGE,
-      per_page: params.limit || DEFAULT_LIMIT,
+      current_page: page,
+      per_page: limit,
       last_page: 1,
       total: 0
     }

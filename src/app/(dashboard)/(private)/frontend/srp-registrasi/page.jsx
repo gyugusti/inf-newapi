@@ -1,5 +1,4 @@
-import ViewRegSrp from '@/views/data-umum/ViewRegSrp'
-
+import IndexReg from '@/views/frontend/srp/IndexReg.js'
 import { fetchRegistrasiSrp } from './server'
 
 const DEFAULT_LIMIT = 20
@@ -20,7 +19,6 @@ const Page = async ({ searchParams }) => {
     tahap_reg_id: tahapRegId,
     validator_id: validatorId,
     otorisator_id: otorisatorId,
-    insp_master_id: inspMasterId,
     cari
   })
 
@@ -31,7 +29,7 @@ const Page = async ({ searchParams }) => {
   const totalPages = Number(response?.last_page ?? (total && perPage ? Math.ceil(total / perPage) : 1))
 
   return (
-    <ViewRegSrp
+    <IndexReg
       data={data}
       currentPage={currentPage}
       perPage={perPage}

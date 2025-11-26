@@ -97,6 +97,7 @@ const JadwalContainer = () => {
 
     const handleRowOptionsClose = itemData => {
       setAnchorEl(null)
+
       if (itemData && itemData.jadwal_id) {
         dispatch(setEditJadwal({ editJadwalId: itemData.jadwal_id, ...itemData }))
       }
