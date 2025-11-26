@@ -78,3 +78,51 @@ export async function fetchRegistrasiSrp(params = {}) {
     }
   }
 }
+
+export async function createRegistrasiSrp(data) {
+  const session = await getServerSession(authOptions)
+
+  if (!session) {
+    throw new Error('Unauthorized')
+  }
+
+  const config = {
+    headers: {
+      Authorization: `Bearer ${session?.user?.accessToken ?? ''}`
+    },
+    withCredentials: true
+  }
+
+  const payload = {
+    jenis_sumber_id: data?.jenis_sumber_id ?? 0,
+    flag_kegiatan: data?.flag_kegiatan ?? '',
+    kat_sumber_id: data?.kat_sumber_id ?? 0,
+    kegiatan: data?.kegiatan ?? 0,
+    model_sumber_id: data?.model_sumber_id ?? 0,
+    tipe: data?.tipe ?? '',
+    no_seri: data?.no_seri ?? '',
+    merk_tabung: data?.merk_tabung ?? 0,
+    tipe_tabung: data?.tipe_tabung ?? '',
+    no_seri_tabung: data?.no_seri_tabung ?? '',
+    tahun_produksi: data?.tahun_produksi ?? '',
+    pabrikan: data?.pabrikan ?? '',
+    aktivitas: data?.aktivitas ?? '',
+    sat_aktivitas: data?.sat_aktivitas ?? 0,
+    tgl_aktivitas: data?.tgl_aktivitas ?? '',
+    kv: data?.kv ?? 0,
+    sat_kv: data?.sat_kv ?? 0,
+    ma: data?.ma ?? 0,
+    sat_ma: data?.sat_ma ?? 0,
+    sifat: data?.sifat ?? '',
+    bentuk: data?.bentuk ?? '',
+    fas_id: data?.fas_id ?? 0,
+    user_id: data?.user_id ?? 0,
+    flag_user: data?.flag_user ?? 0,
+    username: data?.username ?? '',
+    jadwal_id: data?.jadwal_id ?? 0
+  }
+
+  const resp = await customFetch.post('/api/registrasi/srp', payload, config)
+
+  return resp?.data
+}

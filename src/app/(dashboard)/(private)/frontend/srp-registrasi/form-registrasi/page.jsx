@@ -2,6 +2,7 @@ import { Grid2 } from '@mui/material'
 
 import CustomBreadcrumb from '@/components/widget/CustomBreadcrumb'
 import FormSrp from '@/views/frontend/srp/FormSrp'
+import { createRegistrasiSrp } from '../server'
 
 const Page = () => {
   const breadcrumbs = [
@@ -13,7 +14,7 @@ const Page = () => {
     <>
       <Grid2>
         <CustomBreadcrumb breadcrumbs={breadcrumbs} />
-        <FormSrp />
+        <FormSrp onSubmitAction={createRegistrasiSrp} />
       </Grid2>
     </>
   )
