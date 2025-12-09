@@ -26,7 +26,14 @@ const DocumenSrp = ({ fasId, regsrpId, open, handleClose }) => {
 
   const handleModal2Close = () => {
     setIsModal2Open(false)
-    handleClose(true)
+  }
+
+  const handleDokumenSelected = () => {
+    setIsModal2Open(false)
+
+    if (regsrpId) {
+      dispatch(dokumenRegSumber(regsrpId))
+    }
   }
 
   const handleClickDownload = (id, nama) => {
@@ -134,7 +141,14 @@ const DocumenSrp = ({ fasId, regsrpId, open, handleClose }) => {
         )}
       </CustomDialog>
 
-      <FormDokumen open={isModal2Open} handleClose={handleModal2Close} regsrpId={regsrpId} fasId={fasId} edit={false} />
+      <FormDokumen
+        open={isModal2Open}
+        handleClose={handleModal2Close}
+        onSuccess={handleDokumenSelected}
+        regsrpId={regsrpId}
+        fasId={fasId}
+        edit={false}
+      />
     </Fragment>
   )
 }
