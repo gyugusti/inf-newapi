@@ -1,36 +1,48 @@
-import { getServerSession } from 'next-auth'
+import IndexReg from '@/views/frontend/srp/IndexReg.js'
 
-import { authOptions } from '@/libs/auth'
-import Index from '@/views/frontend/lvkf-tahunan/Index'
-import { getLkfData } from './server'
+const DEFAULT_LIMIT = 20
 
-export const dynamic = 'force-dynamic'
+const Page = async ({ searchParams }) => {
+  const page = Number(searchParams?.page) || 1
+  const limitParam = searchParams?.per_page ?? searchParams?.limit
+  const limit = Number(limitParam) || DEFAULT_LIMIT
+  const tahapRegId = searchParams?.tahap_reg_id ?? ''
+  const validatorId = searchParams?.validator_id ?? ''
+  const otorisatorId = searchParams?.otorisator_id ?? ''
+  const inspMasterId = searchParams?.insp_master_id ?? ''
+  const cari = searchParams?.cari ?? ''
 
-export default async function Page({ searchParams }) {
-  const sp = await searchParams
+  // const response = await fetchRegistrasiSrp({
+  //   page,
+  //   limit,
+  //   tahap_reg_id: tahapRegId,
+  //   validator_id: validatorId,
+  //   otorisator_id: otorisatorId,
+  //   cari
+  // })
+  const response = []
 
-  const tab = sp?.tab === 'arsip' ? 'arsip' : 'daftar'
+  const data = response?.data ?? []
+  const currentPage = Number(response?.current_page ?? page)
+  const perPage = Number(response?.per_page ?? limit)
+  const total = Number(response?.total ?? data.length ?? 0)
+  const totalPages = Number(response?.last_page ?? (total && perPage ? Math.ceil(total / perPage) : 1))
 
-  const page = sp?.page ? Number(sp.page) : 1
-  const limit = sp?.limit ? Number(sp.limit) : 10
-
-  const status = tab === 'arsip' ? undefined : Array.isArray(sp?.status) ? sp.status : sp?.status
-
-  const propinsi_id = sp?.propinsi_id
-  const bidang_id = sp?.bidang_id
-
-  const session = await getServerSession(authOptions)
-  const fas_id = session?.user?.fas_id
-
-  const data = await getLkfData({
-    page,
-    limit,
-    status,
-    propinsi_id,
-    bidang_id,
-    fas_id,
-    tab
-  })
-
-  return <Index data={data} tab={tab} searchParams={{ page, limit, status, propinsi_id, bidang_id }} />
+  return (
+    <IndexReg
+      data={data}
+      currentPage={currentPage}
+      perPage={perPage}
+      total={total}
+      totalPages={totalPages}
+      searchTerm={cari}
+    />
+  )
 }
+
+Page.acl = {
+  action: 'all',
+  subject: 'bptn-page'
+}
+
+export default Page

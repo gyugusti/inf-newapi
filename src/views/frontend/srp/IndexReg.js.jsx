@@ -1,8 +1,12 @@
 'use client'
 
-import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { useCallback, useEffect, useMemo, useState, useTransition } from 'react'
 
+import { usePathname, useRouter, useSearchParams } from 'next/navigation'
+
+import Link from 'next/link'
+
+import { Icon } from '@iconify/react/dist/iconify.js'
 import { Button, Card, CardContent, CardHeader, CircularProgress, MenuItem, Typography } from '@mui/material'
 import Grid from '@mui/material/Grid2'
 import {
@@ -19,8 +23,8 @@ import CustomTextField from '@/@core/components/mui/TextField'
 import TablePaginationComponent from '@/components/TablePaginationComponent'
 import { getFlagLengkap, getFlagValid } from '@/utils/balishelper'
 import tableStyles from '@core/styles/table.module.css'
-import Link from 'next/link'
-import ActionsColumn from './ActionColumn'
+import ActionsColumnRegistrasi from './ActionsColumnRegistrasi'
+import DocumenSrp from './DocumenSrp'
 import LogSrp from './LogSrp'
 
 const PER_PAGE_OPTIONS = [5, 10, 20, 50, 100, 500]
@@ -31,6 +35,7 @@ const IndexReg = ({ data = [], currentPage, perPage, total, totalPages, searchTe
   const searchParams = useSearchParams()
   const columnHelper = createColumnHelper()
 
+  const [open, setOpen] = useState(false)
   const [openlog, setOpenlog] = useState(false)
   const [regsrpId, setRegsrpId] = useState()
   const [fasId, setFasId] = useState()
@@ -52,9 +57,16 @@ const IndexReg = ({ data = [], currentPage, perPage, total, totalPages, searchTe
     setOpenlog(true)
   }, [])
 
-  const handleModalClose = useCallback(() => {
+  const handleShowDokumen = (regsrpId, fas_id) => {
+    setRegsrpId(regsrpId)
+    setFasId(fas_id)
+    setOpen(true)
+  }
+
+  const handleModalClose = () => {
+    setOpen(false)
     setOpenlog(false)
-  }, [])
+  }
 
   const updateSearchParams = useCallback(
     newParams => {
@@ -106,17 +118,21 @@ const IndexReg = ({ data = [], currentPage, perPage, total, totalPages, searchTe
       }),
       columnHelper.accessor('actions', {
         header: 'Actions',
-        cell: ({ row }) => <ActionsColumn row={row} handleShowLog={handleShowLog} view='registrasi' />,
+        cell: ({ row }) => (
+          <ActionsColumnRegistrasi
+            row={row}
+            handleShowLog={handleShowLog}
+            handleShowDokumen={handleShowDokumen}
+            view='registrasi'
+          />
+        ),
         enableSorting: false
       }),
       columnHelper.accessor('no_reg', {
         header: 'No Reg',
         cell: ({ row }) => <Typography>{row.original.no_reg}</Typography>
       }),
-      columnHelper.accessor('Kode Sumber', {
-        header: 'Kode Sumber',
-        cell: ({ row }) => <Typography>{row.original.master_sumber_id?.toString().padStart(7, '0')}</Typography>
-      }),
+
       columnHelper.accessor('tahap_reg_id', {
         header: 'Status',
         cell: ({ row }) => (
@@ -128,10 +144,7 @@ const IndexReg = ({ data = [], currentPage, perPage, total, totalPages, searchTe
           </div>
         )
       }),
-      columnHelper.accessor('validator_id', {
-        header: 'Validator',
-        cell: ({ row }) => <div>{row.original.validator?.username}</div>
-      }),
+
       columnHelper.accessor('merk_sumber', {
         header: `Merk Unit/Radionuklida Tipe/No Seri`,
         cell: ({ row }) => (
@@ -184,9 +197,9 @@ const IndexReg = ({ data = [], currentPage, perPage, total, totalPages, searchTe
       <CardHeader
         title={` Registrasi SRP`}
         action={
-          <Link href='/frontend/srp-registrasi/form-registrasi' passHref>
+          <Link href='/frontend/srp-registrasi/create' passHref>
             <Button variant='contained' color='primary'>
-              Create Registrasi SRP
+              Tambah Baru <Icon icon='tabler:circle-plus' fontSize='1.25rem' />
             </Button>
           </Link>
         }
@@ -218,7 +231,7 @@ const IndexReg = ({ data = [], currentPage, perPage, total, totalPages, searchTe
                 ))}
               </CustomTextField>
             </Grid>
-            <Grid size={{ xs: 12, md: 6 }} container justifyContent='flex-end' spacing={2}>
+            <Grid size={{ xs: 12, md: 6 }} container justifyContent='flex-start' spacing={2}>
               <Grid>
                 <Button type='submit' variant='outlined'>
                   Cari
@@ -273,6 +286,8 @@ const IndexReg = ({ data = [], currentPage, perPage, total, totalPages, searchTe
       </CardContent>
 
       {openlog && <LogSrp fasId={fasId} regsrpId={regsrpId} open={openlog} handleClose={handleModalClose} />}
+
+      {open && <DocumenSrp fasId={fasId} regsrpId={regsrpId} open={open} handleClose={handleModalClose} />}
     </Card>
   )
 }

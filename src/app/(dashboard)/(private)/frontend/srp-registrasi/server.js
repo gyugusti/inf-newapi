@@ -17,6 +17,7 @@ export async function fetchRegistrasiSrp(params = {}) {
       current_page: params.page || DEFAULT_PAGE,
       per_page: params.limit || params.per_page || DEFAULT_LIMIT,
       last_page: 1,
+      fas_id: session?.user?.fas_id ?? '',
       total: 0
     }
   }
@@ -34,6 +35,7 @@ export async function fetchRegistrasiSrp(params = {}) {
       tahap_reg_id: params.tahap_reg_id || '',
       validator_id: params.validator_id || '',
       otorisator_id: params.otorisator_id || '',
+      fas_id: session?.user?.fas_id ?? '',
       cari: params.cari || ''
     },
     withCredentials: true
@@ -101,6 +103,7 @@ export async function createRegistrasiSrp(data) {
     model_sumber_id: data?.model_sumber_id ?? 0,
     tipe: data?.tipe ?? '',
     no_seri: data?.no_seri ?? '',
+    nama: data?.nama ?? '',
     merk_tabung: data?.merk_tabung ?? 0,
     tipe_tabung: data?.tipe_tabung ?? '',
     no_seri_tabung: data?.no_seri_tabung ?? '',
@@ -115,6 +118,10 @@ export async function createRegistrasiSrp(data) {
     sat_ma: data?.sat_ma ?? 0,
     sifat: data?.sifat ?? '',
     bentuk: data?.bentuk ?? '',
+    jumlah: data?.jumlah ?? 0,
+    sat_jumlah: data?.sat_jumlah ?? 0,
+    status_sumber_id: data?.status_sumber_id ?? 0,
+    ket_status: data?.ket_status ?? '',
     fas_id: data?.fas_id ?? 0,
     user_id: data?.user_id ?? 0,
     flag_user: data?.flag_user ?? 0,
@@ -122,7 +129,90 @@ export async function createRegistrasiSrp(data) {
     jadwal_id: data?.jadwal_id ?? 0
   }
 
-  const resp = await customFetch.post('/api/registrasi/srp', payload, config)
+  try {
+    const resp = await customFetch.post('/api/registrasi/srp', payload, config)
 
-  return resp?.data
+    return resp?.data
+  } catch (error) {
+    const apiData = error?.response?.data
+    const keterangan = apiData?.keterangan
+
+    console.error('API /api/registrasi/srp error:', apiData || error?.message)
+
+    // sesuai log kamu:
+    // { "status":400, "keterangan": { flag_kegiatan: [...], ma: [...] }, "response":[] }
+    if (keterangan) {
+      throw new Error(JSON.stringify({ type: 'validation', errors: keterangan }))
+    }
+
+    throw new Error(apiData?.message || apiData?.error || error?.message || 'Gagal menyimpan registrasi SRP')
+  }
+}
+
+// ==== UPDATE SRP (PUT) ====
+export async function updateRegistrasiSrp(id, data) {
+  const session = await getServerSession(authOptions)
+
+  if (!session) {
+    throw new Error('Unauthorized')
+  }
+
+  const config = {
+    headers: {
+      Authorization: `Bearer ${session?.user?.accessToken ?? ''}`
+    },
+    withCredentials: true
+  }
+
+  const payload = {
+    jenis_sumber_id: data?.jenis_sumber_id ?? 0,
+    flag_kegiatan: data?.flag_kegiatan ?? '',
+    kat_sumber_id: data?.kat_sumber_id ?? 0,
+    kegiatan: data?.kegiatan ?? 0,
+    model_sumber_id: data?.model_sumber_id ?? 0,
+    tipe: data?.tipe ?? '',
+    no_seri: data?.no_seri ?? '',
+    nama: data?.nama ?? '',
+    merk_tabung: data?.merk_tabung ?? 0,
+    tipe_tabung: data?.tipe_tabung ?? '',
+    no_seri_tabung: data?.no_seri_tabung ?? '',
+    tahun_produksi: data?.tahun_produksi ?? '',
+    pabrikan: data?.pabrikan ?? '',
+    aktivitas: data?.aktivitas ?? '',
+    sat_aktivitas: data?.sat_aktivitas ?? 0,
+    tgl_aktivitas: data?.tgl_aktivitas ?? '',
+    kv: data?.kv ?? 0,
+    sat_kv: data?.sat_kv ?? 0,
+    ma: data?.ma ?? 0,
+    sat_ma: data?.sat_ma ?? 0,
+    sifat: data?.sifat ?? '',
+    bentuk: data?.bentuk ?? '',
+    jumlah: data?.jumlah ?? 0,
+    sat_jumlah: data?.sat_jumlah ?? 0,
+    status_sumber_id: data?.status_sumber_id ?? 0,
+    ket_status: data?.ket_status ?? '',
+    fas_id: data?.fas_id ?? 0,
+    user_id: data?.user_id ?? 0,
+    flag_user: data?.flag_user ?? 0,
+    username: data?.username ?? '',
+    jadwal_id: data?.jadwal_id ?? 0
+  }
+
+  try {
+    const resp = await customFetch.put(`/api/registrasi/srp/${id}`, payload, config)
+
+    return resp?.data
+  } catch (error) {
+    const apiData = error?.response?.data
+    const keterangan = apiData?.keterangan
+
+    console.error('API UPDATE SRP error:', apiData || error?.message)
+
+    // Laravel/Yii response: { status:400, keterangan:{...}, response:[] }
+    if (keterangan) {
+      throw new Error(JSON.stringify({ type: 'validation', errors: keterangan }))
+    }
+
+    throw new Error(apiData?.message || apiData?.error || error?.message || 'Gagal mengupdate registrasi SRP')
+  }
 }

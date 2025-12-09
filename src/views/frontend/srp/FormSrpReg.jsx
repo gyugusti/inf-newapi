@@ -8,26 +8,26 @@ import { useSession } from 'next-auth/react'
 import { Controller, useForm } from 'react-hook-form'
 import { useDispatch, useSelector } from 'react-redux'
 
-import {
-  Autocomplete,
-  Button,
-  FormControl,
-  FormControlLabel,
-  FormGroup,
-  FormLabel,
-  MenuItem,
-  Switch,
-  TextField,
-  Typography
-} from '@mui/material'
+import { Autocomplete, Box, Button, MenuItem, TextField, Typography } from '@mui/material'
 import Grid from '@mui/material/Grid2'
+
+import { toast } from 'react-toastify'
 
 import ShadowBox from '@/components/styles/ShadowBox'
 import CustomAutocomplete from '@/components/widget/CustomAutocomplete'
 import AppReactDatepicker from '@/libs/styles/AppReactDatepicker'
 import { getModelSumber, getSatuan } from '@/redux-store/referensi-balis'
 
-const FormSrp = ({ data, onSubmitAction }) => {
+import LingkupAutoComplete from '@/components/widget/LingkupAutoComplete'
+
+// helper untuk flatten error backend { field: [msg1, msg2], ... } jadi 1 string
+const flattenApiErrors = errorsObj => {
+  if (!errorsObj || typeof errorsObj !== 'object') return ''
+
+  return Object.values(errorsObj).flat().join(' | ')
+}
+
+const FormSrpReg = ({ data, action }) => {
   const searchParams = useSearchParams()
   const dispatch = useDispatch()
   const router = useRouter()
@@ -51,7 +51,7 @@ const FormSrp = ({ data, onSubmitAction }) => {
     model_sumber_id: getSP('model_sumber_id'),
     status_sumber_id: getSP('status_sumber_id'),
     aktivitas: getSP('aktivitas'),
-    satuan_id: getSP('satuan_id'),
+    sat_aktivitas: getSP('sat_aktivitas'),
     tgl_aktivitas: getSP('tgl_aktivitas'),
     kv: getSP('kv'),
     sat_kv: getSP('sat_kv'),
@@ -64,19 +64,24 @@ const FormSrp = ({ data, onSubmitAction }) => {
     sat_jumlah: getSP('sat_jumlah'),
     ket_status: getSP('ket_status'),
     pabrikan: getSP('pabrikan'),
-    tahun_produksi: getSP('tahun_produksi')
+    tahun_produksi: getSP('tahun_produksi'),
+    flag_kegiatan: getSP('flag_kegiatan'),
+    kegiatan_id: getSP('kegiatan_id')
+
+    // kalau mau, bisa tambahkan flag_kegiatan, kegiatan, flag_user, jadwal_id di sini juga
   }
 
   const {
     control,
     setValue,
     handleSubmit,
+    setError,
+    watch,
     formState: { errors }
   } = useForm({ defaultValues })
 
   // Jenis sumber & properti mandat
   const [jenisSbr, setJenisSbr] = useState(defaultValues.jenis_sumber_id ? Number(defaultValues.jenis_sumber_id) : '')
-
   const [prpMandatori, setPrpMandatori] = useState(jenisSbr === 1)
 
   useEffect(() => {
@@ -93,7 +98,7 @@ const FormSrp = ({ data, onSubmitAction }) => {
 
     keys.forEach(k => setValue(k, getSP(k)))
     setJenisSbr(getSP('jenis_sumber_id') ? Number(getSP('jenis_sumber_id')) : '')
-  }, [searchParams])
+  }, [searchParams, setValue])
 
   const optSatuan = useMemo(
     () => dafSatuan.map(item => ({ label: item.nama_satuan, value: item.satuan_id })),
@@ -111,32 +116,46 @@ const FormSrp = ({ data, onSubmitAction }) => {
   }, [dafModelSumber])
 
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const flagKegiatanWatch = watch('flag_kegiatan')
 
   const onSubmit = async dataform => {
-    if (!onSubmitAction) return
+    if (!action) return
 
     const parsed = {
       jenis_sumber_id: dataform.jenis_sumber_id ? Number(dataform.jenis_sumber_id) : 0,
-      flag_kegiatan: dataform.flag_kegiatan ?? '',
+      flag_kegiatan: dataform.flag_kegiatan ?? '', // kalau ada field ini di form/hidden
       kat_sumber_id: dataform.kat_sumber_id ? Number(dataform.kat_sumber_id) : 0,
-      kegiatan: dataform.kegiatan ? Number(dataform.kegiatan) : 0,
+      kegiatan: dataform.kegiatan ? Number(dataform.kegiatan) : 0, // kalau ada
       model_sumber_id: dataform.model_sumber_id ? Number(dataform.model_sumber_id) : 0,
       tipe: dataform.tipe ?? '',
       no_seri: dataform.no_seri ?? '',
+      nama: dataform.nama ?? '',
+
       merk_tabung: dataform.merk_tabung ? Number(dataform.merk_tabung) : 0,
       tipe_tabung: dataform.tipe_tabung ?? '',
       no_seri_tabung: dataform.no_seri_tabung ?? '',
+
       tahun_produksi: dataform.tahun_produksi ? String(dataform.tahun_produksi) : '',
       pabrikan: dataform.pabrikan ?? '',
+
       aktivitas: dataform.aktivitas ?? '',
-      sat_aktivitas: dataform.satuan_id ? Number(dataform.satuan_id) : 0,
+      sat_aktivitas: dataform.sat_aktivitas ? Number(dataform.sat_aktivitas) : 0,
       tgl_aktivitas: dataform.tgl_aktivitas ?? '',
+
       kv: dataform.kv ? Number(dataform.kv) : 0,
       sat_kv: dataform.sat_kv ? Number(dataform.sat_kv) : 0,
       ma: dataform.ma ? Number(dataform.ma) : 0,
       sat_ma: dataform.sat_ma ? Number(dataform.sat_ma) : 0,
+
       sifat: dataform.sifat ?? '',
       bentuk: dataform.bentuk ?? '',
+
+      jumlah: dataform.jumlah ? Number(dataform.jumlah) : 0,
+      sat_jumlah: dataform.sat_jumlah ? Number(dataform.sat_jumlah) : 0,
+
+      status_sumber_id: dataform.status_sumber_id ? Number(dataform.status_sumber_id) : 0,
+      ket_status: dataform.ket_status ?? '',
+
       fas_id: session?.user?.fas_id ?? 0,
       user_id: session?.user?.id ?? 0,
       flag_user: dataform.flag_user ? Number(dataform.flag_user) : 0,
@@ -146,10 +165,48 @@ const FormSrp = ({ data, onSubmitAction }) => {
 
     try {
       setIsSubmitting(true)
-      await onSubmitAction(parsed)
+
+      const result = await action(parsed)
+
+      toast.success(result?.message || 'Data registrasi SRP berhasil disimpan.')
+
       router.push('/frontend/srp-registrasi')
     } catch (error) {
       console.error('Error submitting registrasi SRP:', error)
+
+      let messageForToast = 'Terjadi kesalahan saat menyimpan data.'
+      let fieldErrors = {}
+
+      try {
+        // coba parse JSON dari server action
+        const parsedErr = JSON.parse(error.message)
+
+        if (parsedErr?.type === 'validation' && parsedErr?.errors) {
+          fieldErrors = parsedErr.errors
+          messageForToast = flattenApiErrors(parsedErr.errors)
+        } else if (parsedErr?.errors) {
+          fieldErrors = parsedErr.errors
+          messageForToast = flattenApiErrors(parsedErr.errors)
+        } else {
+          messageForToast = error.message || messageForToast
+        }
+      } catch (e) {
+        // kalau message bukan JSON
+        messageForToast = error.message || messageForToast
+      }
+
+      // tampilkan toast global
+      toast.error(messageForToast)
+
+      // mapping ke field react-hook-form (kalau nama field cocok)
+      Object.entries(fieldErrors).forEach(([field, msgs]) => {
+        if (field in defaultValues) {
+          setError(field, {
+            type: 'server',
+            message: Array.isArray(msgs) ? msgs.join(', ') : String(msgs)
+          })
+        }
+      })
     } finally {
       setIsSubmitting(false)
     }
@@ -160,6 +217,43 @@ const FormSrp = ({ data, onSubmitAction }) => {
       <ShadowBox>
         <form id='myForm' onSubmit={handleSubmit(onSubmit)}>
           <Grid container spacing={2} justifyContent='center'>
+            <Grid size={10}>
+              <Controller
+                name='flag_kegiatan'
+                control={control}
+                rules={{ required: true }}
+                render={({ field: { value, onChange } }) => (
+                  <TextField
+                    fullWidth
+                    select
+                    label='Kegiatan'
+                    value={value}
+                    onChange={onChange}
+                    error={Boolean(errors.flag_kegiatan)}
+                    helperText={errors.flag_kegiatan && 'This field is required'}
+                  >
+                    <MenuItem value='2'>Ekspor/Impor</MenuItem>
+                    <MenuItem value='1'>Pemanfaatan</MenuItem>
+                  </TextField>
+                )}
+              />
+              <Controller
+                name='kegiatan_id'
+                control={control}
+                rules={{ required: 'Lingkup wajib dipilih' }}
+                render={({ field, fieldState }) => (
+                  <div>
+                    <label className='text-md font-medium'>Lingkup</label>
+                    <LingkupAutoComplete
+                      value={field.value}
+                      onChange={selected => setValue('kegiatan_id', selected.kegiatan_id)}
+                      flagKegiatan={flagKegiatanWatch}
+                    />
+                    {fieldState.error && <p className='text-red-500 text-sm'>{fieldState.error.message}</p>}
+                  </div>
+                )}
+              />
+            </Grid>
             <Grid size={5}>
               <Controller
                 name='kat_sumber_id'
@@ -216,7 +310,7 @@ const FormSrp = ({ data, onSubmitAction }) => {
                     options={optMerk}
                     getOptionLabel={option => option?.label ?? ''}
                     onChange={(e, data) => onChange(data?.value ?? null)}
-                    value={optMerk.find(opt => opt.value === value) || null}
+                    value={optMerk.find(opt => opt.value === Number(value)) || null}
                     renderInput={params => <TextField {...params} label='Merk Unit' />}
                   />
                 )}
@@ -272,14 +366,14 @@ const FormSrp = ({ data, onSubmitAction }) => {
                 </Grid>
                 <Grid size={6}>
                   <Controller
-                    name='satuan_id'
+                    name='sat_aktivitas'
                     control={control}
                     render={({ field: { onChange, value } }) => (
                       <Autocomplete
                         options={optSatuan}
                         getOptionLabel={option => option?.label ?? ''}
                         onChange={(e, data) => onChange(data?.value ?? null)}
-                        value={optSatuan.find(opt => opt.value === value) || null}
+                        value={optSatuan.find(opt => opt.value === Number(value)) || null}
                         renderInput={params => <TextField {...params} label='Satuan Aktivitas' />}
                       />
                     )}
@@ -366,193 +460,166 @@ const FormSrp = ({ data, onSubmitAction }) => {
               />
             </Grid>
 
-            <Grid size={10}>
-              <CustomAutocomplete
-                control={control}
-                errors={errors.merk_tabung}
-                name='merk_tabung'
-                label='Merk Tabung'
-                options={optMerk}
-                required={prpMandatori}
-              />
-            </Grid>
+            {/* ====================== DATA TABUNG (hanya untuk jenisSbr === 1) ====================== */}
+            {jenisSbr === 1 && (
+              <Grid size={10}>
+                <Box
+                  sx={{
+                    mt: 2,
+                    mb: 1,
+                    p: 2,
+                    borderRadius: 2,
+                    border: '1px solid',
+                    borderColor: 'divider'
+                  }}
+                >
+                  <Typography variant='subtitle1' fontWeight={600} gutterBottom>
+                    Data Tabung
+                  </Typography>
 
-            <Grid size={5}>
-              <Controller
-                name='tipe_tabung'
-                control={control}
-                rules={{ required: prpMandatori }}
-                render={({ field: { value, onChange } }) => (
-                  <TextField
-                    fullWidth
-                    label='Tipe Tabung'
-                    value={value}
-                    onChange={onChange}
-                    error={Boolean(errors.tipe_tabung)}
-                    helperText={errors.tipe_tabung && 'This field is required'}
-                  />
-                )}
-              />
-            </Grid>
-
-            <Grid size={5}>
-              <Controller
-                name='no_seri_tabung'
-                control={control}
-                rules={{ required: prpMandatori }}
-                render={({ field: { value, onChange } }) => (
-                  <TextField
-                    fullWidth
-                    label='No Seri Tabung'
-                    value={value}
-                    onChange={onChange}
-                    error={Boolean(errors.no_seri_tabung)}
-                    helperText={errors.no_seri_tabung && 'This field is required'}
-                  />
-                )}
-              />
-            </Grid>
-
-            <Grid size={5}>
-              <Grid container spacing={2}>
-                <Grid size={6}>
-                  <Controller
-                    name='ma'
-                    rules={{ required: prpMandatori }}
-                    control={control}
-                    render={({ field: { value, onChange } }) => (
-                      <TextField
-                        fullWidth
-                        label='ma'
-                        value={value}
-                        onChange={onChange}
-                        error={Boolean(errors.ma)}
-                        helperText={errors.ma && 'This field is required'}
+                  <Grid container spacing={2}>
+                    <Grid size={12}>
+                      <CustomAutocomplete
+                        control={control}
+                        errors={errors.merk_tabung}
+                        name='merk_tabung'
+                        label='Merk Tabung'
+                        options={optMerk}
+                        required={prpMandatori}
                       />
-                    )}
-                  />
-                </Grid>
-                <Grid size={6}>
-                  <Controller
-                    name='sat_ma'
-                    rules={{ required: prpMandatori }}
-                    control={control}
-                    render={({ field: { onChange, value } }) => (
-                      <Autocomplete
-                        options={optSatuan}
-                        getOptionLabel={option => option?.label ?? ''}
-                        onChange={(e, data) => onChange(data?.value ?? null)}
-                        value={optSatuan.find(opt => opt.value === value) || null}
-                        renderInput={params => <TextField {...params} label='Satuan Ma' />}
+                    </Grid>
+
+                    <Grid size={6}>
+                      <Controller
+                        name='tipe_tabung'
+                        control={control}
+                        rules={{ required: prpMandatori }}
+                        render={({ field: { value, onChange } }) => (
+                          <TextField
+                            fullWidth
+                            label='Tipe Tabung'
+                            value={value}
+                            onChange={onChange}
+                            error={Boolean(errors.tipe_tabung)}
+                            helperText={errors.tipe_tabung && 'This field is required'}
+                          />
+                        )}
                       />
-                    )}
-                  />
-                </Grid>
+                    </Grid>
+
+                    <Grid size={6}>
+                      <Controller
+                        name='no_seri_tabung'
+                        control={control}
+                        rules={{ required: prpMandatori }}
+                        render={({ field: { value, onChange } }) => (
+                          <TextField
+                            fullWidth
+                            label='No Seri Tabung'
+                            value={value}
+                            onChange={onChange}
+                            error={Boolean(errors.no_seri_tabung)}
+                            helperText={errors.no_seri_tabung && 'This field is required'}
+                          />
+                        )}
+                      />
+                    </Grid>
+
+                    <Grid size={6}>
+                      <Grid container spacing={2}>
+                        <Grid size={6}>
+                          <Controller
+                            name='ma'
+                            rules={{ required: prpMandatori }}
+                            control={control}
+                            render={({ field: { value, onChange } }) => (
+                              <TextField
+                                fullWidth
+                                label='ma'
+                                value={value}
+                                onChange={onChange}
+                                error={Boolean(errors.ma)}
+                                helperText={errors.ma && 'This field is required'}
+                              />
+                            )}
+                          />
+                        </Grid>
+                        <Grid size={6}>
+                          <Controller
+                            name='sat_ma'
+                            control={control}
+                            rules={{ required: prpMandatori ? 'This field is required' : false }}
+                            render={({ field: { onChange, value }, fieldState: { error } }) => (
+                              <Autocomplete
+                                options={optSatuan}
+                                getOptionLabel={option => option?.label ?? ''}
+                                onChange={(e, data) => onChange(data?.value ?? null)}
+                                value={optSatuan.find(opt => opt.value === Number(value)) || null}
+                                renderInput={params => (
+                                  <TextField
+                                    {...params}
+                                    label='Satuan Ma'
+                                    required={prpMandatori}
+                                    error={!!error}
+                                    helperText={error?.message || ''}
+                                  />
+                                )}
+                              />
+                            )}
+                          />
+                        </Grid>
+                      </Grid>
+                    </Grid>
+
+                    <Grid size={6}>
+                      <Grid container spacing={2}>
+                        <Grid size={6}>
+                          <Controller
+                            name='kv'
+                            rules={{ required: prpMandatori }}
+                            control={control}
+                            render={({ field: { value, onChange } }) => (
+                              <TextField
+                                fullWidth
+                                label='kv'
+                                value={value}
+                                onChange={onChange}
+                                error={Boolean(errors.kv)}
+                                helperText={errors.kv && 'This field is required'}
+                              />
+                            )}
+                          />
+                        </Grid>
+                        <Grid size={6}>
+                          <Controller
+                            name='sat_kv'
+                            control={control}
+                            rules={{ required: prpMandatori ? 'This field is required' : false }}
+                            render={({ field: { onChange, value }, fieldState: { error } }) => (
+                              <Autocomplete
+                                options={optSatuan}
+                                getOptionLabel={option => option?.label ?? ''}
+                                onChange={(e, data) => onChange(data?.value ?? null)}
+                                value={optSatuan.find(opt => opt.value === Number(value)) || null}
+                                renderInput={params => (
+                                  <TextField
+                                    {...params}
+                                    label='Satuan Kv'
+                                    required={prpMandatori}
+                                    error={!!error}
+                                    helperText={error?.message || ''}
+                                  />
+                                )}
+                              />
+                            )}
+                          />
+                        </Grid>
+                      </Grid>
+                    </Grid>
+                  </Grid>
+                </Box>
               </Grid>
-            </Grid>
-
-            <Grid size={5}>
-              <Grid container spacing={2}>
-                <Grid size={6}>
-                  <Controller
-                    name='kv'
-                    rules={{ required: prpMandatori }}
-                    control={control}
-                    render={({ field: { value, onChange } }) => (
-                      <TextField
-                        fullWidth
-                        label='kv'
-                        value={value}
-                        onChange={onChange}
-                        error={Boolean(errors.kv)}
-                        helperText={errors.kv && 'This field is required'}
-                      />
-                    )}
-                  />
-                </Grid>
-                <Grid size={6}>
-                  <Controller
-                    name='sat_kv'
-                    rules={{ required: prpMandatori }}
-                    control={control}
-                    render={({ field: { onChange, value } }) => (
-                      <Autocomplete
-                        options={optSatuan}
-                        getOptionLabel={option => option?.label ?? ''}
-                        onChange={(e, data) => onChange(data?.value ?? null)}
-                        value={optSatuan.find(opt => opt.value === value) || null}
-                        renderInput={params => <TextField {...params} label='Satuan Kv' />}
-                      />
-                    )}
-                  />
-                </Grid>
-              </Grid>
-            </Grid>
-
-            <Grid size={5}>
-              <Grid container spacing={2}>
-                <Grid size={6}>
-                  <Controller
-                    name='jumlah'
-                    control={control}
-                    rules={{ required: true }}
-                    render={({ field: { value, onChange } }) => (
-                      <TextField
-                        fullWidth
-                        label='Jumlah'
-                        value={value}
-                        onChange={onChange}
-                        error={Boolean(errors.jumlah)}
-                        helperText={errors.jumlah && 'This field is required'}
-                      />
-                    )}
-                  />
-                </Grid>
-                <Grid size={6}>
-                  <Controller
-                    name='sat_jumlah'
-                    control={control}
-                    render={({ field: { onChange, value } }) => (
-                      <Autocomplete
-                        options={optSatuan}
-                        getOptionLabel={option => option?.label ?? ''}
-                        onChange={(e, data) => onChange(data?.value ?? null)}
-                        value={optSatuan.find(opt => opt.value === value) || null}
-                        renderInput={params => <TextField {...params} label='Satuan Jumlah' />}
-                      />
-                    )}
-                  />
-                </Grid>
-              </Grid>
-            </Grid>
-
-            <Grid size={5}>
-              <Controller
-                name='status_sumber_id'
-                control={control}
-                render={({ field: { value, onChange } }) => {
-                  const checked = String(value) === '1'
-
-                  return (
-                    <FormControl component='fieldset' variant='standard'>
-                      <FormLabel component='legend'>Status Sumber</FormLabel>
-                      <FormGroup>
-                        <FormControlLabel
-                          control={
-                            <Switch
-                              checked={checked}
-                              onChange={e => onChange(e.target.checked ? 1 : 0)}
-                              color='primary'
-                            />
-                          }
-                          label={<Typography>{checked ? 'ON' : 'OFF'}</Typography>}
-                        />
-                      </FormGroup>
-                    </FormControl>
-                  )
-                }}
-              />
-            </Grid>
+            )}
 
             <Grid size={5}>
               <Controller
@@ -590,26 +657,6 @@ const FormSrp = ({ data, onSubmitAction }) => {
             </Grid>
 
             <Grid size={10}>
-              <Controller
-                name='ket_status'
-                control={control}
-                rules={{ required: true }}
-                render={({ field: { value, onChange } }) => (
-                  <TextField
-                    fullWidth
-                    multiline
-                    maxRows={4}
-                    label='Keterangan Status'
-                    value={value}
-                    onChange={onChange}
-                    error={Boolean(errors.ket_status)}
-                    helperText={errors.ket_status && 'This field is required'}
-                  />
-                )}
-              />
-            </Grid>
-
-            <Grid size={10}>
               <Button type='submit' variant='contained' sx={{ float: 'right' }} disabled={isSubmitting}>
                 {isSubmitting ? 'Submitting...' : 'Submit'}
               </Button>
@@ -621,4 +668,4 @@ const FormSrp = ({ data, onSubmitAction }) => {
   )
 }
 
-export default FormSrp
+export default FormSrpReg

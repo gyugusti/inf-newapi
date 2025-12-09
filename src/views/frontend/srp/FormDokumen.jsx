@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useState } from 'react'
+import { Fragment, useEffect } from 'react'
 
 import { Icon } from '@iconify/react/dist/iconify.js'
 import {
@@ -7,37 +7,30 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
-  MenuItem,
   Pagination,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableHead,
-  TableRow,
-  TextField
+  TableRow
 } from '@mui/material'
 
 import { useSession } from 'next-auth/react'
 import { useDispatch, useSelector } from 'react-redux'
-
-import { toast } from 'react-toastify'
 
 import { useSettings } from '@/@core/hooks/useSettings'
 import DialogCloseButton from '@/components/dialogs/DialogCloseButton'
 import { changePage, getDokumen } from '@/redux-store/referensi-balis'
 import { insertDocSumber } from '@/redux-store/validasi-data'
 
-const FormAddSrpdoc = ({ regsrpId, fasId, open, handleClose }) => {
+const FormDokumen = ({ regsrpId, fasId, open, jenisDokumen, handleClose }) => {
   const dispatch = useDispatch()
   const { data: session } = useSession()
   const username = session?.user?.name || ''
   const bgColors = useSettings()
 
   const { listDokumen, isLoading, numOfPages, total, per_page, current_page } = useSelector(store => store.refbalis)
-
-  // Jenis dokumen per dokumen
-  const [jenisDokumenMap, setJenisDokumenMap] = useState({})
 
   useEffect(() => {
     if (fasId) {
@@ -52,19 +45,7 @@ const FormAddSrpdoc = ({ regsrpId, fasId, open, handleClose }) => {
     dispatch(changePage(value))
   }
 
-  const handleChangeJenisDokumen = (dok_file_id, value) => {
-    setJenisDokumenMap(prev => ({ ...prev, [dok_file_id]: value }))
-  }
-
   const handlePilihDokumen = id => {
-    const jenisDokumen = jenisDokumenMap[id]
-
-    if (!jenisDokumen) {
-      toast.error('Silakan pilih jenis dokumen terlebih dahulu.')
-
-      return
-    }
-
     const dataform = {
       reg_srp_id: regsrpId,
       username: username,
@@ -116,7 +97,6 @@ const FormAddSrpdoc = ({ regsrpId, fasId, open, handleClose }) => {
             <TableBody>
               {listDokumen.map((item, index) => {
                 const { dok_file_id, nama_file, uraian_file } = item
-                const selectedJenis = jenisDokumenMap[dok_file_id] || ''
 
                 return (
                   <Fragment key={dok_file_id}>
@@ -126,20 +106,7 @@ const FormAddSrpdoc = ({ regsrpId, fasId, open, handleClose }) => {
                         {nama_file} <br /> ID: {dok_file_id}
                       </TableCell>
                       <TableCell>{uraian_file}</TableCell>
-                      <TableCell>
-                        <TextField
-                          select
-                          fullWidth
-                          size='small'
-                          label='Jenis Dokumen'
-                          value={selectedJenis}
-                          onChange={e => handleChangeJenisDokumen(dok_file_id, e.target.value)}
-                        >
-                          <MenuItem value=''>Pilih Jenis Dokumen</MenuItem>
-                          <MenuItem value='1'>Foto</MenuItem>
-                          <MenuItem value='2'>Sertifikat</MenuItem>
-                        </TextField>
-                      </TableCell>
+
                       <TableCell padding='checkbox'>
                         <Button
                           variant='tonal'
@@ -178,4 +145,4 @@ const FormAddSrpdoc = ({ regsrpId, fasId, open, handleClose }) => {
   )
 }
 
-export default FormAddSrpdoc
+export default FormDokumen
