@@ -33,7 +33,14 @@ const DocumenSrp = ({ fasId, regsrpId, open, handleClose }) => {
 
   const handleModal2Close = () => {
     setIsModal2Open(false)
-    handleClose(true)
+  }
+
+  const handleDokumenSelected = () => {
+    setIsModal2Open(false)
+
+    if (regsrpId) {
+      dispatch(dokumenRegSumber(regsrpId))
+    }
   }
 
   const handleClickDownload = (id, nama) => {
@@ -151,12 +158,18 @@ const DocumenSrp = ({ fasId, regsrpId, open, handleClose }) => {
 
       <FormDokumen
         open={isModal2Open}
+<<<<<<< HEAD
         jenis={jenis}
         handleClose={handleModal2Close}
+=======
+        handleClose={handleModal2Close}
+        onSuccess={handleDokumenSelected}
+>>>>>>> 2bf07f65c335de381ef721b0c5b94881cd559c80
         regsrpId={regsrpId}
         fasId={fasId}
         edit={false}
       />
+<<<<<<< HEAD
 
       <KonfirmasiDialog
         open={showConfirmationDel}
@@ -171,6 +184,8 @@ const DocumenSrp = ({ fasId, regsrpId, open, handleClose }) => {
         }}
         message='Data Ini akan dihapus'
       />
+=======
+>>>>>>> 2bf07f65c335de381ef721b0c5b94881cd559c80
     </Fragment>
   )
 }
