@@ -24,11 +24,7 @@ import DialogCloseButton from '@/components/dialogs/DialogCloseButton'
 import { changePage, getDokumen } from '@/redux-store/referensi-balis'
 import { insertDocSumber } from '@/redux-store/validasi-data'
 
-<<<<<<< HEAD
-const FormDokumen = ({ regsrpId, fasId, open, jenis, handleClose }) => {
-=======
-const FormDokumen = ({ regsrpId, fasId, open, jenisDokumen, handleClose, onSuccess }) => {
->>>>>>> 2bf07f65c335de381ef721b0c5b94881cd559c80
+const FormDokumen = ({ regsrpId, fasId, open, jenis, handleClose, onSuccess }) => {
   const dispatch = useDispatch()
   const { data: session } = useSession()
   const username = session?.user?.name || ''

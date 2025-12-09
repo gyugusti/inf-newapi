@@ -18,13 +18,13 @@ const DocumenSrp = ({ fasId, regsrpId, open, handleClose }) => {
   const [dataId, setDataId] = useState()
   const [showConfirmationDel, setShowConfirmationDel] = useState(false)
 
-  const { isLoading, listDokumenSrp, tahap_reg_id } = useSelector(store => store.validasiData)
+  const { isLoading, tab, listDokumenSrp, tahap_reg_id } = useSelector(store => store.validasiData)
 
   useEffect(() => {
     if (regsrpId) {
       dispatch(dokumenRegSumber(regsrpId))
     }
-  }, [dispatch, regsrpId])
+  }, [dispatch, regsrpId, tab])
 
   const handleModal2Open = jenisval => {
     setIsModal2Open(true)
@@ -33,14 +33,7 @@ const DocumenSrp = ({ fasId, regsrpId, open, handleClose }) => {
 
   const handleModal2Close = () => {
     setIsModal2Open(false)
-  }
-
-  const handleDokumenSelected = () => {
-    setIsModal2Open(false)
-
-    if (regsrpId) {
-      dispatch(dokumenRegSumber(regsrpId))
-    }
+    handleClose(true)
   }
 
   const handleClickDownload = (id, nama) => {
@@ -158,18 +151,12 @@ const DocumenSrp = ({ fasId, regsrpId, open, handleClose }) => {
 
       <FormDokumen
         open={isModal2Open}
-<<<<<<< HEAD
         jenis={jenis}
         handleClose={handleModal2Close}
-=======
-        handleClose={handleModal2Close}
-        onSuccess={handleDokumenSelected}
->>>>>>> 2bf07f65c335de381ef721b0c5b94881cd559c80
         regsrpId={regsrpId}
         fasId={fasId}
         edit={false}
       />
-<<<<<<< HEAD
 
       <KonfirmasiDialog
         open={showConfirmationDel}
@@ -184,8 +171,6 @@ const DocumenSrp = ({ fasId, regsrpId, open, handleClose }) => {
         }}
         message='Data Ini akan dihapus'
       />
-=======
->>>>>>> 2bf07f65c335de381ef721b0c5b94881cd559c80
     </Fragment>
   )
 }
