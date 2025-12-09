@@ -262,6 +262,31 @@ export const deleteDocReg = createAsyncThunk('validasiData/deleteDocReg', async 
   }
 })
 
+export const uploadRegisDoc = createAsyncThunk('validasiData/uploadRegisDoc', async (dataform, thunkAPI) => {
+  console.log('upload')
+  let url = `/api/registrasi/srp/newDoc`
+
+  let config = {
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    }
+  }
+
+  try {
+    const resp = await customFetch.post(url, dataform, config)
+
+    return resp.data
+  } catch (error) {
+    if (error.response.status === 401) {
+      thunkAPI.dispatch(handleLogout())
+
+      return thunkAPI.rejectWithValue('Unautorized ! Logging Out...')
+    } else {
+      return thunkAPI.rejectWithValue(error.response)
+    }
+  }
+})
+
 export const kevalidatorRegSumber = createAsyncThunk(
   'validasiData/kevalidatorRegSumber',
   async (dataform, thunkAPI) => {
@@ -958,6 +983,21 @@ const validasiDataSlice = createSlice({
           window.location.href = '/'
         } else {
           toast.error(JSON.stringify(payload))
+        }
+      })
+      .addCase(uploadRegisDoc.pending, state => {
+        state.isLoading = true
+      })
+      .addCase(uploadRegisDoc.fulfilled, (state, { payload }) => {
+        state.isLoading = false
+        state.tab = payload
+        toast.success('Srp dokumen berhasil diupload...')
+      })
+      .addCase(uploadRegisDoc.rejected, (state, { payload }) => {
+        if (payload === 401) {
+          toast.error('User Belum memiliki akses ! Logging Out...')
+        } else {
+          toast.error('error something wrong with the server')
         }
       })
       .addCase(getRegsrpDetail.pending, state => {
