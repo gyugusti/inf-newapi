@@ -33,7 +33,11 @@ const DocumenSrp = ({ fasId, regsrpId, open, handleClose }) => {
 
   const handleModal2Close = () => {
     setIsModal2Open(false)
-    handleClose(true)
+  }
+
+  const handleModal2Success = () => {
+    setIsModal2Open(false)
+    dispatch(dokumenRegSumber(regsrpId))
   }
 
   const handleClickDownload = (id, nama) => {
@@ -156,6 +160,7 @@ const DocumenSrp = ({ fasId, regsrpId, open, handleClose }) => {
         regsrpId={regsrpId}
         fasId={fasId}
         edit={false}
+        onSuccess={handleModal2Success}
       />
 
       <KonfirmasiDialog
