@@ -6,13 +6,17 @@ import { useDispatch, useSelector } from 'react-redux'
 
 import Loading from '@/components/Loading'
 import CustomDialog from '@/components/widget/CustomDialog'
+import KonfirmasiDialog from '@/components/widget/KonfirmasiDialog'
 import { downloadDokfile, setNamadoc } from '@/redux-store/pdf'
-import { dokumenRegSumber } from '@/redux-store/validasi-data'
+import { deleteDocReg, dokumenRegSumber } from '@/redux-store/validasi-data'
 import FormDokumen from './FormDokumen'
 
 const DocumenSrp = ({ fasId, regsrpId, open, handleClose }) => {
   const dispatch = useDispatch()
   const [isModal2Open, setIsModal2Open] = useState(false) // Control state for Modal2
+  const [jenis, setJenis] = useState()
+  const [dataId, setDataId] = useState()
+  const [showConfirmationDel, setShowConfirmationDel] = useState(false)
 
   const { isLoading, listDokumenSrp, tahap_reg_id } = useSelector(store => store.validasiData)
 
@@ -22,7 +26,10 @@ const DocumenSrp = ({ fasId, regsrpId, open, handleClose }) => {
     }
   }, [dispatch, regsrpId])
 
-  const handleModal2Open = () => setIsModal2Open(true) // Open Modal2
+  const handleModal2Open = jenisval => {
+    setIsModal2Open(true)
+    setJenis(jenisval)
+  }
 
   const handleModal2Close = () => {
     setIsModal2Open(false)
@@ -53,6 +60,11 @@ const DocumenSrp = ({ fasId, regsrpId, open, handleClose }) => {
         alert('Gagal mengunduh file.')
       }
     })
+  }
+
+  const handleDeleteClick = data => {
+    setDataId(data.id)
+    setShowConfirmationDel(true)
   }
 
   return (
@@ -109,6 +121,9 @@ const DocumenSrp = ({ fasId, regsrpId, open, handleClose }) => {
                                         <label htmlFor='' fontSize={1}>
                                           {doc.data_dok.nama_file}
                                         </label>
+                                        <IconButton color='warning' onClick={() => handleDeleteClick(doc)}>
+                                          <Icon icon='tabler:trash' fontSize={20} />
+                                        </IconButton>
                                       </>
                                     )}
                                   </div>
@@ -119,7 +134,7 @@ const DocumenSrp = ({ fasId, regsrpId, open, handleClose }) => {
                               variant='tonal'
                               aria-label='Tambah Dokumen'
                               color='success'
-                              onClick={handleModal2Open}
+                              onClick={() => handleModal2Open(item.jenis_dokumen_id)}
                             >
                               <Icon icon='tabler:circle-plus' />
                             </IconButton>
@@ -134,7 +149,28 @@ const DocumenSrp = ({ fasId, regsrpId, open, handleClose }) => {
         )}
       </CustomDialog>
 
-      <FormDokumen open={isModal2Open} handleClose={handleModal2Close} regsrpId={regsrpId} fasId={fasId} edit={false} />
+      <FormDokumen
+        open={isModal2Open}
+        jenis={jenis}
+        handleClose={handleModal2Close}
+        regsrpId={regsrpId}
+        fasId={fasId}
+        edit={false}
+      />
+
+      <KonfirmasiDialog
+        open={showConfirmationDel}
+        setOpen={showConfirmationDel}
+        Id={dataId}
+        onConfirm={dataId => {
+          if (dataId !== 'no') {
+            dispatch(deleteDocReg({ id: dataId }))
+          }
+
+          setShowConfirmationDel(false)
+        }}
+        message='Data Ini akan dihapus'
+      />
     </Fragment>
   )
 }

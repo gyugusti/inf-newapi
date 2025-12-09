@@ -278,7 +278,7 @@ export const getAlamat = createAsyncThunk('refbalis/getAlamat', async (fas_id, t
 })
 
 export const getDokumen = createAsyncThunk('refbalis/getDokumen', async (fas_id, thunkAPI) => {
-  let url = `/api/dokumen`
+  let url = `/apiBalis/getFasilitasDok`
 
   let config = {
     params: {

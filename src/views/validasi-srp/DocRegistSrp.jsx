@@ -1,31 +1,14 @@
-import React, { Fragment, useState, useEffect } from 'react'
+import { Fragment, useEffect, useState } from 'react'
 
-import { useDispatch, useSelector } from 'react-redux'
-import { useForm, Controller } from 'react-hook-form'
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Button,
-  IconButton,
-  Dialog,
-  DialogContent,
-  Checkbox,
-  Pagination,
-  useColorScheme,
-  CircularProgress
-} from '@mui/material'
 import { Icon } from '@iconify/react/dist/iconify.js'
+import { Button, IconButton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material'
+import { useDispatch, useSelector } from 'react-redux'
 
-import CustomDialog from '@/components/widget/CustomDialog'
 import Loading from '@/components/Loading'
-import { useSettings } from '@/@core/hooks/useSettings'
+import CustomDialog from '@/components/widget/CustomDialog'
+import { downloadDokfile, setNamadoc } from '@/redux-store/pdf'
 import { dokumenRegSumber } from '@/redux-store/validasi-data'
 import FormAddSrpdoc from './FormAddSrpdoc'
-import { downloadDokfile, setNamadoc } from '@/redux-store/pdf'
 
 const DocRegistSrp = ({ fasId, regsrpId, open, handleClose }) => {
   const dispatch = useDispatch()

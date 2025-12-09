@@ -24,7 +24,7 @@ import DialogCloseButton from '@/components/dialogs/DialogCloseButton'
 import { changePage, getDokumen } from '@/redux-store/referensi-balis'
 import { insertDocSumber } from '@/redux-store/validasi-data'
 
-const FormDokumen = ({ regsrpId, fasId, open, jenisDokumen, handleClose }) => {
+const FormDokumen = ({ regsrpId, fasId, open, jenis, handleClose }) => {
   const dispatch = useDispatch()
   const { data: session } = useSession()
   const username = session?.user?.name || ''
@@ -50,7 +50,7 @@ const FormDokumen = ({ regsrpId, fasId, open, jenisDokumen, handleClose }) => {
       reg_srp_id: regsrpId,
       username: username,
       dok_file_id: id,
-      jenis_dokumen_id: jenisDokumen
+      jenis_dokumen_id: jenis
     }
 
     dispatch(insertDocSumber(dataform))
@@ -90,7 +90,6 @@ const FormDokumen = ({ regsrpId, fasId, open, jenisDokumen, handleClose }) => {
                 <TableCell component='th'>NO</TableCell>
                 <TableCell>Nama File</TableCell>
                 <TableCell>Uraian File</TableCell>
-                <TableCell>Jenis Dokumen</TableCell>
                 <TableCell>Action</TableCell>
               </TableRow>
             </TableHead>

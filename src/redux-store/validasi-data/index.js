@@ -233,6 +233,35 @@ export const insertDocSumber = createAsyncThunk('validasiData/insertDocSumber', 
   }
 })
 
+export const deleteDocReg = createAsyncThunk('validasiData/deleteDocReg', async (params, thunkAPI) => {
+  try {
+    const resp = await customFetch.delete(`/api/registrasi/srp/doc/${params.id}`, {
+      params: {
+        id: [params.id]
+      }
+    })
+
+    if (resp.data.status === 200) {
+      return resp.data
+    } else {
+      return thunkAPI.rejectWithValue(resp.data.keterangan)
+    }
+  } catch (error) {
+    console.log('Error response:', error.response?.status, error.response?.data)
+
+    if (error.response?.status === 401) {
+      thunkAPI.dispatch(handleLogout())
+
+      return thunkAPI.rejectWithValue({ status: 401, message: 'Unauthorized' })
+    } else {
+      return thunkAPI.rejectWithValue({
+        status: error.response?.status || 500,
+        message: error.response?.data?.message || 'There was an error'
+      })
+    }
+  }
+})
+
 export const kevalidatorRegSumber = createAsyncThunk(
   'validasiData/kevalidatorRegSumber',
   async (dataform, thunkAPI) => {
@@ -911,6 +940,22 @@ const validasiDataSlice = createSlice({
       .addCase(insertDocSumber.rejected, (state, { payload }) => {
         if (payload === 401) {
           toast.error('User Belum memiliki akses ! Logging Out...')
+        } else {
+          toast.error(JSON.stringify(payload))
+        }
+      })
+      .addCase(deleteDocReg.pending, state => {
+        state.isLoading = true
+      })
+      .addCase(deleteDocReg.fulfilled, (state, { payload }) => {
+        state.isLoading = false
+        state.tab = payload
+        toast.success(payload.keterangan)
+      })
+      .addCase(deleteDocReg.rejected, (state, { payload }) => {
+        if (payload === 401) {
+          toast.error('User Belum memiliki akses ! Logging Out...')
+          window.location.href = '/'
         } else {
           toast.error(JSON.stringify(payload))
         }
