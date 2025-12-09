@@ -1,15 +1,14 @@
-import React, { Fragment, useState, useEffect } from 'react'
+import { Fragment, useEffect, useState } from 'react'
 
-import { useForm } from 'react-hook-form'
-import { useDropzone } from 'react-dropzone'
-import { Button, Typography, Box, TextField } from '@mui/material'
+import { Box, Button, TextField, Typography } from '@mui/material'
 import Grid from '@mui/material/Grid2'
+import { useDropzone } from 'react-dropzone'
+import { useForm } from 'react-hook-form'
 
 import { useDispatch } from 'react-redux'
 
 import CustomDialog from '@/components/widget/CustomDialog'
 import { uploadSrpDok } from '@/redux-store/validasi-data'
-import { Icon } from '@iconify/react/dist/iconify.js'
 
 const FormUploadDoc = ({ masterSumberId, open, handleClose }) => {
   const { register, handleSubmit } = useForm()
@@ -34,7 +33,7 @@ const FormUploadDoc = ({ masterSumberId, open, handleClose }) => {
     setPreviewUrl(URL.createObjectURL(selectedFile))
   }
 
-  const { getRootProps, getInputProps, isDragActive, open: openFileDialog } = useDropzone({
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
     multiple: false,
     accept: {
@@ -63,18 +62,7 @@ const FormUploadDoc = ({ masterSumberId, open, handleClose }) => {
 
   return (
     <Fragment>
-      <CustomDialog
-        open={open}
-        handleClose={handleClose}
-        title='Upload Dokumen'
-        titleAction=
-          {openFileDialog && (
-            <Button variant='outlined' size='small' startIcon={<Icon icon='tabler:plus' />} onClick={openFileDialog}>
-              Upload Dokumen Baru
-            </Button>
-          )}
-        maxWidth='xs'
-      >
+      <CustomDialog open={open} handleClose={handleClose} title='Upload Dokumen' maxWidth='xs'>
         <form onSubmit={handleSubmit(onSubmit)}>
           <Grid container spacing={2}>
             <Grid size={12}>

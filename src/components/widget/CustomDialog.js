@@ -1,10 +1,8 @@
-import React from 'react'
-
-import { Dialog, DialogContent, DialogTitle, DialogActions, Fade, IconButton, Box } from '@mui/material'
-import { styled } from '@mui/material/styles'
 import { Icon } from '@iconify/react/dist/iconify.js'
+import { Dialog, DialogActions, DialogContent, DialogTitle, IconButton } from '@mui/material'
+import { styled } from '@mui/material/styles'
 
-const CustomDialog = ({ open, handleClose, title, children, actions, maxWidth, titleAction }) => {
+const CustomDialog = ({ open, handleClose, title, children, actions, maxWidth }) => {
   const CustomCloseButton = styled(IconButton)(({ theme }) => ({
     top: 0,
     right: 0,
@@ -34,9 +32,8 @@ const CustomDialog = ({ open, handleClose, title, children, actions, maxWidth, t
         style: { overflow: 'visible' } // Allow overflow to position the close button outside the dialog's content area
       }}
     >
-      <DialogTitle sx={{ display: 'flex', alignItems: 'center', gap: 2, pr: theme => theme.spacing(6) }}>
-        <Box sx={{ flexGrow: 1, display: 'flex', alignItems: 'center', gap: 2 }}>{title}</Box>
-        {titleAction}
+      <DialogTitle>
+        {title}
         <CustomCloseButton onClick={handleClose}>
           <Icon icon='tabler:x' fontSize='1.25rem' />
         </CustomCloseButton>
