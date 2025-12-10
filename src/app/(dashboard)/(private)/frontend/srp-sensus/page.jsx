@@ -20,13 +20,13 @@ const Page = async ({ searchParams }) => {
     cari
   })
 
-  const dataSrp = response?.data ?? []
+  const dataSensus = response?.data ?? []
   const currentPage = Number(response?.current_page ?? page)
   const perPage = Number(response?.per_page ?? limit)
   const total = Number(response?.total ?? data.length ?? 0)
   const totalPages = Number(response?.last_page ?? (total && perPage ? Math.ceil(total / perPage) : 1))
 
-  return <IndexSensus data={dataSrp} />
+  return <IndexSensus data={dataSensus} />
 }
 
 Page.acl = {
