@@ -22,14 +22,13 @@ import {
 import CustomTextField from '@/@core/components/mui/TextField'
 import TablePaginationComponent from '@/components/TablePaginationComponent'
 import KonfirmasiDialog from '@/components/widget/KonfirmasiDialog'
-import { deleteRegSumber, kevalidatorRegSumber } from '@/redux-store/validasi-data'
 import { getFlagLengkap, getFlagValid } from '@/utils/balishelper'
 import tableStyles from '@core/styles/table.module.css'
 import { useSession } from 'next-auth/react'
-import { useDispatch } from 'react-redux'
 import ActionsColumnRegistrasi from './ActionsColumnRegistrasi'
 import DocumenSrp from './DocumenSrp'
 import LogSrp from './LogSrp'
+import { deleteRegSumber, kevalidatorRegSumber } from '@/app/(dashboard)/(private)/frontend/srp-registrasi/server'
 
 const PER_PAGE_OPTIONS = [5, 10, 20, 50, 100, 500]
 
@@ -39,7 +38,6 @@ const IndexReg = ({ data = [], currentPage, perPage, total, totalPages, searchTe
   const searchParams = useSearchParams()
   const columnHelper = createColumnHelper()
   const { data: session } = useSession()
-  const dispatch = useDispatch()
 
   const [open, setOpen] = useState(false)
   const [openlog, setOpenlog] = useState(false)
@@ -48,6 +46,7 @@ const IndexReg = ({ data = [], currentPage, perPage, total, totalPages, searchTe
   const [cariValue, setCariValue] = useState(searchTerm || '')
   const [perPageValue, setPerPageValue] = useState(perPage)
   const [isPending, startTransition] = useTransition()
+  const [, startActionTransition] = useTransition()
   const [showConfirmationDel, setShowConfirmationDel] = useState(false)
   const [showConfirmationSend, setShowConfirmationSend] = useState(false)
 
@@ -315,7 +314,14 @@ const IndexReg = ({ data = [], currentPage, perPage, total, totalPages, searchTe
         Id={regsrpId}
         onConfirm={regsrpId => {
           if (regsrpId !== 'no') {
-            dispatch(deleteRegSumber({ id: regsrpId }))
+            startActionTransition(async () => {
+              try {
+                await deleteRegSumber(regsrpId)
+                router.refresh()
+              } catch (error) {
+                console.error('Failed to delete registrasi SRP:', error)
+              }
+            })
           }
 
           setShowConfirmationDel(false)
@@ -334,7 +340,14 @@ const IndexReg = ({ data = [], currentPage, perPage, total, totalPages, searchTe
               username: session ? session.user.name : ''
             }
 
-            dispatch(kevalidatorRegSumber(dataform))
+            startActionTransition(async () => {
+              try {
+                await kevalidatorRegSumber(dataform)
+                router.refresh()
+              } catch (error) {
+                console.error('Failed to send registrasi SRP to validator:', error)
+              }
+            })
           }
 
           setShowConfirmationSend(false)
