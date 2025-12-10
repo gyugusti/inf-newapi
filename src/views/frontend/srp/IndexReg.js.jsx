@@ -29,6 +29,7 @@ import ActionsColumnRegistrasi from './ActionsColumnRegistrasi'
 import DocumenSrp from './DocumenSrp'
 import LogSrp from './LogSrp'
 import { deleteRegSumber, kevalidatorRegSumber } from '@/app/(dashboard)/(private)/frontend/srp-registrasi/server'
+import { toast } from 'react-toastify'
 
 const PER_PAGE_OPTIONS = [5, 10, 20, 50, 100, 500]
 
@@ -316,10 +317,14 @@ const IndexReg = ({ data = [], currentPage, perPage, total, totalPages, searchTe
           if (regsrpId !== 'no') {
             startActionTransition(async () => {
               try {
-                await deleteRegSumber(regsrpId)
+                const result = await deleteRegSumber(regsrpId)
+
+                toast.success(result?.message || 'Registrasi SRP berhasil dihapus.')
                 router.refresh()
               } catch (error) {
                 console.error('Failed to delete registrasi SRP:', error)
+
+                toast.error(error?.message || 'Gagal menghapus registrasi SRP.')
               }
             })
           }
@@ -342,10 +347,14 @@ const IndexReg = ({ data = [], currentPage, perPage, total, totalPages, searchTe
 
             startActionTransition(async () => {
               try {
-                await kevalidatorRegSumber(dataform)
+                const result = await kevalidatorRegSumber(dataform)
+
+                toast.success(result?.message || 'Registrasi SRP berhasil dikirim ke validator.')
                 router.refresh()
               } catch (error) {
                 console.error('Failed to send registrasi SRP to validator:', error)
+
+                toast.error(error?.message || 'Gagal mengirim registrasi SRP ke validator.')
               }
             })
           }

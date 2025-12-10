@@ -276,8 +276,6 @@ export async function kevalidatorRegSumber(dataform) {
 
     console.error('Error sending registrasi SRP to validator:', apiData || error?.message)
 
-    throw new Error(
-      apiData?.message || apiData?.error || error?.message || 'Gagal mengirim registrasi SRP ke validator'
-    )
+    throw new Error(apiData?.message || apiData?.error || error?.message || 'Gagal mengirim registrasi SRP ke validator')
   }
 }
