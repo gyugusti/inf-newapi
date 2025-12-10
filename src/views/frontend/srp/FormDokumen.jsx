@@ -85,6 +85,8 @@ const FormDokumen = ({ regsrpId, fasId, open, jenis, handleClose, onSuccess }) =
           handleClose={handleCloseUpload}
           onSuccess={() => {
             setOpenUpload(false)
+            handleClose()
+            onSuccess?.()
           }}
         />
       )}

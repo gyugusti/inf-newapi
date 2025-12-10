@@ -10,7 +10,7 @@ import { useDispatch } from 'react-redux'
 import CustomDialog from '@/components/widget/CustomDialog'
 import { uploadRegisDoc } from '@/redux-store/validasi-data'
 
-const FormUploadDocnew = ({ regsrpId, open, jenis, handleClose }) => {
+const FormUploadDocnew = ({ regsrpId, open, jenis, handleClose, onSuccess }) => {
   const { register, handleSubmit } = useForm()
   const [file, setFile] = useState(null)
   const [previewUrl, setPreviewUrl] = useState(null)
@@ -50,6 +50,7 @@ const FormUploadDocnew = ({ regsrpId, open, jenis, handleClose }) => {
       handleClose()
       setFile(null)
       setPreviewUrl(null)
+      onSuccess?.()
     } catch (error) {
       console.error('Gagal mengunggah dokumen registrasi SRP:', error)
     }
