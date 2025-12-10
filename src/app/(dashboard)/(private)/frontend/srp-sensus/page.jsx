@@ -1,5 +1,5 @@
 import IndexSensus from '@/views/frontend/srp/IndexSensus'
-import { fetchListSrp } from './server'
+import { fetchSensusSrp } from './server'
 
 const DEFAULT_LIMIT = 20
 
@@ -13,9 +13,10 @@ const Page = async ({ searchParams }) => {
   const inspMasterId = searchParams?.insp_master_id ?? ''
   const cari = searchParams?.cari ?? ''
 
-  const response = await fetchListSrp({
+  const response = await fetchSensusSrp({
     page,
     limit,
+    tahap_reg_id: tahapRegId,
     cari
   })
 
