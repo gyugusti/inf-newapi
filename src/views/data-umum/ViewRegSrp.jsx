@@ -1,44 +1,28 @@
 'use client'
 import { useEffect, useMemo, useState } from 'react'
 
-import Link from 'next/link'
-
 import { usePathname } from 'next/navigation'
 
-import { useDispatch, useSelector } from 'react-redux'
-import { Typography, IconButton, CircularProgress, Chip } from '@mui/material'
+import { CircularProgress, Typography } from '@mui/material'
 import {
   createColumnHelper,
   flexRender,
   getCoreRowModel,
-  useReactTable,
   getFilteredRowModel,
+  getPaginationRowModel,
   getSortedRowModel,
-  getPaginationRowModel
+  useReactTable
 } from '@tanstack/react-table'
-import classnames from 'classnames'
 import { useSession } from 'next-auth/react'
+import { useDispatch, useSelector } from 'react-redux'
 
-import {
-  getRegistrasiSrp,
-  changePage,
-  clearFilters,
-  clearValues,
-  deleteRegSumber,
-  kevalidatorRegSumber,
-  kirimOtorisatorSrp,
-  selesaiSrp,
-  tolakSrp,
-  kembalikanSrp
-} from '@/redux-store/validasi-data'
-import tableStyles from '@core/styles/table.module.css'
 import TablePaginationComponent from '@/components/TablePaginationComponent'
-import OptionMenu from '@/@core/components/option-menu'
-import KonfirmasiDialog from '@/components/widget/KonfirmasiDialog'
+import { changePage, clearFilters, clearValues, getRegistrasiSrp } from '@/redux-store/validasi-data'
+import { getFlagLengkap, getFlagValid } from '@/utils/balishelper'
+import tableStyles from '@core/styles/table.module.css'
 import LogSrp from '../validasi-srp/LogSrp'
-import ActionsColumn from './ActionColumn'
-import { getTahapanValidasi, getFlagValid, getFlagLengkap } from '@/utils/balishelper'
 import SearchValidasi from '../validasi-srp/SearchValidasi'
+import ActionsColumn from './ActionColumn'
 
 const ViewRegSrp = ({ view }) => {
   const dispatch = useDispatch()

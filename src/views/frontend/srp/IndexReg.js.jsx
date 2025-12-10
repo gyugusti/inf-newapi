@@ -21,8 +21,12 @@ import {
 
 import CustomTextField from '@/@core/components/mui/TextField'
 import TablePaginationComponent from '@/components/TablePaginationComponent'
+import KonfirmasiDialog from '@/components/widget/KonfirmasiDialog'
+import { deleteRegSumber, kevalidatorRegSumber } from '@/redux-store/validasi-data'
 import { getFlagLengkap, getFlagValid } from '@/utils/balishelper'
 import tableStyles from '@core/styles/table.module.css'
+import { useSession } from 'next-auth/react'
+import { useDispatch } from 'react-redux'
 import ActionsColumnRegistrasi from './ActionsColumnRegistrasi'
 import DocumenSrp from './DocumenSrp'
 import LogSrp from './LogSrp'
@@ -34,6 +38,8 @@ const IndexReg = ({ data = [], currentPage, perPage, total, totalPages, searchTe
   const pathname = usePathname()
   const searchParams = useSearchParams()
   const columnHelper = createColumnHelper()
+  const { data: session } = useSession()
+  const dispatch = useDispatch()
 
   const [open, setOpen] = useState(false)
   const [openlog, setOpenlog] = useState(false)
@@ -42,6 +48,8 @@ const IndexReg = ({ data = [], currentPage, perPage, total, totalPages, searchTe
   const [cariValue, setCariValue] = useState(searchTerm || '')
   const [perPageValue, setPerPageValue] = useState(perPage)
   const [isPending, startTransition] = useTransition()
+  const [showConfirmationDel, setShowConfirmationDel] = useState(false)
+  const [showConfirmationSend, setShowConfirmationSend] = useState(false)
 
   useEffect(() => {
     setCariValue(searchTerm || '')
@@ -109,6 +117,16 @@ const IndexReg = ({ data = [], currentPage, perPage, total, totalPages, searchTe
     [updateSearchParams]
   )
 
+  const handleDeleteClick = regsrpId => {
+    setRegsrpId(regsrpId)
+    setShowConfirmationDel(true)
+  }
+
+  const handleKirimClick = regsrpId => {
+    setRegsrpId(regsrpId)
+    setShowConfirmationSend(true)
+  }
+
   const columns = useMemo(
     () => [
       columnHelper.display({
@@ -123,6 +141,8 @@ const IndexReg = ({ data = [], currentPage, perPage, total, totalPages, searchTe
             row={row}
             handleShowLog={handleShowLog}
             handleShowDokumen={handleShowDokumen}
+            handleKirimClick={handleKirimClick}
+            handleDeleteClick={handleDeleteClick}
             view='registrasi'
           />
         ),
@@ -288,6 +308,39 @@ const IndexReg = ({ data = [], currentPage, perPage, total, totalPages, searchTe
       {openlog && <LogSrp fasId={fasId} regsrpId={regsrpId} open={openlog} handleClose={handleModalClose} />}
 
       {open && <DocumenSrp fasId={fasId} regsrpId={regsrpId} open={open} handleClose={handleModalClose} />}
+
+      <KonfirmasiDialog
+        open={showConfirmationDel}
+        setOpen={showConfirmationDel}
+        Id={regsrpId}
+        onConfirm={regsrpId => {
+          if (regsrpId !== 'no') {
+            dispatch(deleteRegSumber({ id: regsrpId }))
+          }
+
+          setShowConfirmationDel(false)
+        }}
+        message='Registrasi SRP akan dihapus'
+      />
+
+      <KonfirmasiDialog
+        open={showConfirmationSend}
+        setOpen={showConfirmationSend}
+        Id={regsrpId}
+        onConfirm={regsrpId => {
+          if (regsrpId !== 'no') {
+            const dataform = {
+              reg_srp_id: [regsrpId],
+              username: session ? session.user.name : ''
+            }
+
+            dispatch(kevalidatorRegSumber(dataform))
+          }
+
+          setShowConfirmationSend(false)
+        }}
+        message='Registrasi Sumber ini akan dikirim ke Validator'
+      />
     </Card>
   )
 }

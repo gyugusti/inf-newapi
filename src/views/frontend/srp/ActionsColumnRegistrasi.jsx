@@ -1,6 +1,13 @@
 import OptionMenu from '@/@core/components/option-menu'
 
-const ActionsColumnRegistrasi = ({ row, handleShowDokumen, handleShowLog, view = 'registrasi' }) => {
+const ActionsColumnRegistrasi = ({
+  row,
+  handleShowDokumen,
+  handleShowLog,
+  handleKirimClick,
+  handleDeleteClick,
+  view = 'registrasi'
+}) => {
   const { reg_srp_id, tahap_reg_id, fas_id, flag_valid, no_reg, no_seri } = row.original
 
   const iconButtonProps = { size: 'medium' }
@@ -18,6 +25,18 @@ const ActionsColumnRegistrasi = ({ row, handleShowDokumen, handleShowLog, view =
     menuItemProps: { onClick: () => handleShowDokumen(reg_srp_id, fas_id) }
   })
 
+  const getKirimOption = () => ({
+    text: 'Kirim Validator',
+    icon: 'tabler-send',
+    menuItemProps: { onClick: () => handleKirimClick(reg_srp_id) }
+  })
+
+  const getDeleteOption = () => ({
+    text: 'Delete',
+    icon: 'tabler-trash',
+    menuItemProps: { onClick: () => handleDeleteClick(reg_srp_id) }
+  })
+
   return (
     <div className='flex items-center'>
       <OptionMenu
@@ -25,6 +44,8 @@ const ActionsColumnRegistrasi = ({ row, handleShowDokumen, handleShowLog, view =
         iconClassName='text-textSecondary'
         options={[
           getLogOption(),
+          getKirimOption(),
+          getDeleteOption(),
           {
             text: 'Update',
             icon: 'tabler-edit',
