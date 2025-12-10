@@ -44,8 +44,8 @@ const fasilitasMenu = [
     roles: ['pemohon_admin', 'pemohon_tambahan'], // Accessible by these roles
     children: [
       { label: 'Registrasi SRP', href: '/frontend/srp-registrasi', roles: [] },
-      { label: 'Update Srp', href: '/frontend/srp-update', roles: ['pemohon_admin', 'pemohon_tambahan', 'admin'] },
-      { label: 'Sensus Srp', href: '/frontend/srp-sensus', roles: ['pemohon_admin', 'pemohon_tambahan', 'admin'] }
+      { label: 'Update SRP', href: '/frontend/srp-update', roles: ['pemohon_admin', 'pemohon_tambahan', 'admin'] },
+      { label: 'Sensus SRP', href: '/frontend/srp-sensus', roles: ['pemohon_admin', 'pemohon_tambahan', 'admin'] }
     ]
   }
 ]
