@@ -6,7 +6,7 @@ import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 
 import { Box, Card, Tab, Tabs } from '@mui/material'
 
-import IndexReg from './IndexReg.js.jsx'
+import IndexTabsensus from './IndexTabsensus.js.jsx'
 import IndexSrp from './IndexSrp'
 
 const TAB_CONFIG = [
@@ -83,7 +83,7 @@ const IndexSensus = ({
     const selectedTahapRegId = selectedTab?.tahapRegId || []
 
     return (
-      <IndexReg
+      <IndexTabsensus
         data={data}
         currentPage={currentPage}
         perPage={perPage}
