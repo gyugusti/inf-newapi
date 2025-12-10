@@ -1,7 +1,8 @@
 'use server'
 
-import customFetch from '@/utils/axios'
 import { getServerSession } from 'next-auth/next'
+
+import customFetch from '@/utils/axios'
 
 import { authOptions } from '@/libs/auth'
 import { getServerAccessToken } from '@/utils/auth-server'
@@ -12,6 +13,7 @@ const DEFAULT_LIMIT = 20
 export async function fetchDataFasilitas(params = {}) {
   const session = await getServerSession(authOptions)
   const accessToken = await getServerAccessToken()
+
   console.log(accessToken)
 
   if (!session) {

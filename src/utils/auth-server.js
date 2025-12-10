@@ -1,13 +1,15 @@
 'use server'
 
-import { getToken } from 'next-auth/jwt'
 import { cookies } from 'next/headers'
+
+import { getToken } from 'next-auth/jwt'
 
 export async function getServerAccessToken() {
   // Ambil semua cookie dari request
   const cookieStore = cookies()
 
   const allCookies = cookieStore.getAll()
+
   console.log('🍪 cookies di request:', allCookies)
 
   // Build header "Cookie: ..."
@@ -30,6 +32,7 @@ export async function getServerAccessToken() {
       }
     },
     secret: process.env.NEXTAUTH_SECRET,
+
     // bantu tegasin nama cookie (dev vs prod)
     cookieName: process.env.NODE_ENV === 'production' ? '__Secure-next-auth.session-token' : 'next-auth.session-token'
   })

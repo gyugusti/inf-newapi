@@ -19,17 +19,20 @@ import {
   useReactTable
 } from '@tanstack/react-table'
 
+import { useSession } from 'next-auth/react'
+
+import { toast } from 'react-toastify'
+
 import CustomTextField from '@/@core/components/mui/TextField'
 import TablePaginationComponent from '@/components/TablePaginationComponent'
 import KonfirmasiDialog from '@/components/widget/KonfirmasiDialog'
 import { getFlagLengkap, getFlagValid } from '@/utils/balishelper'
 import tableStyles from '@core/styles/table.module.css'
-import { useSession } from 'next-auth/react'
 import ActionsColumnRegistrasi from './ActionsColumnRegistrasi'
 import DocumenSrp from './DocumenSrp'
 import LogSrp from './LogSrp'
 import { deleteRegSumber, kevalidatorRegSumber } from '@/app/(dashboard)/(private)/frontend/srp-registrasi/server'
-import { toast } from 'react-toastify'
+
 
 const PER_PAGE_OPTIONS = [5, 10, 20, 50, 100, 500]
 
@@ -61,6 +64,7 @@ const IndexReg = ({ data = [], currentPage, perPage, total, totalPages, searchTe
   const [showConfirmationDel, setShowConfirmationDel] = useState(false)
   const [showConfirmationSend, setShowConfirmationSend] = useState(false)
   const normalizedTahapRegId = useMemo(() => serializeTahapRegId(tahapRegId), [tahapRegId])
+
   const [tabValue, setTabValue] = useState(
     TAB_CONFIG.find(tab => serializeTahapRegId(tab.tahapRegId) === normalizedTahapRegId)?.value || 'pengajuan'
   )
