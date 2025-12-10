@@ -1,4 +1,4 @@
-"use client"
+'use client'
 
 import { useCallback, useEffect, useMemo, useState } from 'react'
 
@@ -6,8 +6,8 @@ import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 
 import { Box, Card, Tab, Tabs } from '@mui/material'
 
-import IndexTabsensus from './IndexTabsensus.js.jsx'
 import IndexSrp from './IndexSrp'
+import IndexTabsensus from './IndexTabsensus.jsx'
 
 const TAB_CONFIG = [
   { value: 'srp', label: 'Srp' },
@@ -16,9 +16,8 @@ const TAB_CONFIG = [
   { value: 'arsip', label: 'Arsip', tahapRegId: ['4', '-1'] }
 ]
 
-const serializeTahapRegId = ids => (Array.isArray(ids) ? ids : typeof ids === 'string' ? ids.split(',') : [])
-  .filter(Boolean)
-  .join(',')
+const serializeTahapRegId = ids =>
+  (Array.isArray(ids) ? ids : typeof ids === 'string' ? ids.split(',') : []).filter(Boolean).join(',')
 
 const IndexSensus = ({
   data = [],
