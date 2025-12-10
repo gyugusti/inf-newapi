@@ -7,7 +7,7 @@ import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 
 import { Icon } from '@iconify/react/dist/iconify.js'
-import { Button, Card, CardContent, CardHeader, CircularProgress, MenuItem, Typography } from '@mui/material'
+import { Button, Card, CardContent, CardHeader, CircularProgress, MenuItem, Tab, Tabs, Typography } from '@mui/material'
 import Grid from '@mui/material/Grid2'
 import {
   createColumnHelper,
@@ -33,7 +33,13 @@ import { toast } from 'react-toastify'
 
 const PER_PAGE_OPTIONS = [5, 10, 20, 50, 100, 500]
 
-const IndexReg = ({ data = [], currentPage, perPage, total, totalPages, searchTerm }) => {
+const TAB_CONFIG = [
+  { value: 'pengajuan', label: 'Pengajuan', tahapRegId: '0,3' },
+  { value: 'proses', label: 'Proses', tahapRegId: '1,2' },
+  { value: 'arsip', label: 'Arsip', tahapRegId: '4,-1' }
+]
+
+const IndexReg = ({ data = [], currentPage, perPage, total, totalPages, searchTerm, tahapRegId }) => {
   const router = useRouter()
   const pathname = usePathname()
   const searchParams = useSearchParams()
@@ -50,6 +56,9 @@ const IndexReg = ({ data = [], currentPage, perPage, total, totalPages, searchTe
   const [, startActionTransition] = useTransition()
   const [showConfirmationDel, setShowConfirmationDel] = useState(false)
   const [showConfirmationSend, setShowConfirmationSend] = useState(false)
+  const [tabValue, setTabValue] = useState(
+    TAB_CONFIG.find(tab => tab.tahapRegId === (tahapRegId || ''))?.value || 'pengajuan'
+  )
 
   useEffect(() => {
     setCariValue(searchTerm || '')
@@ -58,6 +67,14 @@ const IndexReg = ({ data = [], currentPage, perPage, total, totalPages, searchTe
   useEffect(() => {
     setPerPageValue(perPage)
   }, [perPage])
+
+  useEffect(() => {
+    const matchedTab = TAB_CONFIG.find(tab => tab.tahapRegId === (tahapRegId || ''))
+
+    if (matchedTab && matchedTab.value !== tabValue) {
+      setTabValue(matchedTab.value)
+    }
+  }, [tahapRegId, tabValue])
 
   const handleShowLog = useCallback((selectedRegsrpId, selectedFasId) => {
     setRegsrpId(selectedRegsrpId)
@@ -109,6 +126,17 @@ const IndexReg = ({ data = [], currentPage, perPage, total, totalPages, searchTe
     setCariValue('')
     updateSearchParams({ cari: undefined, per_page: undefined, page: undefined })
   }, [updateSearchParams])
+
+  const handleTabChange = useCallback(
+    newValue => {
+      const selectedTab = TAB_CONFIG.find(tab => tab.value === newValue)
+      const selectedTahapRegId = selectedTab?.tahapRegId || ''
+
+      setTabValue(newValue)
+      updateSearchParams({ tahap_reg_id: selectedTahapRegId, page: undefined })
+    },
+    [updateSearchParams]
+  )
 
   const handlePageChange = useCallback(
     page => {
@@ -214,6 +242,11 @@ const IndexReg = ({ data = [], currentPage, perPage, total, totalPages, searchTe
 
   return (
     <Card>
+      <Tabs value={tabValue} onChange={(_, value) => handleTabChange(value)} sx={{ px: 4, pt: 2 }}>
+        {TAB_CONFIG.map(tab => (
+          <Tab key={tab.value} value={tab.value} label={tab.label} />
+        ))}
+      </Tabs>
       <CardHeader
         title={` Registrasi SRP`}
         action={
