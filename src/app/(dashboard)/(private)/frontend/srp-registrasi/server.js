@@ -126,7 +126,8 @@ export async function createRegistrasiSrp(data) {
     user_id: data?.user_id ?? 0,
     flag_user: data?.flag_user ?? 0,
     username: data?.username ?? '',
-    jadwal_id: data?.jadwal_id ?? 0
+    jadwal_id: data?.jadwal_id ?? 0,
+    jenis_validasi_id: 1
   }
 
   try {
@@ -275,6 +276,8 @@ export async function kevalidatorRegSumber(dataform) {
 
     console.error('Error sending registrasi SRP to validator:', apiData || error?.message)
 
-    throw new Error(apiData?.message || apiData?.error || error?.message || 'Gagal mengirim registrasi SRP ke validator')
+    throw new Error(
+      apiData?.message || apiData?.error || error?.message || 'Gagal mengirim registrasi SRP ke validator'
+    )
   }
 }
