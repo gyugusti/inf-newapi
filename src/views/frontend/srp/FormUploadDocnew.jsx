@@ -10,7 +10,7 @@ import { useDispatch } from 'react-redux'
 import CustomDialog from '@/components/widget/CustomDialog'
 import { uploadRegisDoc } from '@/redux-store/validasi-data'
 
-const FormUploadDocnew = ({ regsrpId, open, jenis, handleClose }) => {
+const FormUploadDocnew = ({ regsrpId, open, jenis, handleClose, onSuccess }) => {
   const { register, handleSubmit } = useForm()
   const [file, setFile] = useState(null)
   const [previewUrl, setPreviewUrl] = useState(null)
@@ -42,20 +42,18 @@ const FormUploadDocnew = ({ regsrpId, open, jenis, handleClose }) => {
     }
   })
 
-  const onSubmit = data => {
+  const onSubmit = async data => {
     if (!file) return alert('Silakan pilih dokumen terlebih dahulu.')
 
-    const formData = new FormData()
-
-    formData.append('file', file)
-    formData.append('judul_dokumen', data.judul_dokumen)
-    formData.append('keterangan', data.keterangan)
-
-    //console.log('Data to upload:', formData)
-
-    dispatch(uploadRegisDoc({ reg_srp_id: regsrpId, jenis_dokumen_id: jenis, dokumen: file, ...data }))
-
-    handleClose()
+    try {
+      await dispatch(uploadRegisDoc({ reg_srp_id: regsrpId, jenis_dokumen_id: jenis, dokumen: file, ...data })).unwrap()
+      handleClose()
+      setFile(null)
+      setPreviewUrl(null)
+      onSuccess?.()
+    } catch (error) {
+      console.error('Gagal mengunggah dokumen registrasi SRP:', error)
+    }
   }
 
   return (
