@@ -34,10 +34,14 @@ import { toast } from 'react-toastify'
 const PER_PAGE_OPTIONS = [5, 10, 20, 50, 100, 500]
 
 const TAB_CONFIG = [
-  { value: 'pengajuan', label: 'Pengajuan', tahapRegId: '0,3' },
-  { value: 'proses', label: 'Proses', tahapRegId: '1,2' },
-  { value: 'arsip', label: 'Arsip', tahapRegId: '4,-1' }
+  { value: 'pengajuan', label: 'Pengajuan', tahapRegId: ['0', '3'] },
+  { value: 'proses', label: 'Proses', tahapRegId: ['1', '2'] },
+  { value: 'arsip', label: 'Arsip', tahapRegId: ['4', '-1'] }
 ]
+
+const serializeTahapRegId = ids => (Array.isArray(ids) ? ids : typeof ids === 'string' ? ids.split(',') : [])
+  .filter(Boolean)
+  .join(',')
 
 const IndexReg = ({ data = [], currentPage, perPage, total, totalPages, searchTerm, tahapRegId }) => {
   const router = useRouter()
@@ -56,8 +60,9 @@ const IndexReg = ({ data = [], currentPage, perPage, total, totalPages, searchTe
   const [, startActionTransition] = useTransition()
   const [showConfirmationDel, setShowConfirmationDel] = useState(false)
   const [showConfirmationSend, setShowConfirmationSend] = useState(false)
+  const normalizedTahapRegId = useMemo(() => serializeTahapRegId(tahapRegId), [tahapRegId])
   const [tabValue, setTabValue] = useState(
-    TAB_CONFIG.find(tab => tab.tahapRegId === (tahapRegId || ''))?.value || 'pengajuan'
+    TAB_CONFIG.find(tab => serializeTahapRegId(tab.tahapRegId) === normalizedTahapRegId)?.value || 'pengajuan'
   )
 
   useEffect(() => {
@@ -69,12 +74,12 @@ const IndexReg = ({ data = [], currentPage, perPage, total, totalPages, searchTe
   }, [perPage])
 
   useEffect(() => {
-    const matchedTab = TAB_CONFIG.find(tab => tab.tahapRegId === (tahapRegId || ''))
+    const matchedTab = TAB_CONFIG.find(tab => serializeTahapRegId(tab.tahapRegId) === normalizedTahapRegId)
 
     if (matchedTab && matchedTab.value !== tabValue) {
       setTabValue(matchedTab.value)
     }
-  }, [tahapRegId, tabValue])
+  }, [normalizedTahapRegId, tabValue])
 
   const handleShowLog = useCallback((selectedRegsrpId, selectedFasId) => {
     setRegsrpId(selectedRegsrpId)
@@ -130,7 +135,7 @@ const IndexReg = ({ data = [], currentPage, perPage, total, totalPages, searchTe
   const handleTabChange = useCallback(
     newValue => {
       const selectedTab = TAB_CONFIG.find(tab => tab.value === newValue)
-      const selectedTahapRegId = selectedTab?.tahapRegId || ''
+      const selectedTahapRegId = selectedTab?.tahapRegId || []
 
       setTabValue(newValue)
       updateSearchParams({ tahap_reg_id: selectedTahapRegId, page: undefined })

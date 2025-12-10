@@ -7,7 +7,13 @@ const Page = async ({ searchParams }) => {
   const page = Number(searchParams?.page) || 1
   const limitParam = searchParams?.per_page ?? searchParams?.limit
   const limit = Number(limitParam) || DEFAULT_LIMIT
-  const tahapRegId = searchParams?.tahap_reg_id ?? '0,3'
+  const tahapRegParam = searchParams?.tahap_reg_id
+  const defaultTahapRegIds = ['0', '3']
+  const tahapRegId = Array.isArray(tahapRegParam)
+    ? tahapRegParam
+    : typeof tahapRegParam === 'string' && tahapRegParam.length > 0
+      ? tahapRegParam.split(',')
+      : defaultTahapRegIds
   const validatorId = searchParams?.validator_id ?? ''
   const otorisatorId = searchParams?.otorisator_id ?? ''
   const inspMasterId = searchParams?.insp_master_id ?? ''
