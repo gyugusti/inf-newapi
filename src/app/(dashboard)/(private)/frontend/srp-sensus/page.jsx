@@ -1,4 +1,4 @@
-import IndexSrp from '@/views/frontend/srp/IndexSrp'
+import IndexSensus from '@/views/frontend/srp/IndexSensus'
 import { fetchListSrp } from './server'
 
 const DEFAULT_LIMIT = 20
@@ -19,22 +19,13 @@ const Page = async ({ searchParams }) => {
     cari
   })
 
-  const data = response?.data ?? []
+  const dataSrp = response?.data ?? []
   const currentPage = Number(response?.current_page ?? page)
   const perPage = Number(response?.per_page ?? limit)
   const total = Number(response?.total ?? data.length ?? 0)
   const totalPages = Number(response?.last_page ?? (total && perPage ? Math.ceil(total / perPage) : 1))
 
-  return (
-    <IndexSrp
-      data={data}
-      currentPage={currentPage}
-      perPage={perPage}
-      total={total}
-      totalPages={totalPages}
-      searchTerm={cari}
-    />
-  )
+  return <IndexSensus data={dataSrp} />
 }
 
 Page.acl = {
