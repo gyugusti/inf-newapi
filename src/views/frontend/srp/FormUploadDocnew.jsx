@@ -42,20 +42,17 @@ const FormUploadDocnew = ({ regsrpId, open, jenis, handleClose }) => {
     }
   })
 
-  const onSubmit = data => {
+  const onSubmit = async data => {
     if (!file) return alert('Silakan pilih dokumen terlebih dahulu.')
 
-    const formData = new FormData()
-
-    formData.append('file', file)
-    formData.append('judul_dokumen', data.judul_dokumen)
-    formData.append('keterangan', data.keterangan)
-
-    //console.log('Data to upload:', formData)
-
-    dispatch(uploadRegisDoc({ reg_srp_id: regsrpId, jenis_dokumen_id: jenis, dokumen: file, ...data }))
-
-    handleClose()
+    try {
+      await dispatch(uploadRegisDoc({ reg_srp_id: regsrpId, jenis_dokumen_id: jenis, dokumen: file, ...data })).unwrap()
+      handleClose()
+      setFile(null)
+      setPreviewUrl(null)
+    } catch (error) {
+      console.error('Gagal mengunggah dokumen registrasi SRP:', error)
+    }
   }
 
   return (
