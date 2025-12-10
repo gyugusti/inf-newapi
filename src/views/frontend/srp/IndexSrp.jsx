@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 
-import { useParams, useRouter, useSearchParams } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 
 import { Box, CircularProgress, FormControl, InputLabel, MenuItem, Pagination, Select, TextField } from '@mui/material'
 import Button from '@mui/material/Button'
@@ -17,16 +17,12 @@ import TableRow from '@mui/material/TableRow'
 
 import { Controller, useForm } from 'react-hook-form'
 
-import { fetchListSrp } from '@/app/(dashboard)/(private)/frontend/srp-sensus/server'
-
 export default function IndexSrp() {
-  const { control, handleSubmit, setValue, watch } = useForm()
-  const params = useParams()
+  const { control, handleSubmit } = useForm()
   const searchParams = useSearchParams()
   const router = useRouter()
 
   const page = Number(searchParams.get('page')) || 1
-  const nama = searchParams.get('nama') || ''
 
   const [data, setData] = useState([])
   const [loading, setLoading] = useState(true)
@@ -52,22 +48,57 @@ export default function IndexSrp() {
       setLoading(true)
 
       try {
-        const response = await fetchListSrp({
-          ...filters,
-          page,
-          limit: perPage
+        const queryParams = new URLSearchParams()
+
+        queryParams.set('page', page)
+        queryParams.set('limit', perPage)
+
+        if (filters.status !== '') queryParams.set('status', filters.status)
+        if (filters.jenis_sumber_id !== '') queryParams.set('jenis_sumber_id', filters.jenis_sumber_id)
+        if (filters.kat_sumber_id !== '') queryParams.set('kat_sumber_id', filters.kat_sumber_id)
+        if (filters.cari) queryParams.set('cari', filters.cari)
+
+        const response = await fetch(`/frontend/srp-sensus/list?${queryParams.toString()}`, {
+          method: 'GET',
+          cache: 'no-store'
         })
 
-        if (isMounted && response?.data) {
-          setData(response.data)
+        if (!response.ok) {
+          console.error('Failed to fetch SRP list:', response.statusText)
+
+          if (isMounted) {
+            setData([])
+            setPagination({
+              current_page: 1,
+              per_page: perPage,
+              last_page: 1
+            })
+          }
+
+          return
+        }
+
+        const responseData = await response.json()
+
+        if (isMounted) {
+          setData(responseData.data || [])
           setPagination({
-            current_page: response.current_page,
-            per_page: response.per_page,
-            last_page: response.last_page
+            current_page: responseData.current_page ?? 1,
+            per_page: responseData.per_page ?? perPage,
+            last_page: responseData.last_page ?? 1
           })
         }
       } catch (e) {
         console.error(e)
+
+        if (isMounted) {
+          setData([])
+          setPagination({
+            current_page: 1,
+            per_page: perPage,
+            last_page: 1
+          })
+        }
       } finally {
         if (isMounted) setLoading(false)
       }
