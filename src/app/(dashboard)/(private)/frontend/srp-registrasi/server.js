@@ -216,3 +216,65 @@ export async function updateRegistrasiSrp(id, data) {
     throw new Error(apiData?.message || apiData?.error || error?.message || 'Gagal mengupdate registrasi SRP')
   }
 }
+
+export async function deleteRegSumber(regsrpId) {
+  const session = await getServerSession(authOptions)
+
+  if (!session) {
+    throw new Error('Unauthorized')
+  }
+
+  const config = {
+    headers: {
+      Authorization: `Bearer ${session?.user?.accessToken ?? ''}`
+    },
+    params: {
+      reg_srp_id: [regsrpId]
+    },
+    withCredentials: true
+  }
+
+  try {
+    const resp = await customFetch.delete('/api/registrasi/srp/destroy', config)
+
+    return resp?.data
+  } catch (error) {
+    const apiData = error?.response?.data
+
+    console.error('Error deleting registrasi SRP:', apiData || error?.message)
+
+    throw new Error(apiData?.message || apiData?.error || error?.message || 'Gagal menghapus registrasi SRP')
+  }
+}
+
+export async function kevalidatorRegSumber(dataform) {
+  const session = await getServerSession(authOptions)
+
+  if (!session) {
+    throw new Error('Unauthorized')
+  }
+
+  const config = {
+    headers: {
+      Authorization: `Bearer ${session?.user?.accessToken ?? ''}`
+    },
+    withCredentials: true
+  }
+
+  const payload = {
+    reg_srp_id: dataform?.reg_srp_id ?? [],
+    username: dataform?.username ?? ''
+  }
+
+  try {
+    const resp = await customFetch.post('/api/registrasi/srp/kirim', payload, config)
+
+    return resp?.data
+  } catch (error) {
+    const apiData = error?.response?.data
+
+    console.error('Error sending registrasi SRP to validator:', apiData || error?.message)
+
+    throw new Error(apiData?.message || apiData?.error || error?.message || 'Gagal mengirim registrasi SRP ke validator')
+  }
+}
