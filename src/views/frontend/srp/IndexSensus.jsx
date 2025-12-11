@@ -19,6 +19,9 @@ const TAB_CONFIG = [
 const serializeTahapRegId = ids =>
   (Array.isArray(ids) ? ids : typeof ids === 'string' ? ids.split(',') : []).filter(Boolean).join(',')
 
+const normalizeTahapRegIdArray = ids =>
+  Array.isArray(ids) ? ids : typeof ids === 'string' ? ids.split(',').filter(Boolean) : []
+
 const IndexSensus = ({
   data = [],
   currentPage = 1,
@@ -58,9 +61,10 @@ const IndexSensus = ({
 
       const params = new URLSearchParams(searchParams.toString())
       const targetTab = TAB_CONFIG.find(tabConfig => tabConfig.value === newValue)
+      const serializedTahapRegId = serializeTahapRegId(targetTab?.tahapRegId)
 
-      if (targetTab?.tahapRegId) {
-        params.set('tahap_reg_id', targetTab.tahapRegId.join(','))
+      if (serializedTahapRegId) {
+        params.set('tahap_reg_id', serializedTahapRegId)
       } else {
         params.delete('tahap_reg_id')
       }
@@ -79,7 +83,7 @@ const IndexSensus = ({
     }
 
     const selectedTab = TAB_CONFIG.find(tabConfig => tabConfig.value === tabValue)
-    const selectedTahapRegId = selectedTab?.tahapRegId || []
+    const selectedTahapRegId = normalizeTahapRegIdArray(selectedTab?.tahapRegId)
 
     return (
       <IndexTabsensus

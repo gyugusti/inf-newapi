@@ -148,7 +148,7 @@ export default function IndexSrp() {
             />
           </Grid>
 
-          <Grid size={{ xs: 12, sm: 3 }}>
+          <Grid size={{ xs: 2, sm: 3 }}>
             <Controller
               name='cari'
               control={control}
@@ -159,7 +159,7 @@ export default function IndexSrp() {
             />
           </Grid>
 
-          <Grid size={{ xs: 12 }}>
+          <Grid size={{ xs: 2 }}>
             <Button type='submit' variant='contained'>
               Cari
             </Button>
