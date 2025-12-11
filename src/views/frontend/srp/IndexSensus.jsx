@@ -1,10 +1,10 @@
 'use client'
 
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState, useTransition } from 'react'
 
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 
-import { Box, Card, Tab, Tabs } from '@mui/material'
+import { Box, Card, CircularProgress, Tab, Tabs } from '@mui/material'
 
 import IndexSrp from './IndexSrp'
 import IndexTabsensus from './IndexTabsensus.jsx'
@@ -35,6 +35,7 @@ const IndexSensus = ({
   const router = useRouter()
   const pathname = usePathname()
   const searchParams = useSearchParams()
+  const [isPending, startTransition] = useTransition()
 
   const normalizedTahapRegId = useMemo(() => serializeTahapRegId(tahapRegId), [tahapRegId])
 
@@ -57,24 +58,26 @@ const IndexSensus = ({
 
   const handleTabChange = useCallback(
     (_, newValue) => {
-      setTabValue(newValue)
+      startTransition(() => {
+        setTabValue(newValue)
 
-      const params = new URLSearchParams(searchParams.toString())
-      const targetTab = TAB_CONFIG.find(tabConfig => tabConfig.value === newValue)
-      const serializedTahapRegId = serializeTahapRegId(targetTab?.tahapRegId)
+        const params = new URLSearchParams(searchParams.toString())
+        const targetTab = TAB_CONFIG.find(tabConfig => tabConfig.value === newValue)
+        const serializedTahapRegId = serializeTahapRegId(targetTab?.tahapRegId)
 
-      if (serializedTahapRegId) {
-        params.set('tahap_reg_id', serializedTahapRegId)
-      } else {
-        params.delete('tahap_reg_id')
-      }
+        if (serializedTahapRegId) {
+          params.set('tahap_reg_id', serializedTahapRegId)
+        } else {
+          params.delete('tahap_reg_id')
+        }
 
-      params.set('tab', newValue)
-      params.set('page', '1')
+        params.set('tab', newValue)
+        params.set('page', '1')
 
-      router.push(`${pathname}?${params.toString()}`, { scroll: false })
+        router.push(`${pathname}?${params.toString()}`, { scroll: false })
+      })
     },
-    [pathname, router, searchParams]
+    [pathname, router, searchParams, startTransition]
   )
 
   const renderContent = () => {
@@ -105,7 +108,24 @@ const IndexSensus = ({
           <Tab key={tabConfig.value} value={tabConfig.value} label={tabConfig.label} />
         ))}
       </Tabs>
-      <Box p={3}>{renderContent()}</Box>
+      <Box p={3} position='relative'>
+        {isPending && (
+          <Box
+            sx={{
+              position: 'absolute',
+              inset: 0,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              backgroundColor: theme => `${theme.palette.background.paper}E6`,
+              zIndex: 1
+            }}
+          >
+            <CircularProgress color='inherit' />
+          </Box>
+        )}
+        {renderContent()}
+      </Box>
     </Card>
   )
 }
