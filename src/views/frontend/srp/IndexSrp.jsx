@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 
-import { useRouter, useSearchParams } from 'next/navigation'
+import { useParams, useRouter, useSearchParams } from 'next/navigation'
 
 import { Box, CircularProgress, FormControl, InputLabel, MenuItem, Pagination, Select, TextField } from '@mui/material'
 import Button from '@mui/material/Button'
@@ -17,12 +17,16 @@ import TableRow from '@mui/material/TableRow'
 
 import { Controller, useForm } from 'react-hook-form'
 
+import { fetchListSrp } from '@/app/(dashboard)/(private)/frontend/srp-sensus/server'
+
 export default function IndexSrp() {
-  const { control, handleSubmit } = useForm()
+  const { control, handleSubmit, setValue, watch } = useForm()
+  const params = useParams()
   const searchParams = useSearchParams()
   const router = useRouter()
 
   const page = Number(searchParams.get('page')) || 1
+  const nama = searchParams.get('nama') || ''
 
   const [data, setData] = useState([])
   const [loading, setLoading] = useState(true)
@@ -48,57 +52,22 @@ export default function IndexSrp() {
       setLoading(true)
 
       try {
-        const queryParams = new URLSearchParams()
-
-        queryParams.set('page', page)
-        queryParams.set('limit', perPage)
-
-        if (filters.status !== '') queryParams.set('status', filters.status)
-        if (filters.jenis_sumber_id !== '') queryParams.set('jenis_sumber_id', filters.jenis_sumber_id)
-        if (filters.kat_sumber_id !== '') queryParams.set('kat_sumber_id', filters.kat_sumber_id)
-        if (filters.cari) queryParams.set('cari', filters.cari)
-
-        const response = await fetch(`/frontend/srp-sensus/list?${queryParams.toString()}`, {
-          method: 'GET',
-          cache: 'no-store'
+        const response = await fetchListSrp({
+          ...filters,
+          page,
+          limit: perPage
         })
 
-        if (!response.ok) {
-          console.error('Failed to fetch SRP list:', response.statusText)
-
-          if (isMounted) {
-            setData([])
-            setPagination({
-              current_page: 1,
-              per_page: perPage,
-              last_page: 1
-            })
-          }
-
-          return
-        }
-
-        const responseData = await response.json()
-
-        if (isMounted) {
-          setData(responseData.data || [])
+        if (isMounted && response?.data) {
+          setData(response.data)
           setPagination({
-            current_page: responseData.current_page ?? 1,
-            per_page: responseData.per_page ?? perPage,
-            last_page: responseData.last_page ?? 1
+            current_page: response.current_page,
+            per_page: response.per_page,
+            last_page: response.last_page
           })
         }
       } catch (e) {
         console.error(e)
-
-        if (isMounted) {
-          setData([])
-          setPagination({
-            current_page: 1,
-            per_page: perPage,
-            last_page: 1
-          })
-        }
       } finally {
         if (isMounted) setLoading(false)
       }
@@ -213,7 +182,6 @@ export default function IndexSrp() {
               <TableCell>No Seri Tabung</TableCell>
               <TableCell>Status</TableCell>
               <TableCell>KTUN</TableCell>
-              <TableCell>Fasilitas</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -247,7 +215,6 @@ export default function IndexSrp() {
                     {row.status_sumber_id === 1 ? 'aktif' : row.status_sumber_id === 0 ? 'nonaktif' : '-'}
                   </TableCell>
                   <TableCell>{row.ktun}</TableCell>
-                  <TableCell>{row.fasilitas}</TableCell>
                 </TableRow>
               ))
             )}

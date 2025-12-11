@@ -89,7 +89,8 @@ export async function fetchListSrp(params = {}) {
     throw new Error('Unauthorized')
   }
 
-  const url = `/api/registrasi/srp/list`
+  //const url = `/api/registrasi/srp/list`
+  const url = `/api/validasi/sumber`
 
   const config = {
     headers: {
@@ -98,7 +99,6 @@ export async function fetchListSrp(params = {}) {
     params: {
       page: params.page || 1,
       limit: params.limit || 20,
-      fas_id: session?.user?.fas_id ?? '',
       cari: params.cari || '',
       jenis_sumber_id: params.jenis_sumber_id || '',
       kat_sumber_id: params.kat_sumber_id || '',
