@@ -4,7 +4,7 @@ import { getServerSession } from 'next-auth/next'
 
 import { authOptions } from '@/libs/auth'
 import customFetch from '@/utils/axios'
-
+import { normalizeArray } from '@/utils/helper'
 const DEFAULT_PAGE = 1
 const DEFAULT_LIMIT = 20
 
@@ -25,6 +25,8 @@ export async function fetchSensusSrp(params = {}) {
   const page = Number(params.page) || DEFAULT_PAGE
   const limit = Number(params.limit || params.per_page) || DEFAULT_LIMIT
 
+  const tahapRegIdParam = normalizeArray(params.tahap_reg_id)
+
   const config = {
     headers: {
       Authorization: `Bearer ${session?.user?.accessToken ?? ''}`
@@ -32,7 +34,7 @@ export async function fetchSensusSrp(params = {}) {
     params: {
       page,
       limit,
-      tahap_reg_id: params.tahap_reg_id || '',
+      ...(tahapRegIdParam ? { tahap_reg_id: tahapRegIdParam } : {}),
       validator_id: params.validator_id || '',
       otorisator_id: params.otorisator_id || '',
       fas_id: session?.user?.fas_id ?? '',
@@ -89,8 +91,7 @@ export async function fetchListSrp(params = {}) {
     throw new Error('Unauthorized')
   }
 
-  //const url = `/api/registrasi/srp/list`
-  const url = `/api/validasi/sumber`
+  const url = `/api/registrasi/srp/list`
 
   const config = {
     headers: {
@@ -102,7 +103,7 @@ export async function fetchListSrp(params = {}) {
       cari: params.cari || '',
       jenis_sumber_id: params.jenis_sumber_id || '',
       kat_sumber_id: params.kat_sumber_id || '',
-      status: params.status || ''
+      fas_id: session?.user?.fas_id ?? ''
     },
     withCredentials: true
   }

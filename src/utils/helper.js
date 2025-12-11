@@ -80,3 +80,18 @@ const getMonthName = month => {
 
   return months[month - 1]
 }
+
+export const normalizeArray = raw => {
+  if (!raw) return undefined
+
+  // Jika sudah array → bersihkan
+  if (Array.isArray(raw)) {
+    return raw.map(v => String(v).trim()).filter(Boolean)
+  }
+
+  // Jika string "4,-1"
+  return String(raw)
+    .split(',')
+    .map(v => v.trim())
+    .filter(Boolean)
+}
