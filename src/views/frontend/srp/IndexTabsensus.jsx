@@ -24,20 +24,19 @@ import { useSession } from 'next-auth/react'
 import { toast } from 'react-toastify'
 
 import CustomTextField from '@/@core/components/mui/TextField'
+import { deleteRegSumber, kevalidatorRegSumber } from '@/app/(dashboard)/(private)/frontend/srp-registrasi/server'
 import TablePaginationComponent from '@/components/TablePaginationComponent'
 import KonfirmasiDialog from '@/components/widget/KonfirmasiDialog'
 import { getFlagLengkap, getFlagValid } from '@/utils/balishelper'
 import tableStyles from '@core/styles/table.module.css'
-import ActionsColumnRegistrasi from './ActionsColumnRegistrasi'
+import ActionColumnSensus from './ActionColumnSensus'
 import DocumenSrp from './DocumenSrp'
 import LogSrp from './LogSrp'
-import { deleteRegSumber, kevalidatorRegSumber } from '@/app/(dashboard)/(private)/frontend/srp-registrasi/server'
 
 const PER_PAGE_OPTIONS = [5, 10, 20, 50, 100, 500]
 
-const serializeTahapRegId = ids => (Array.isArray(ids) ? ids : typeof ids === 'string' ? ids.split(',') : [])
-  .filter(Boolean)
-  .join(',')
+const serializeTahapRegId = ids =>
+  (Array.isArray(ids) ? ids : typeof ids === 'string' ? ids.split(',') : []).filter(Boolean).join(',')
 
 const IndexTabsensus = ({ data = [], currentPage, perPage, total, totalPages, searchTerm, tahapRegId }) => {
   const router = useRouter()
@@ -148,7 +147,7 @@ const IndexTabsensus = ({ data = [], currentPage, perPage, total, totalPages, se
       columnHelper.accessor('actions', {
         header: 'Actions',
         cell: ({ row }) => (
-          <ActionsColumnRegistrasi
+          <ActionColumnSensus
             row={row}
             handleShowLog={handleShowLog}
             handleShowDokumen={handleShowDokumen}
