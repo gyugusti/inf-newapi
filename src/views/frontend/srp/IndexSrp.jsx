@@ -196,6 +196,7 @@ export default function IndexSrp() {
           <TableHead>
             <TableRow>
               <TableCell>No</TableCell>
+              <TableCell></TableCell>
               <TableCell>Master ID</TableCell>
               <TableCell>Jenis/Kat</TableCell>
               <TableCell>Model</TableCell>
@@ -205,8 +206,6 @@ export default function IndexSrp() {
               <TableCell>Tipe Tabung</TableCell>
               <TableCell>No Seri Tabung</TableCell>
               <TableCell>Status</TableCell>
-              <TableCell>KTUN</TableCell>
-              <TableCell>Aksi</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -224,9 +223,19 @@ export default function IndexSrp() {
               </TableRow>
             ) : (
               data.map((row, i) => (
-                <TableRow key={row.master_id}>
+                <TableRow key={row.master_sumber_id}>
                   <TableCell>{(pagination.current_page - 1) * pagination.per_page + i + 1}</TableCell>
-                  <TableCell>{row.master_id || 'XXXXXX'}</TableCell>
+                  <TableCell>
+                    <Button
+                      size='small'
+                      variant='outlined'
+                      onClick={() => handleSelectSensus(row.master_sumber_id)}
+                      disabled={actionLoadingId === row.master_sumber_id}
+                    >
+                      {actionLoadingId === row.master_sumber_id ? <CircularProgress size={16} /> : 'Pilih Sensus'}
+                    </Button>
+                  </TableCell>
+                  <TableCell>{row.master_sumber_id || 'XXXXXX'}</TableCell>
                   <TableCell>
                     {row.jenis_sumber?.keterangan}/{row.kat_sumber?.nama}
                   </TableCell>
@@ -238,17 +247,6 @@ export default function IndexSrp() {
                   <TableCell>{row.no_seri_tabung}</TableCell>
                   <TableCell>
                     {row.status_sumber_id === 1 ? 'aktif' : row.status_sumber_id === 0 ? 'nonaktif' : '-'}
-                  </TableCell>
-                  <TableCell>{row.ktun}</TableCell>
-                  <TableCell>
-                    <Button
-                      size='small'
-                      variant='outlined'
-                      onClick={() => handleSelectSensus(row.master_id)}
-                      disabled={actionLoadingId === row.master_id}
-                    >
-                      {actionLoadingId === row.master_id ? <CircularProgress size={16} /> : 'Pilih Sensus'}
-                    </Button>
                   </TableCell>
                 </TableRow>
               ))
