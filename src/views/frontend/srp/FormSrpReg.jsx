@@ -71,6 +71,8 @@ const FormSrpReg = ({ data, action }) => {
     // kalau mau, bisa tambahkan flag_kegiatan, kegiatan, flag_user, jadwal_id di sini juga
   }
 
+  const formFields = useMemo(() => Object.keys(defaultValues), [])
+
   const {
     control,
     setValue,
@@ -94,11 +96,50 @@ const FormSrpReg = ({ data, action }) => {
   }, [jenisSbr])
 
   useEffect(() => {
-    const keys = Object.keys(defaultValues)
-
-    keys.forEach(k => setValue(k, getSP(k)))
+    formFields.forEach(k => setValue(k, getSP(k)))
     setJenisSbr(getSP('jenis_sumber_id') ? Number(getSP('jenis_sumber_id')) : '')
-  }, [searchParams, setValue])
+  }, [searchParams, setValue, formFields])
+
+  useEffect(() => {
+    if (!data) return
+
+    const mappedValues = {
+      flag_kegiatan: data.flag_kegiatan,
+      kegiatan_id: data.kegiatan_id ?? data.kegiatan,
+      kat_sumber_id: data.kat_sumber_id,
+      jenis_sumber_id: data.jenis_sumber_id,
+      nama: data.nama,
+      tipe: data.tipe,
+      no_seri: data.no_seri,
+      sifat: data.sifat,
+      bentuk: data.bentuk,
+      model_sumber_id: data.model_sumber_id,
+      status_sumber_id: data.status_sumber_id,
+      aktivitas: data.aktivitas,
+      sat_aktivitas: data.sat_aktivitas,
+      tgl_aktivitas: data.tgl_aktivitas,
+      kv: data.kv,
+      sat_kv: data.sat_kv,
+      ma: data.ma,
+      sat_ma: data.sat_ma,
+      tipe_tabung: data.tipe_tabung,
+      no_seri_tabung: data.no_seri_tabung,
+      merk_tabung: data.merk_tabung,
+      jumlah: data.jumlah,
+      sat_jumlah: data.sat_jumlah,
+      ket_status: data.ket_status,
+      pabrikan: data.pabrikan,
+      tahun_produksi: data.tahun_produksi
+    }
+
+    Object.entries(mappedValues).forEach(([field, value]) => {
+      if (formFields.includes(field)) {
+        setValue(field, value ?? '')
+      }
+    })
+
+    setJenisSbr(data.jenis_sumber_id ? Number(data.jenis_sumber_id) : '')
+  }, [data, formFields, setValue])
 
   const optSatuan = useMemo(
     () => dafSatuan.map(item => ({ label: item.nama_satuan, value: item.satuan_id })),
