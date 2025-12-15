@@ -18,6 +18,7 @@ import TableRow from '@mui/material/TableRow'
 import { Controller, useForm } from 'react-hook-form'
 
 import { fetchListSrp } from '@/app/(dashboard)/(private)/frontend/srp-sensus/server'
+import customFetch from '@/utils/axios'
 
 export default function IndexSrp() {
   const { control, handleSubmit, setValue, watch } = useForm()
@@ -31,6 +32,7 @@ export default function IndexSrp() {
   const [data, setData] = useState([])
   const [loading, setLoading] = useState(true)
   const [perPage, setPerPage] = useState(20)
+  const [actionLoadingId, setActionLoadingId] = useState(null)
 
   const [pagination, setPagination] = useState({
     current_page: 1,
@@ -82,6 +84,28 @@ export default function IndexSrp() {
 
   const handlePageChange = (_, value) => {
     router.push(`?page=${value}`, { scroll: false })
+  }
+
+  const handleSelectSensus = async masterSumberId => {
+    setActionLoadingId(masterSumberId)
+
+    try {
+      const { data } = await customFetch.put(`/api/registrasi/srp/mohonMaster/${masterSumberId}`, {
+        jenis_validasi_id: 2
+      })
+
+      const regSrpId = data?.response?.reg_srp_id
+
+      if (regSrpId) {
+        router.push(`/frontend/srp-update/update?reg_srp_id=${regSrpId}`)
+      } else {
+        console.warn('Registrasi SRP tidak berhasil dibuat:', data?.keterangan)
+      }
+    } catch (error) {
+      console.error('Error selecting sensus:', error)
+    } finally {
+      setActionLoadingId(null)
+    }
   }
 
   const onSubmit = values => {
@@ -182,18 +206,19 @@ export default function IndexSrp() {
               <TableCell>No Seri Tabung</TableCell>
               <TableCell>Status</TableCell>
               <TableCell>KTUN</TableCell>
+              <TableCell>Aksi</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {loading ? (
               <TableRow>
-                <TableCell colSpan={11} align='center'>
+                <TableCell colSpan={12} align='center'>
                   <CircularProgress size={24} />
                 </TableCell>
               </TableRow>
             ) : data.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={11} align='center'>
+                <TableCell colSpan={12} align='center'>
                   Tidak ada data
                 </TableCell>
               </TableRow>
@@ -215,6 +240,16 @@ export default function IndexSrp() {
                     {row.status_sumber_id === 1 ? 'aktif' : row.status_sumber_id === 0 ? 'nonaktif' : '-'}
                   </TableCell>
                   <TableCell>{row.ktun}</TableCell>
+                  <TableCell>
+                    <Button
+                      size='small'
+                      variant='outlined'
+                      onClick={() => handleSelectSensus(row.master_id)}
+                      disabled={actionLoadingId === row.master_id}
+                    >
+                      {actionLoadingId === row.master_id ? <CircularProgress size={16} /> : 'Pilih Sensus'}
+                    </Button>
+                  </TableCell>
                 </TableRow>
               ))
             )}
