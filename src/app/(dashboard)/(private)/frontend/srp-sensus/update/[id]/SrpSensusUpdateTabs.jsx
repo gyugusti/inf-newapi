@@ -6,6 +6,7 @@ import Box from '@mui/material/Box'
 import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
 import Divider from '@mui/material/Divider'
+import Stack from '@mui/material/Stack'
 import Tab from '@mui/material/Tab'
 import Typography from '@mui/material/Typography'
 import Grid from '@mui/material/Grid2'
@@ -21,20 +22,37 @@ const renderFieldValue = value => {
   return value
 }
 
-const DetailGrid = ({ data, fields }) => (
-  <Grid container spacing={4} sx={{ mt: 0 }}>
-    {fields.map(field => (
-      <Grid key={field.label} xs={12} md={6}>
-        <Typography variant='caption' color='text.secondary'>
-          {field.label}
-        </Typography>
-        <Typography variant='body1' sx={{ fontWeight: 600 }}>
-          {renderFieldValue(field.value(data))}
-        </Typography>
+const DetailGrid = ({ data, fields }) => {
+  const middleIndex = Math.ceil(fields.length / 2)
+  const firstColumn = fields.slice(0, middleIndex)
+  const secondColumn = fields.slice(middleIndex)
+
+  const renderColumn = columnFields => (
+    <Stack spacing={3}>
+      {columnFields.map(field => (
+        <Box key={field.label}>
+          <Typography variant='caption' color='text.secondary'>
+            {field.label}
+          </Typography>
+          <Typography variant='body1' sx={{ fontWeight: 600 }}>
+            {renderFieldValue(field.value(data))}
+          </Typography>
+        </Box>
+      ))}
+    </Stack>
+  )
+
+  return (
+    <Grid container spacing={4} sx={{ mt: 0 }}>
+      <Grid xs={12} md={6}>
+        {renderColumn(firstColumn)}
       </Grid>
-    ))}
-  </Grid>
-)
+      <Grid xs={12} md={6}>
+        {renderColumn(secondColumn)}
+      </Grid>
+    </Grid>
+  )
+}
 
 const SrpSensusUpdateTabs = ({ detailData, updateAction }) => {
   const [tabValue, setTabValue] = useState('registrasi')
