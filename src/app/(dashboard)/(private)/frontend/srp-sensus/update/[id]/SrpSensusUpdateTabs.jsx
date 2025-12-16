@@ -128,7 +128,9 @@ const SrpSensusUpdateTabs = ({ detailData, updateAction }) => {
       >
         {/* HEADER (MINIMIZE SATU SAJA) */}
         <AccordionSummary expandIcon={<i className='tabler-chevron-down' />}>
-          <Typography variant='h6'>Data Sensus Sumber</Typography>
+          <Typography variant='h5' fontWeight={700}>
+            Data Sensus Sumber
+          </Typography>
         </AccordionSummary>
 
         {/* ISI */}
@@ -185,14 +187,7 @@ const SrpSensusUpdateTabs = ({ detailData, updateAction }) => {
           width: '100%'
         }}
       >
-        <AccordionSummary
-          expandIcon={<i className='tabler-chevron-down' style={{ color: '#fff' }} />}
-          sx={{
-            backgroundColor: '#4b3bf1',
-            color: '#fff',
-            '& .MuiAccordionSummary-content': { alignItems: 'flex-start', flexDirection: 'column' }
-          }}
-        >
+        <AccordionSummary expandIcon={<i className='tabler-chevron-down' />}>
           <Typography variant='h5' fontWeight={700}>
             Formulir Data
           </Typography>
