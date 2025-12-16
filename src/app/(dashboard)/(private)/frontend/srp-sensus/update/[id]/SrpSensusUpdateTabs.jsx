@@ -113,61 +113,59 @@ const SrpSensusUpdateTabs = ({ detailData, updateAction }) => {
         borderRadius: 3
       }}
     >
-      <Grid container spacing={4} alignItems='stretch'>
-        {/* KIRI: Data Registrasi */}
-        <Grid size={{ xs: 12, md: 6 }}>
-          <Accordion
-            defaultExpanded
-            elevation={0}
-            sx={{
-              height: '100%',
-              borderRadius: 3,
-              border: '1px solid #e7eaf2',
-              boxShadow: '0px 4px 12px rgba(15, 23, 42, 0.06)',
-              backgroundColor: '#fbfcff'
-            }}
-          >
-            <AccordionSummary expandIcon={<i className='tabler-chevron-down' />}>
-              <Typography variant='h6'>Data Registrasi</Typography>
-            </AccordionSummary>
+      {/* =========================
+    ROW ATAS: 1 Accordion, 2 Kolom
+   ========================= */}
+      <Accordion
+        defaultExpanded
+        elevation={0}
+        sx={{
+          borderRadius: 3,
+          border: '1px solid #e7eaf2',
+          boxShadow: '0px 4px 12px rgba(15, 23, 42, 0.06)',
+          backgroundColor: '#fbfcff'
+        }}
+      >
+        {/* HEADER (MINIMIZE SATU SAJA) */}
+        <AccordionSummary expandIcon={<i className='tabler-chevron-down' />}>
+          <Typography variant='h6'>Data Sensus Sumber</Typography>
+        </AccordionSummary>
 
-            <AccordionDetails>
-              {detailData ? (
-                <DetailGrid data={detailData} fields={registrasiFields} />
-              ) : (
-                <Placeholder message='Konten Grid Kosong' />
-              )}
-            </AccordionDetails>
-          </Accordion>
-        </Grid>
+        {/* ISI */}
+        <AccordionDetails>
+          <Grid container spacing={4} alignItems='stretch'>
+            {/* KIRI: Data Registrasi */}
+            <Grid size={{ xs: 12, md: 6 }}>
+              <Box>
+                <Typography variant='subtitle1' fontWeight={600} sx={{ mb: 2 }}>
+                  Data Registrasi
+                </Typography>
 
-        {/* KANAN: Data Master Sumber */}
-        <Grid size={{ xs: 12, md: 6 }}>
-          <Accordion
-            defaultExpanded
-            elevation={0}
-            sx={{
-              height: '100%',
-              borderRadius: 3,
-              border: '1px solid #e7eaf2',
-              boxShadow: '0px 4px 12px rgba(15, 23, 42, 0.06)',
-              backgroundColor: '#fbfcff'
-            }}
-          >
-            <AccordionSummary expandIcon={<i className='tabler-chevron-down' />}>
-              <Typography variant='h6'>Data Master Sumber</Typography>
-            </AccordionSummary>
+                {detailData ? (
+                  <DetailGrid data={detailData} fields={registrasiFields} />
+                ) : (
+                  <Placeholder message='Konten Grid Kosong' />
+                )}
+              </Box>
+            </Grid>
 
-            <AccordionDetails>
-              {detailData?.master_sumber ? (
-                <DetailGrid data={detailData.master_sumber} fields={masterFields} />
-              ) : (
-                <Placeholder message='Konten Grid Kosong' />
-              )}
-            </AccordionDetails>
-          </Accordion>
-        </Grid>
-      </Grid>
+            {/* KANAN: Data Master */}
+            <Grid size={{ xs: 12, md: 6 }}>
+              <Box>
+                <Typography variant='subtitle1' fontWeight={600} sx={{ mb: 2 }}>
+                  Data Master Sumber
+                </Typography>
+
+                {detailData?.master_sumber ? (
+                  <DetailGrid data={detailData.master_sumber} fields={masterFields} />
+                ) : (
+                  <Placeholder message='Konten Grid Kosong' />
+                )}
+              </Box>
+            </Grid>
+          </Grid>
+        </AccordionDetails>
+      </Accordion>
 
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
         <Divider sx={{ flex: 1 }} />
@@ -197,9 +195,6 @@ const SrpSensusUpdateTabs = ({ detailData, updateAction }) => {
         >
           <Typography variant='h5' fontWeight={700}>
             Formulir Data
-          </Typography>
-          <Typography variant='body2' sx={{ opacity: 0.9 }}>
-            Keterangan Data Form
           </Typography>
         </AccordionSummary>
         <AccordionDetails sx={{ backgroundColor: 'transparent', px: { xs: 0, md: 2 } }}>
