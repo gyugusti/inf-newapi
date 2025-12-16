@@ -2,7 +2,6 @@
 
 import { useMemo } from 'react'
 
-import FormSrpReg from '@/views/frontend/srp/FormSrpReg'
 import Accordion from '@mui/material/Accordion'
 import AccordionDetails from '@mui/material/AccordionDetails'
 import AccordionSummary from '@mui/material/AccordionSummary'
@@ -11,6 +10,8 @@ import Divider from '@mui/material/Divider'
 import Grid from '@mui/material/Grid2'
 import Stack from '@mui/material/Stack'
 import Typography from '@mui/material/Typography'
+
+import FormSrpReg from '@/views/frontend/srp/FormSrpReg'
 
 const renderFieldValue = value => {
   if (value === null || value === undefined || value === '') return '-'

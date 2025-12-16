@@ -15,7 +15,8 @@ const Page = async ({ params }) => {
 
   async function updateAction(formData) {
     'use server'
-    return updateRegistrasiSrp(regSrpId, formData)
+    
+return updateRegistrasiSrp(regSrpId, formData)
   }
 
   return (
