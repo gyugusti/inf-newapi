@@ -2,13 +2,15 @@
 
 import { useMemo } from 'react'
 
+import Accordion from '@mui/material/Accordion'
+import AccordionDetails from '@mui/material/AccordionDetails'
+import AccordionSummary from '@mui/material/AccordionSummary'
 import Box from '@mui/material/Box'
-import Card from '@mui/material/Card'
-import CardContent from '@mui/material/CardContent'
 import Divider from '@mui/material/Divider'
+import Grid from '@mui/material/Grid2'
 import Stack from '@mui/material/Stack'
 import Typography from '@mui/material/Typography'
-import Grid from '@mui/material/Grid2'
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import FormSrpReg from '@/views/frontend/srp/FormSrpReg'
 
 const renderFieldValue = value => {
@@ -86,58 +88,110 @@ const SrpSensusUpdateTabs = ({ detailData, updateAction }) => {
     []
   )
 
-  return (
-    <Card>
-      <CardContent>
-        <Grid container spacing={4} sx={{ mb: 2 }}>
-          <Grid xs={12} md={6}>
-            {detailData ? (
-              <Box sx={{ mt: 2 }}>
-                <Typography variant='h6' sx={{ mb: 2 }}>
-                  Detail Registrasi
-                </Typography>
-                <DetailGrid data={detailData} fields={registrasiFields} />
-              </Box>
-            ) : (
-              <Box sx={{ mt: 2 }}>
-                <Typography variant='h6' sx={{ mb: 2 }}>
-                  Detail Registrasi
-                </Typography>
-                <Typography>Data registrasi tidak ditemukan.</Typography>
-              </Box>
-            )}
-          </Grid>
+  const Placeholder = ({ message }) => (
+    <Box
+      sx={{
+        minHeight: 180,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        color: 'text.secondary',
+        fontStyle: 'italic',
+        px: 2
+      }}
+    >
+      <Typography variant='body1'>{message}</Typography>
+    </Box>
+  )
 
-          <Grid xs={12} md={6}>
-            <Box sx={{ mt: 2 }}>
-              <Typography variant='h6' sx={{ mb: 2 }}>
-                Data Master Sumber
-              </Typography>
+  return (
+    <Stack spacing={4}>
+      <Grid container spacing={4}>
+        <Grid xs={12} md={6}>
+          <Accordion
+            defaultExpanded
+            elevation={0}
+            sx={{
+              borderRadius: 3,
+              border: theme => `1px solid ${theme.palette.divider}`,
+              boxShadow: theme => `0px 10px 25px 0px ${theme.palette.divider}`
+            }}
+          >
+            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+              <Typography variant='h6'>Data Registrasi</Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+              {detailData ? (
+                <DetailGrid data={detailData} fields={registrasiFields} />
+              ) : (
+                <Placeholder message='Konten Grid Kosong' />
+              )}
+            </AccordionDetails>
+          </Accordion>
+        </Grid>
+
+        <Grid xs={12} md={6}>
+          <Accordion
+            defaultExpanded
+            elevation={0}
+            sx={{
+              borderRadius: 3,
+              border: theme => `1px solid ${theme.palette.divider}`,
+              boxShadow: theme => `0px 10px 25px 0px ${theme.palette.divider}`
+            }}
+          >
+            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+              <Typography variant='h6'>Data Master Sumber</Typography>
+            </AccordionSummary>
+            <AccordionDetails>
               {detailData?.master_sumber ? (
                 <DetailGrid data={detailData.master_sumber} fields={masterFields} />
               ) : (
-                <Grid container spacing={4} sx={{ mt: 0 }}>
-                  <Grid xs={12}>
-                    <Box>
-                      <Typography variant='caption' color='text.secondary'>
-                        Informasi Master Sumber
-                      </Typography>
-                      <Typography variant='body1' sx={{ fontWeight: 600 }}>
-                        Data master belum tersedia
-                      </Typography>
-                    </Box>
-                  </Grid>
-                </Grid>
+                <Placeholder message='Data master belum tersedia' />
               )}
-            </Box>
-          </Grid>
+            </AccordionDetails>
+          </Accordion>
         </Grid>
+      </Grid>
 
-        <Divider sx={{ my: 4 }} />
+      <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+        <Divider sx={{ flex: 1 }} />
+        <Typography variant='body2' color='text.secondary' sx={{ textTransform: 'lowercase' }}>
+          form srp
+        </Typography>
+        <Divider sx={{ flex: 1 }} />
+      </Box>
 
-        <FormSrpReg data={detailData} action={updateAction} />
-      </CardContent>
-    </Card>
+      <Accordion
+        defaultExpanded
+        elevation={0}
+        sx={{
+          borderRadius: 3,
+          overflow: 'hidden',
+          border: theme => `1px solid ${theme.palette.divider}`,
+          boxShadow: theme => `0px 12px 30px 0px ${theme.palette.divider}`
+        }}
+      >
+        <AccordionSummary
+          expandIcon={<ExpandMoreIcon htmlColor='#fff' />}
+          sx={{
+            backgroundColor: '#4b3bf1',
+            color: '#fff',
+            '& .MuiAccordionSummary-content': { alignItems: 'flex-start', flexDirection: 'column' }
+          }}
+        >
+          <Typography variant='h5' fontWeight={700}>
+            Formulir Data
+          </Typography>
+          <Typography variant='body2' sx={{ opacity: 0.9 }}>
+            Keterangan Data Form
+          </Typography>
+        </AccordionSummary>
+        <AccordionDetails sx={{ backgroundColor: '#f7f8ff' }}>
+          <FormSrpReg data={detailData} action={updateAction} />
+        </AccordionDetails>
+      </Accordion>
+    </Stack>
   )
 }
 
