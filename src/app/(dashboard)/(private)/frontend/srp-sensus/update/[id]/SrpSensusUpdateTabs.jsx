@@ -10,7 +10,6 @@ import Divider from '@mui/material/Divider'
 import Grid from '@mui/material/Grid2'
 import Stack from '@mui/material/Stack'
 import Typography from '@mui/material/Typography'
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import FormSrpReg from '@/views/frontend/srp/FormSrpReg'
 
 const renderFieldValue = value => {
@@ -117,7 +116,7 @@ const SrpSensusUpdateTabs = ({ detailData, updateAction }) => {
               boxShadow: theme => `0px 10px 25px 0px ${theme.palette.divider}`
             }}
           >
-            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+            <AccordionSummary expandIcon={<i className='tabler-chevron-down' />}>
               <Typography variant='h6'>Data Registrasi</Typography>
             </AccordionSummary>
             <AccordionDetails>
@@ -140,7 +139,7 @@ const SrpSensusUpdateTabs = ({ detailData, updateAction }) => {
               boxShadow: theme => `0px 10px 25px 0px ${theme.palette.divider}`
             }}
           >
-            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+            <AccordionSummary expandIcon={<i className='tabler-chevron-down' />}>
               <Typography variant='h6'>Data Master Sumber</Typography>
             </AccordionSummary>
             <AccordionDetails>
@@ -173,7 +172,7 @@ const SrpSensusUpdateTabs = ({ detailData, updateAction }) => {
         }}
       >
         <AccordionSummary
-          expandIcon={<ExpandMoreIcon htmlColor='#fff' />}
+          expandIcon={<i className='tabler-chevron-down' style={{ color: '#fff' }} />}
           sx={{
             backgroundColor: '#4b3bf1',
             color: '#fff',
