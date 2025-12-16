@@ -97,7 +97,7 @@ export default function IndexSrp() {
       const regSrpId = data?.response?.reg_srp_id
 
       if (regSrpId) {
-        router.push(`/frontend/srp-update/update?reg_srp_id=${regSrpId}`)
+        router.push(`/frontend/srp-sensus/update/${regSrpId}/?id=${regSrpId}`)
       } else {
         console.warn('Registrasi SRP tidak berhasil dibuat:', data?.keterangan)
       }

@@ -50,8 +50,8 @@ const ActionColumnSensus = ({
             text: 'Update',
             icon: 'tabler-edit',
             href: {
-              pathname: `/frontend/srp-sensus/update/${reg_srp_id}`,
-              query: { id: reg_srp_id, ...row.original }
+              pathname: `/frontend/srp-sensus/update/${reg_srp_id}`
+              //query: { id: reg_srp_id, ...row.original }
             },
             linkProps: { className: 'flex items-center gap-2 is-full plb-2 pli-4' }
           },
