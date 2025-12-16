@@ -104,9 +104,9 @@ const SrpSensusUpdateTabs = ({ detailData, updateAction }) => {
   )
 
   return (
-    <Stack spacing={4}>
+    <Stack spacing={4} sx={{ width: '100%' }}>
       <Grid container spacing={4} sx={{ width: '100%' }}>
-        <Grid xs={12} md={6} sx={{ width: '100%' }}>
+        <Grid xs={12} md={6} sx={{ width: '100%', minWidth: 0 }}>
           <Accordion
             defaultExpanded
             elevation={0}
@@ -130,7 +130,7 @@ const SrpSensusUpdateTabs = ({ detailData, updateAction }) => {
           </Accordion>
         </Grid>
 
-        <Grid xs={12} md={6} sx={{ width: '100%' }}>
+        <Grid xs={12} md={6} sx={{ width: '100%', minWidth: 0 }}>
           <Accordion
             defaultExpanded
             elevation={0}
