@@ -5,17 +5,18 @@ import CustomBreadcrumb from '@/components/widget/CustomBreadcrumb'
 import { fetchRegistrasiSrpDetail } from '../../../srp-update/server'
 import SrpSensusUpdateTabs from './SrpSensusUpdateTabs'
 
-const Page = async ({ searchParams }) => {
-  const regSrpId = searchParams?.reg_srp_id ?? ''
+const Page = async ({ params }) => {
+  const p = await params
+  const regSrpId = p?.id ?? ''
 
   const detailData = regSrpId ? await fetchRegistrasiSrpDetail(regSrpId) : null
 
-  const breadcrumbs = [{ name: 'Update SRP', path: '/frontend/srp-update' }, { name: 'Update SRP Detail' }]
+  const breadcrumbs = [{ name: 'Update SRP', path: '/frontend/srp-sensus' }, { name: 'Update SRP Detail' }]
 
   async function updateAction(formData) {
     'use server'
-
-    return updateRegistrasiSrp(regSrpId, formData)
+    
+return updateRegistrasiSrp(regSrpId, formData)
   }
 
   return (

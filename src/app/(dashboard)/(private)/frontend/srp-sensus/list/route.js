@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server'
+
 import { getServerSession } from 'next-auth/next'
 
 import { authOptions } from '@/libs/auth'
@@ -69,6 +70,7 @@ export async function GET(request) {
     return NextResponse.json(normalizedResponse)
   } catch (error) {
     console.error('Error fetching SRP list:', error)
-    return NextResponse.json(emptyResponse, { status: 500 })
+    
+return NextResponse.json(emptyResponse, { status: 500 })
   }
 }
