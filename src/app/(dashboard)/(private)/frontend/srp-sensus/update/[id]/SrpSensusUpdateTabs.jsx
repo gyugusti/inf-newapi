@@ -104,7 +104,15 @@ const SrpSensusUpdateTabs = ({ detailData, updateAction }) => {
   )
 
   return (
-    <Stack spacing={4} sx={{ width: '100%' }}>
+    <Stack
+      spacing={4}
+      sx={{
+        width: '100%',
+        backgroundColor: '#f7f8ff',
+        p: { xs: 2, md: 3 },
+        borderRadius: 3
+      }}
+    >
       <Grid container spacing={4} sx={{ width: '100%' }}>
         <Grid xs={12} md={6} sx={{ width: '100%', minWidth: 0 }}>
           <Accordion
@@ -112,20 +120,17 @@ const SrpSensusUpdateTabs = ({ detailData, updateAction }) => {
             elevation={0}
             sx={{
               borderRadius: 3,
-              border: theme => `1px solid ${theme.palette.divider}`,
-              boxShadow: theme => `0px 10px 25px 0px ${theme.palette.divider}`,
-              width: '100%'
+              border: '1px solid #e7eaf2',
+              boxShadow: '0px 4px 12px rgba(15, 23, 42, 0.06)',
+              width: '100%',
+              backgroundColor: '#fbfcff'
             }}
           >
             <AccordionSummary expandIcon={<i className='tabler-chevron-down' />}>
               <Typography variant='h6'>Data Registrasi</Typography>
             </AccordionSummary>
             <AccordionDetails>
-              {detailData ? (
-                <DetailGrid data={detailData} fields={registrasiFields} />
-              ) : (
-                <Placeholder message='Konten Grid Kosong' />
-              )}
+              {detailData ? <DetailGrid data={detailData} fields={registrasiFields} /> : <Placeholder message='Konten Grid Kosong' />}
             </AccordionDetails>
           </Accordion>
         </Grid>
@@ -136,9 +141,10 @@ const SrpSensusUpdateTabs = ({ detailData, updateAction }) => {
             elevation={0}
             sx={{
               borderRadius: 3,
-              border: theme => `1px solid ${theme.palette.divider}`,
-              boxShadow: theme => `0px 10px 25px 0px ${theme.palette.divider}`,
-              width: '100%'
+              border: '1px solid #e7eaf2',
+              boxShadow: '0px 4px 12px rgba(15, 23, 42, 0.06)',
+              width: '100%',
+              backgroundColor: '#fbfcff'
             }}
           >
             <AccordionSummary expandIcon={<i className='tabler-chevron-down' />}>
@@ -148,7 +154,7 @@ const SrpSensusUpdateTabs = ({ detailData, updateAction }) => {
               {detailData?.master_sumber ? (
                 <DetailGrid data={detailData.master_sumber} fields={masterFields} />
               ) : (
-                <Placeholder message='Data master belum tersedia' />
+                <Placeholder message='Konten Grid Kosong' />
               )}
             </AccordionDetails>
           </Accordion>
