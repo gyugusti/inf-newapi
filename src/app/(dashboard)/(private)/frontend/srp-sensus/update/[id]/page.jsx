@@ -2,8 +2,8 @@ import Grid2 from '@mui/material/Grid2'
 
 import { updateRegistrasiSrp } from '@/app/(dashboard)/(private)/frontend/srp-registrasi/server'
 import CustomBreadcrumb from '@/components/widget/CustomBreadcrumb'
-import FormSrpReg from '@/views/frontend/srp/FormSrpReg'
 import { fetchRegistrasiSrpDetail } from '../../../srp-update/server'
+import SrpSensusUpdateTabs from './SrpSensusUpdateTabs'
 
 const Page = async ({ searchParams }) => {
   const regSrpId = searchParams?.reg_srp_id ?? ''
@@ -25,7 +25,7 @@ const Page = async ({ searchParams }) => {
       </Grid2>
 
       <Grid2>
-        <FormSrpReg data={detailData} action={updateAction} />
+        <SrpSensusUpdateTabs detailData={detailData} updateAction={updateAction} />
       </Grid2>
     </Grid2>
   )
