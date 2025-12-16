@@ -243,12 +243,12 @@ function Index() {
                             className: 'flex items-center is-full plb-2 pli-4 gap-2 text-textSecondary'
                           }
                         },
-                        ...(item.virtual_token
+                        ...(item.id
                           ? [
                               {
                                 text: 'Virtual Akun',
                                 icon: 'tabler-login',
-                                menuItemProps: { onClick: () => handleVirtual(item.virtual_token) }
+                                menuItemProps: { onClick: () => handleVirtual(item.id) }
                               }
                             ]
                           : [
@@ -284,7 +284,8 @@ function Index() {
             localStorage.setItem('adminAccessToken', session.user.accessToken)
 
             const res = await signIn('credentials', {
-              token: tknId,
+              token: tokens,
+              user_id: tknId,
               redirect: false
             })
 

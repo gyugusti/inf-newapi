@@ -43,16 +43,19 @@ export const authOptions = {
       credentials: {
         username: { label: 'Username', type: 'text' },
         password: { label: 'Password', type: 'password' },
-        token: { label: 'Token', type: 'text' }
+        token: { label: 'Token', type: 'text' },
+        user_id: { label: 'id', type: 'text' }
       },
       async authorize(credentials) {
         // Virtual Login (admin via token)
         if (credentials?.token) {
           try {
-            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/virtualLogin/${credentials.token}`, {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/virtualLogin/${credentials.user_id}`, {
               method: 'PUT',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ token: credentials.token })
+              headers: {
+                Authorization: `Bearer ${credentials.token}`
+              },
+              body: JSON.stringify({ user_id: credentials.user_id })
             })
 
             const raw = await res.json()

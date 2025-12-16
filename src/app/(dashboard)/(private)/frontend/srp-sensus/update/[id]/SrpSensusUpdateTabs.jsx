@@ -2,6 +2,7 @@
 
 import { useMemo } from 'react'
 
+import FormSrpReg from '@/views/frontend/srp/FormSrpReg'
 import Accordion from '@mui/material/Accordion'
 import AccordionDetails from '@mui/material/AccordionDetails'
 import AccordionSummary from '@mui/material/AccordionSummary'
@@ -10,8 +11,6 @@ import Divider from '@mui/material/Divider'
 import Grid from '@mui/material/Grid2'
 import Stack from '@mui/material/Stack'
 import Typography from '@mui/material/Typography'
-import FormSrpReg from '@/views/frontend/srp/FormSrpReg'
-import DocRegistSrp from '@/views/validasi-srp/DocRegistSrp'
 
 const renderFieldValue = value => {
   if (value === null || value === undefined || value === '') return '-'
@@ -114,54 +113,9 @@ const SrpSensusUpdateTabs = ({ detailData, updateAction }) => {
         borderRadius: 3
       }}
     >
-      <Grid container spacing={4} sx={{ width: '100%' }}>
-        <Grid xs={12} md={6} sx={{ width: '100%', minWidth: 0 }}>
-          <Accordion
-            defaultExpanded
-            elevation={0}
-            sx={{
-              borderRadius: 3,
-              border: '1px solid #e7eaf2',
-              boxShadow: '0px 4px 12px rgba(15, 23, 42, 0.06)',
-              width: '100%',
-              backgroundColor: '#fbfcff'
-            }}
-          >
-            <AccordionSummary expandIcon={<i className='tabler-chevron-down' />}>
-              <Typography variant='h6'>Data Registrasi</Typography>
-            </AccordionSummary>
-            <AccordionDetails>
-              {detailData ? <DetailGrid data={detailData} fields={registrasiFields} /> : <Placeholder message='Konten Grid Kosong' />}
-            </AccordionDetails>
-          </Accordion>
-        </Grid>
-
-        <Grid xs={12} md={6} sx={{ width: '100%', minWidth: 0 }}>
-          <Accordion
-            defaultExpanded
-            elevation={0}
-            sx={{
-              borderRadius: 3,
-              border: '1px solid #e7eaf2',
-              boxShadow: '0px 4px 12px rgba(15, 23, 42, 0.06)',
-              width: '100%',
-              backgroundColor: '#fbfcff'
-            }}
-          >
-            <AccordionSummary expandIcon={<i className='tabler-chevron-down' />}>
-              <Typography variant='h6'>Data Master Sumber</Typography>
-            </AccordionSummary>
-            <AccordionDetails>
-              {detailData?.master_sumber ? (
-                <DetailGrid data={detailData.master_sumber} fields={masterFields} />
-              ) : (
-                <Placeholder message='Konten Grid Kosong' />
-              )}
-            </AccordionDetails>
-          </Accordion>
-        </Grid>
-      </Grid>
-
+      {/* =========================
+    ROW ATAS: 1 Accordion, 2 Kolom
+   ========================= */}
       <Accordion
         defaultExpanded
         elevation={0}
@@ -169,19 +123,49 @@ const SrpSensusUpdateTabs = ({ detailData, updateAction }) => {
           borderRadius: 3,
           border: '1px solid #e7eaf2',
           boxShadow: '0px 4px 12px rgba(15, 23, 42, 0.06)',
-          width: '100%',
           backgroundColor: '#fbfcff'
         }}
       >
+        {/* HEADER (MINIMIZE SATU SAJA) */}
         <AccordionSummary expandIcon={<i className='tabler-chevron-down' />}>
-          <Typography variant='h6'>Dokumen Sensus</Typography>
+          <Typography variant='h5' fontWeight={700}>
+            Data Sensus Sumber
+          </Typography>
         </AccordionSummary>
+
+        {/* ISI */}
         <AccordionDetails>
-          {detailData ? (
-            <DocRegistSrp inlineMode fasId={detailData?.fas_id} regsrpId={detailData?.reg_srp_id} />
-          ) : (
-            <Placeholder message='Konten Grid Kosong' />
-          )}
+          <Grid container spacing={4} alignItems='stretch'>
+            {/* KIRI: Data Registrasi */}
+            <Grid size={{ xs: 12, md: 6 }}>
+              <Box>
+                <Typography variant='subtitle1' fontWeight={600} sx={{ mb: 2 }}>
+                  Data Registrasi
+                </Typography>
+
+                {detailData ? (
+                  <DetailGrid data={detailData} fields={registrasiFields} />
+                ) : (
+                  <Placeholder message='Konten Grid Kosong' />
+                )}
+              </Box>
+            </Grid>
+
+            {/* KANAN: Data Master */}
+            <Grid size={{ xs: 12, md: 6 }}>
+              <Box>
+                <Typography variant='subtitle1' fontWeight={600} sx={{ mb: 2 }}>
+                  Data Master Sumber
+                </Typography>
+
+                {detailData?.master_sumber ? (
+                  <DetailGrid data={detailData.master_sumber} fields={masterFields} />
+                ) : (
+                  <Placeholder message='Konten Grid Kosong' />
+                )}
+              </Box>
+            </Grid>
+          </Grid>
         </AccordionDetails>
       </Accordion>
 
@@ -203,19 +187,9 @@ const SrpSensusUpdateTabs = ({ detailData, updateAction }) => {
           width: '100%'
         }}
       >
-        <AccordionSummary
-          expandIcon={<i className='tabler-chevron-down' style={{ color: '#fff' }} />}
-          sx={{
-            backgroundColor: '#4b3bf1',
-            color: '#fff',
-            '& .MuiAccordionSummary-content': { alignItems: 'flex-start', flexDirection: 'column' }
-          }}
-        >
+        <AccordionSummary expandIcon={<i className='tabler-chevron-down' />}>
           <Typography variant='h5' fontWeight={700}>
             Formulir Data
-          </Typography>
-          <Typography variant='body2' sx={{ opacity: 0.9 }}>
-            Keterangan Data Form
           </Typography>
         </AccordionSummary>
         <AccordionDetails sx={{ backgroundColor: 'transparent', px: { xs: 0, md: 2 } }}>
