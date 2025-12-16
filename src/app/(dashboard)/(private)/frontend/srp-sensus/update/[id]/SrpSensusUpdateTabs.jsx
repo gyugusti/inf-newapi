@@ -1,19 +1,14 @@
 'use client'
 
-import { useMemo, useState } from 'react'
+import { useMemo } from 'react'
 
 import Box from '@mui/material/Box'
 import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
 import Divider from '@mui/material/Divider'
 import Stack from '@mui/material/Stack'
-import Tab from '@mui/material/Tab'
 import Typography from '@mui/material/Typography'
 import Grid from '@mui/material/Grid2'
-import TabContext from '@mui/lab/TabContext'
-import TabPanel from '@mui/lab/TabPanel'
-
-import CustomTabList from '@/@core/components/mui/TabList'
 import FormSrpReg from '@/views/frontend/srp/FormSrpReg'
 
 const renderFieldValue = value => {
@@ -55,8 +50,6 @@ const DetailGrid = ({ data, fields }) => {
 }
 
 const SrpSensusUpdateTabs = ({ detailData, updateAction }) => {
-  const [tabValue, setTabValue] = useState('registrasi')
-
   const registrasiFields = useMemo(
     () => [
       { label: 'Registrasi SRP ID', value: data => data?.reg_srp_id },
@@ -93,49 +86,56 @@ const SrpSensusUpdateTabs = ({ detailData, updateAction }) => {
     []
   )
 
-  const handleChange = (event, newValue) => {
-    setTabValue(newValue)
-  }
-
   return (
     <Card>
       <CardContent>
-        <TabContext value={tabValue}>
-          <CustomTabList variant='fullWidth' onChange={handleChange} aria-label='tab detail srp'>
-            <Tab value='registrasi' label='Detail Registrasi' />
-            <Tab value='master' label='Data Master Sumber' />
-          </CustomTabList>
-
-          <TabPanel value='registrasi' sx={{ px: 0 }}>
+        <Grid container spacing={4} sx={{ mb: 2 }}>
+          <Grid xs={12} md={6}>
             {detailData ? (
               <Box sx={{ mt: 2 }}>
                 <Typography variant='h6' sx={{ mb: 2 }}>
-                  Informasi Registrasi
+                  Detail Registrasi
                 </Typography>
                 <DetailGrid data={detailData} fields={registrasiFields} />
               </Box>
             ) : (
-              <Typography sx={{ mt: 2 }}>Data registrasi tidak ditemukan.</Typography>
-            )}
-
-            <Divider sx={{ my: 4 }} />
-
-            <FormSrpReg data={detailData} action={updateAction} />
-          </TabPanel>
-
-          <TabPanel value='master' sx={{ px: 0 }}>
-            {detailData?.master_sumber ? (
               <Box sx={{ mt: 2 }}>
                 <Typography variant='h6' sx={{ mb: 2 }}>
-                  Informasi Master Sumber
+                  Detail Registrasi
                 </Typography>
-                <DetailGrid data={detailData.master_sumber} fields={masterFields} />
+                <Typography>Data registrasi tidak ditemukan.</Typography>
               </Box>
-            ) : (
-              <Typography sx={{ mt: 2 }}>Data master sumber belum tersedia.</Typography>
             )}
-          </TabPanel>
-        </TabContext>
+          </Grid>
+
+          <Grid xs={12} md={6}>
+            <Box sx={{ mt: 2 }}>
+              <Typography variant='h6' sx={{ mb: 2 }}>
+                Data Master Sumber
+              </Typography>
+              {detailData?.master_sumber ? (
+                <DetailGrid data={detailData.master_sumber} fields={masterFields} />
+              ) : (
+                <Grid container spacing={4} sx={{ mt: 0 }}>
+                  <Grid xs={12}>
+                    <Box>
+                      <Typography variant='caption' color='text.secondary'>
+                        Informasi Master Sumber
+                      </Typography>
+                      <Typography variant='body1' sx={{ fontWeight: 600 }}>
+                        Data master belum tersedia
+                      </Typography>
+                    </Box>
+                  </Grid>
+                </Grid>
+              )}
+            </Box>
+          </Grid>
+        </Grid>
+
+        <Divider sx={{ my: 4 }} />
+
+        <FormSrpReg data={detailData} action={updateAction} />
       </CardContent>
     </Card>
   )
