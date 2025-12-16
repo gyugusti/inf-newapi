@@ -105,15 +105,16 @@ const SrpSensusUpdateTabs = ({ detailData, updateAction }) => {
 
   return (
     <Stack spacing={4}>
-      <Grid container spacing={4}>
-        <Grid xs={12} md={6}>
+      <Grid container spacing={4} sx={{ width: '100%' }}>
+        <Grid xs={12} md={6} sx={{ width: '100%' }}>
           <Accordion
             defaultExpanded
             elevation={0}
             sx={{
               borderRadius: 3,
               border: theme => `1px solid ${theme.palette.divider}`,
-              boxShadow: theme => `0px 10px 25px 0px ${theme.palette.divider}`
+              boxShadow: theme => `0px 10px 25px 0px ${theme.palette.divider}`,
+              width: '100%'
             }}
           >
             <AccordionSummary expandIcon={<i className='tabler-chevron-down' />}>
@@ -129,14 +130,15 @@ const SrpSensusUpdateTabs = ({ detailData, updateAction }) => {
           </Accordion>
         </Grid>
 
-        <Grid xs={12} md={6}>
+        <Grid xs={12} md={6} sx={{ width: '100%' }}>
           <Accordion
             defaultExpanded
             elevation={0}
             sx={{
               borderRadius: 3,
               border: theme => `1px solid ${theme.palette.divider}`,
-              boxShadow: theme => `0px 10px 25px 0px ${theme.palette.divider}`
+              boxShadow: theme => `0px 10px 25px 0px ${theme.palette.divider}`,
+              width: '100%'
             }}
           >
             <AccordionSummary expandIcon={<i className='tabler-chevron-down' />}>
@@ -163,12 +165,12 @@ const SrpSensusUpdateTabs = ({ detailData, updateAction }) => {
 
       <Accordion
         defaultExpanded
-        elevation={0}
         sx={{
           borderRadius: 3,
           overflow: 'hidden',
-          border: theme => `1px solid ${theme.palette.divider}`,
-          boxShadow: theme => `0px 12px 30px 0px ${theme.palette.divider}`
+          border: 'none',
+          boxShadow: 'none',
+          width: '100%'
         }}
       >
         <AccordionSummary
@@ -186,7 +188,7 @@ const SrpSensusUpdateTabs = ({ detailData, updateAction }) => {
             Keterangan Data Form
           </Typography>
         </AccordionSummary>
-        <AccordionDetails sx={{ backgroundColor: '#f7f8ff' }}>
+        <AccordionDetails sx={{ backgroundColor: 'transparent', px: { xs: 0, md: 2 } }}>
           <FormSrpReg data={detailData} action={updateAction} />
         </AccordionDetails>
       </Accordion>
