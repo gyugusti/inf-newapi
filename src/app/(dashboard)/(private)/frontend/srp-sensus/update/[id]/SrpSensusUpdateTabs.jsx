@@ -2,6 +2,7 @@
 
 import { useMemo } from 'react'
 
+import FormSrpReg from '@/views/frontend/srp/FormSrpReg'
 import Accordion from '@mui/material/Accordion'
 import AccordionDetails from '@mui/material/AccordionDetails'
 import AccordionSummary from '@mui/material/AccordionSummary'
@@ -10,7 +11,6 @@ import Divider from '@mui/material/Divider'
 import Grid from '@mui/material/Grid2'
 import Stack from '@mui/material/Stack'
 import Typography from '@mui/material/Typography'
-import FormSrpReg from '@/views/frontend/srp/FormSrpReg'
 
 const renderFieldValue = value => {
   if (value === null || value === undefined || value === '') return '-'
@@ -113,43 +113,51 @@ const SrpSensusUpdateTabs = ({ detailData, updateAction }) => {
         borderRadius: 3
       }}
     >
-      <Grid container spacing={4} sx={{ width: '100%' }}>
-        <Grid xs={12} md={6} sx={{ width: '100%', minWidth: 0 }}>
+      <Grid container spacing={4} alignItems='stretch'>
+        {/* KIRI: Data Registrasi */}
+        <Grid size={{ xs: 12, md: 6 }}>
           <Accordion
             defaultExpanded
             elevation={0}
             sx={{
+              height: '100%',
               borderRadius: 3,
               border: '1px solid #e7eaf2',
               boxShadow: '0px 4px 12px rgba(15, 23, 42, 0.06)',
-              width: '100%',
               backgroundColor: '#fbfcff'
             }}
           >
             <AccordionSummary expandIcon={<i className='tabler-chevron-down' />}>
               <Typography variant='h6'>Data Registrasi</Typography>
             </AccordionSummary>
+
             <AccordionDetails>
-              {detailData ? <DetailGrid data={detailData} fields={registrasiFields} /> : <Placeholder message='Konten Grid Kosong' />}
+              {detailData ? (
+                <DetailGrid data={detailData} fields={registrasiFields} />
+              ) : (
+                <Placeholder message='Konten Grid Kosong' />
+              )}
             </AccordionDetails>
           </Accordion>
         </Grid>
 
-        <Grid xs={12} md={6} sx={{ width: '100%', minWidth: 0 }}>
+        {/* KANAN: Data Master Sumber */}
+        <Grid size={{ xs: 12, md: 6 }}>
           <Accordion
             defaultExpanded
             elevation={0}
             sx={{
+              height: '100%',
               borderRadius: 3,
               border: '1px solid #e7eaf2',
               boxShadow: '0px 4px 12px rgba(15, 23, 42, 0.06)',
-              width: '100%',
               backgroundColor: '#fbfcff'
             }}
           >
             <AccordionSummary expandIcon={<i className='tabler-chevron-down' />}>
               <Typography variant='h6'>Data Master Sumber</Typography>
             </AccordionSummary>
+
             <AccordionDetails>
               {detailData?.master_sumber ? (
                 <DetailGrid data={detailData.master_sumber} fields={masterFields} />
