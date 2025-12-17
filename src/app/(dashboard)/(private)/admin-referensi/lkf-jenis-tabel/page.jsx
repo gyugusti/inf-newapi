@@ -6,25 +6,24 @@ import Link from 'next/link'
 import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
 import Table from '@mui/material/Table'
-import TableRow from '@mui/material/TableRow'
-import TableHead from '@mui/material/TableHead'
 import TableBody from '@mui/material/TableBody'
 import TableCell from '@mui/material/TableCell'
 import TableContainer from '@mui/material/TableContainer'
+import TableHead from '@mui/material/TableHead'
+import TableRow from '@mui/material/TableRow'
 
-import { useDispatch, useSelector } from 'react-redux'
 import { Icon } from '@iconify/react'
 import Button from '@mui/material/Button'
 import IconButton from '@mui/material/IconButton'
+import { useDispatch, useSelector } from 'react-redux'
 
+import CustomBreadcrumb from '@/components/widget/CustomBreadcrumb'
 import {
   clearValues,
   deletelkfJenisTabel,
   getlkfJenisTabel,
   setEdit
 } from '@/redux-store/admin-referensi/lkf-jenis-tabel'
-import CustomBreadcrumb from '@/components/widget/CustomBreadcrumb'
-
 
 const breadcrumbs = [{ name: 'Referensi', path: '/admin-referensi' }, { name: 'Jenis Tabel' }]
 
@@ -78,7 +77,7 @@ const Index = () => {
                       <TableCell>
                         <Link
                           href={{
-                            pathname: `lkf-jenis-tabel/form`
+                            pathname: `form`
                           }}
                           onClick={() => handleEdit(item)}
                         >

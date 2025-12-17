@@ -11,12 +11,12 @@ const Page = async ({ params }) => {
 
   const detailData = regSrpId ? await fetchRegistrasiSrpDetail(regSrpId) : null
 
-  const breadcrumbs = [{ name: 'Update SRP', path: '/frontend/srp-sensus' }, { name: 'Update SRP Detail' }]
+  const breadcrumbs = [{ name: 'Sensus SRP', path: '/frontend/srp-sensus' }, { name: 'Sensus SRP Detail' }]
 
   async function updateAction(formData) {
     'use server'
-    
-return updateRegistrasiSrp(regSrpId, formData)
+
+    return updateRegistrasiSrp(regSrpId, formData)
   }
 
   return (

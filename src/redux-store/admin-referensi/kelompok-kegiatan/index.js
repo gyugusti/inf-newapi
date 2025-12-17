@@ -50,7 +50,7 @@ export const getkelKegiatan = createAsyncThunk('kelKegiatan/getkelKegiatan', asy
 })
 
 export const getKegiatanKelompok = createAsyncThunk('kelKegiatan/getKegiatanKelompok', async (id, thunkAPI) => {
-  let url = `/api/kelKegiatan/${id}`
+  let url = `/apiBalis/kelKegiatan/${id}`
 
   let config = {}
 
@@ -76,7 +76,7 @@ export const getKegiatanKelompok = createAsyncThunk('kelKegiatan/getKegiatanKelo
 })
 
 export const getKegiatan = createAsyncThunk('kelKegiatan/getKegiatan', async (_, thunkAPI) => {
-  let url = `/api/Balis/kegiatan`
+  let url = `/apiBalis/kegiatan`
 
   let config = {
     params: {

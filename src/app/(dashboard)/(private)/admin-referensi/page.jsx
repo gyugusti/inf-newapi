@@ -1,12 +1,11 @@
 'use client'
-import { Fragment, useContext } from 'react'
 
 import Link from 'next/link'
 
 import Grid from '@mui/material/Grid2'
 
-import CustomerStats from '@components/card-statistics/CustomerStats'
 import { stringLimit } from '@/utils/helper'
+import CustomerStats from '@components/card-statistics/CustomerStats'
 
 const Index = () => {
   return (
@@ -36,7 +35,7 @@ const Index = () => {
       </Grid>
 
       <Grid size={{ xs: 12, md: 4, sm: 6 }}>
-        <Link href='jadwal' title='Nama Penanda Tangan Persuratan Inspeksi'>
+        <Link href='tanda-tangan' title='Nama Penanda Tangan Persuratan Inspeksi'>
           <CustomerStats
             avatarColor='primary'
             avatarIcon='tabler-activity'

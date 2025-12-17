@@ -4,25 +4,13 @@ import { Fragment, useEffect } from 'react'
 
 import Link from 'next/link'
 
-import {
-  Checkbox,
-  Table,
-  Button,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Card,
-  CardContent
-} from '@mui/material'
 import { Icon } from '@iconify/react/dist/iconify.js'
-
+import { Card, CardContent, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material'
 
 import { useDispatch, useSelector } from 'react-redux'
 
 import CustomBreadcrumb from '@/components/widget/CustomBreadcrumb'
-import { getIkk, setDetail } from '@/redux-store/admin-referensi/ikk'
+import { getIkk } from '@/redux-store/admin-referensi/ikk'
 import { getInkf } from '@/redux-store/admin-referensi/inkf'
 import IkkItem from '@/views/admin-referensi/ikk/IkkItem'
 
@@ -73,7 +61,7 @@ const Index = () => {
                         <TableCell component='th'>
                           <Link
                             href={{
-                              pathname: `ikk/${inkf_id}`,
+                              pathname: `${inkf_id}`,
                               query: { inkf_id: inkf_id, nama: nama }
                             }}
                             onClick={() => toggleDetail(inkf_id)}

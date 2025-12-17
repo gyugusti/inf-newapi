@@ -1,18 +1,18 @@
-import React, { useEffect } from 'react'
+import { useEffect } from 'react'
 
 import Link from 'next/link'
 
-import { useDispatch, useSelector } from 'react-redux'
+import { Icon } from '@iconify/react'
+import Button from '@mui/material/Button'
+import IconButton from '@mui/material/IconButton'
 import Paper from '@mui/material/Paper'
 import Table from '@mui/material/Table'
-import TableRow from '@mui/material/TableRow'
-import TableHead from '@mui/material/TableHead'
 import TableBody from '@mui/material/TableBody'
 import TableCell from '@mui/material/TableCell'
 import TableContainer from '@mui/material/TableContainer'
-import IconButton from '@mui/material/IconButton'
-import { Icon } from '@iconify/react'
-import Button from '@mui/material/Button'
+import TableHead from '@mui/material/TableHead'
+import TableRow from '@mui/material/TableRow'
+import { useDispatch, useSelector } from 'react-redux'
 
 import Loading from '@/components/Loading'
 import { clearValues, deletesyaratItem, getsyaratItem, setEdit } from '@/redux-store/admin-referensi/syarat-item'
@@ -42,7 +42,7 @@ function Item() {
     <>
       <Link
         href={{
-          pathname: `syarat-item/form`
+          pathname: `form`
         }}
         onClick={() => dispatch(clearValues())}
       >
@@ -76,7 +76,7 @@ function Item() {
                   <TableCell>
                     <Link
                       href={{
-                        pathname: `syarat-item/form`,
+                        pathname: `form`,
                         query: { nama: nama, urutan: urutan }
                       }}
                       onClick={() => handleEdit(item)}

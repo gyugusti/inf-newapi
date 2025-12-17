@@ -6,21 +6,20 @@ import Link from 'next/link'
 import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
 import Table from '@mui/material/Table'
-import TableRow from '@mui/material/TableRow'
-import TableHead from '@mui/material/TableHead'
 import TableBody from '@mui/material/TableBody'
 import TableCell from '@mui/material/TableCell'
 import TableContainer from '@mui/material/TableContainer'
+import TableHead from '@mui/material/TableHead'
+import TableRow from '@mui/material/TableRow'
 
-import { useDispatch, useSelector } from 'react-redux'
 import { Icon } from '@iconify/react'
 import Button from '@mui/material/Button'
 import IconButton from '@mui/material/IconButton'
+import { useDispatch, useSelector } from 'react-redux'
 
 import CustomBreadcrumb from '@/components/widget/CustomBreadcrumb'
 
-
-import { deleteInkf, getInkf, setEdit, clearValues } from '@/redux-store/admin-referensi/inkf'
+import { clearValues, deleteInkf, getInkf, setEdit } from '@/redux-store/admin-referensi/inkf'
 
 const breadcrumbs = [{ name: 'Referensi', path: '/admin-referensi' }, { name: 'Jenis Tabel' }]
 
@@ -47,7 +46,7 @@ const Index = () => {
         <CardContent>
           <Link
             href={{
-              pathname: `inkf/form`
+              pathname: `form`
             }}
             onClick={() => dispatch(clearValues())}
           >
@@ -81,7 +80,7 @@ const Index = () => {
                       <TableCell>
                         <Link
                           href={{
-                            pathname: `inkf/form`,
+                            pathname: `form`,
                             query: { nama: nama, uraian: uraian, bobot: bobot }
                           }}
                           onClick={() => handleEdit(item)}
