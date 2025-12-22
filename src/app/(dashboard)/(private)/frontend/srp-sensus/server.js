@@ -39,7 +39,7 @@ export async function fetchSensusSrp(params = {}) {
       validator_id: params.validator_id || '',
       otorisator_id: params.otorisator_id || '',
       fas_id: session?.user?.fas_id ?? '',
-      jenis_validasi_id: 2,
+      jenis_validasi_id: 3,
       cari: params.cari || ''
     },
     withCredentials: true

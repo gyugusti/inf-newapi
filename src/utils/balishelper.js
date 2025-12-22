@@ -111,3 +111,15 @@ export const getStatusFasSumber = status => {
     return '-'
   }
 }
+
+export const getJenisValidasi = jenis => {
+  if (jenis === 1) {
+    return 'Registrasi'
+  } else if (jenis === 2) {
+    return 'Update'
+  } else if (jenis === 3) {
+    return 'Sensus'
+  } else {
+    return null
+  }
+}

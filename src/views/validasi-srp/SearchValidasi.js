@@ -1,16 +1,14 @@
-import { useState, useEffect } from 'react'
-
+import { Icon } from '@iconify/react/dist/iconify.js'
+import { Button, MenuItem } from '@mui/material'
 import Grid from '@mui/material/Grid2'
 import { useDispatch, useSelector } from 'react-redux'
-import { Button, Card, CardContent, Typography, MenuItem, IconButton } from '@mui/material'
-import { Icon } from '@iconify/react/dist/iconify.js'
 
-import { useForm, Controller } from 'react-hook-form'
+import { Controller, useForm } from 'react-hook-form'
 
 import * as XLSX from 'xlsx'
 
 import CustomTextField from '@/@core/components/mui/TextField'
-import { clearFilters, handleChange, handleChangeSrp } from '@/redux-store/validasi-data'
+import { clearFilters, handleChangeSrp } from '@/redux-store/validasi-data'
 import { getKategoriSumber } from '@/utils/balishelper'
 
 const SearchValidasi = ({ showExcelSelect }) => {
@@ -154,7 +152,19 @@ const SearchValidasi = ({ showExcelSelect }) => {
             )}
           />
         </Grid>
-
+        <Grid size={{ xs: 12, sm: 4 }}>
+          <Controller
+            name='jenis_validasi_id'
+            control={control}
+            render={({ field: { value, onChange } }) => (
+              <CustomTextField select fullWidth value={value} label='Jenis Validasi' onChange={onChange}>
+                <MenuItem value={1}>Registrasi</MenuItem>
+                <MenuItem value={2}>Update</MenuItem>
+                <MenuItem value={3}>Sensus</MenuItem>
+              </CustomTextField>
+            )}
+          />
+        </Grid>
         <Grid item='true' size={{ xs: 6 }} container justifyContent='flex-end' spacing={2}>
           <Grid item='true'>
             <Button type='submit' variant='contained'>

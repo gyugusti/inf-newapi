@@ -1,46 +1,42 @@
 'use client'
 import { useEffect, useMemo, useState } from 'react'
 
-import Link from 'next/link'
-
 import { usePathname } from 'next/navigation'
 
-import { useDispatch, useSelector } from 'react-redux'
-import { Typography, IconButton, CircularProgress, Chip } from '@mui/material'
+import { CircularProgress, Typography } from '@mui/material'
 import {
   createColumnHelper,
   flexRender,
   getCoreRowModel,
-  useReactTable,
   getFilteredRowModel,
+  getPaginationRowModel,
   getSortedRowModel,
-  getPaginationRowModel
+  useReactTable
 } from '@tanstack/react-table'
-import classnames from 'classnames'
 import { useSession } from 'next-auth/react'
+import { useDispatch, useSelector } from 'react-redux'
 
+import TablePaginationComponent from '@/components/TablePaginationComponent'
+import KonfirmasiDialog from '@/components/widget/KonfirmasiDialog'
 import {
-  getRegistrasiSrp,
   changePage,
+  clearFilters,
+  clearValues,
   deleteRegSumber,
+  getRegistrasiSrp,
+  kembalikanSrp,
   kevalidatorRegSumber,
   kirimOtorisatorSrp,
   selesaiSrp,
-  tolakSrp,
-  kembalikanSrp,
-  clearValues,
-  clearFilters
+  tolakSrp
 } from '@/redux-store/validasi-data'
+import { getFlagLengkap, getFlagValid, getJenisValidasi } from '@/utils/balishelper'
 import tableStyles from '@core/styles/table.module.css'
-import TablePaginationComponent from '@/components/TablePaginationComponent'
-import OptionMenu from '@/@core/components/option-menu'
-import KonfirmasiDialog from '@/components/widget/KonfirmasiDialog'
-import DocRegistSrp from './DocRegistSrp'
-import LogSrp from './LogSrp'
 import ActionsColumn from './ActionsColumn'
-import { getTahapanValidasi, getFlagValid, getFlagLengkap } from '@/utils/balishelper'
-import SearchValidasi from './SearchValidasi'
+import DocRegistSrp from './DocRegistSrp'
 import FormDisposisi from './FormDisposisi'
+import LogSrp from './LogSrp'
+import SearchValidasi from './SearchValidasi'
 
 const TabelSrp = ({ view }) => {
   const dispatch = useDispatch()
@@ -63,12 +59,11 @@ const TabelSrp = ({ view }) => {
   const [showConfirmationKembalikan, setShowConfirmationKembalikan] = useState(false)
   const [showConfirmationTolak, setShowConfirmationTolak] = useState(false)
 
-  const { total, tab, per_page, current_page, listRegsrp, tahap_reg_id, isLoading, cari } = useSelector(
-    store => store.validasiData
-  )
+  const { total, tab, per_page, current_page, listRegsrp, tahap_reg_id, jenis_validasi_id, isLoading, cari } =
+    useSelector(store => store.validasiData)
 
   useEffect(() => {
-    dispatch(clearValues()) // aksi reset state slice
+    dispatch(clearValues())
     dispatch(clearFilters())
   }, [pathname, dispatch])
 
@@ -76,7 +71,7 @@ const TabelSrp = ({ view }) => {
     if (tahap_reg_id) {
       dispatch(getRegistrasiSrp())
     }
-  }, [dispatch, current_page, tahap_reg_id, tab, cari, per_page, total])
+  }, [dispatch, current_page, tahap_reg_id, jenis_validasi_id, tab, cari, per_page, total])
 
   const handlePageChange = newPage => {
     dispatch(changePage(newPage))
@@ -166,6 +161,10 @@ const TabelSrp = ({ view }) => {
         header: 'No Reg',
         cell: ({ row }) => <Typography>{row.original.no_reg}</Typography>
       }),
+      columnHelper.accessor('jenis_validasi_id', {
+        header: 'Jenis',
+        cell: ({ row }) => <div>{getJenisValidasi(row.original.jenis_validasi_id)} </div>
+      }),
       columnHelper.accessor('tahap_reg_id', {
         header: 'Status',
         cell: ({ row }) => (
@@ -177,6 +176,7 @@ const TabelSrp = ({ view }) => {
           </div>
         )
       }),
+
       columnHelper.accessor('validator_id', {
         header: 'Validator',
         cell: ({ row }) => <div>{row.original.validator?.username}</div>

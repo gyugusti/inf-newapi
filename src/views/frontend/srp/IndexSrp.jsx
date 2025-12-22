@@ -91,7 +91,7 @@ export default function IndexSrp() {
 
     try {
       const { data } = await customFetch.put(`/api/registrasi/srp/mohonMaster/${masterSumberId}`, {
-        jenis_validasi_id: 2
+        jenis_validasi_id: 3
       })
 
       const regSrpId = data?.response?.reg_srp_id

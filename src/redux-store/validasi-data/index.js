@@ -36,6 +36,7 @@ const initialState = {
   detailSrp: [],
   jenis_sumber_id: '',
   jenis_dokumen_id: [],
+  jenis_validasi_id: '',
   srpId: [],
   jadwalSrp: [],
   validator: '',
@@ -60,6 +61,7 @@ export const getRegistrasiSrp = createAsyncThunk('validasiData/getRegistrasiSrp'
       page: thunkAPI.getState().validasiData.current_page,
       limit: thunkAPI.getState().validasiData.per_page,
       tahap_reg_id: thunkAPI.getState().validasiData.tahap_reg_id,
+      jenis_validasi_id: thunkAPI.getState().validasiData.jenis_validasi_id,
       validator_id: thunkAPI.getState().validasiData.validator,
       otorisator_id: thunkAPI.getState().validasiData.koordinator,
       insp_master_id: thunkAPI.getState().validasiData.inspektur,
@@ -778,6 +780,7 @@ const validasiDataSlice = createSlice({
     },
     clearFilters: state => {
       state.cari = ''
+      state.jenis_validasi_id = ''
       state.per_page = 20
       state.current_page = 1
       state.total = 0
